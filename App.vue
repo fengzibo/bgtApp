@@ -1,6 +1,8 @@
 <script>
 import Vue from 'vue';
+import pageAnimation from './components/page-animation';
 export default {
+	mixins: [pageAnimation],
 	onLaunch: function() {
 		uni.getSystemInfo({
 			success: function(e) {
@@ -38,4 +40,7 @@ export default {
 /*每个页面公共css */
 @import 'colorui/main.css';
 @import 'colorui/icon.css';
+.scrollPage{
+		height: 100%;
+}
 </style>

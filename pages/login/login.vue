@@ -76,7 +76,20 @@ export default {
 
 			this.isRotate = true;
 			setTimeout(() => {
-				this.isRotate = false;
+				uni.showToast({
+					title:'登录成功',
+					icon: 'success',
+					position: 'bottom',
+					success: () => {
+						uni.switchTab({
+							url:'../tabbar/task/task',
+							complete: () => {
+								this.isRotate = false;
+							}
+						})
+					}
+				});
+				
 			}, 3000);
 		},
 		login_weixin() {

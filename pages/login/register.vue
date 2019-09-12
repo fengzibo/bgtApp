@@ -28,7 +28,7 @@
 </template>
 
 <script>
-var _this;
+let _this;
 import lInput from '../../components/login-comp/login-input.vue'; //input
 import lButton from '../../components/login-comp/login-button.vue'; //button
 
