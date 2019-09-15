@@ -1,17 +1,20 @@
 <template>
-	<mescroll-uni :down="downOption" @down="downCallback" @up="upCallback">
+	<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100">
 		<msg-list></msg-list>
 	</mescroll-uni>
 </template>
 
 <script>
-	import msgList from 'msgList.vue';
+	import msgList from './msgList.vue';
 	export default {
 		data() {
 			return {
 				downOption: {
 					auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
 				},
+				upOption:{
+					auto:false,
+				}
 			};
 		},
 		components: {
@@ -27,7 +30,9 @@
 			/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
 			upCallback(mescroll) {
 				//联网加载数据
-				
+				setTimeout(() =>{
+					mescroll.endErr()
+				},1000)
 			},
 		}
 	}
