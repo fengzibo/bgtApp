@@ -1,5 +1,6 @@
 <template>
 	<view>
+		
 		<view class="no-team" v-if="!has_team">
 			<image src="../../../static/no-team.png" mode="widthFix"></image>
 			<button class="cu-btn block bg-blue lg margin-top-lg" @tap="goto_add">
@@ -7,7 +8,12 @@
 				添加团队
 			</button>
 		</view>
-		<scroll-view scroll-y class="scrollPage" v-else>
+		<template  v-else>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content">我的团队</block>
+		</cu-custom>
+		<scroll-view scroll-y class="scrollPage">
 			<view class="team-main padding shadow-warp">
 				<view class="flex align-center team-info">
 					<view class="cu-avatar xl round bg-red"></view>
@@ -61,6 +67,7 @@
 			</view>
 			<t-chart></t-chart>
 		</scroll-view>
+		</template>
 	</view>
 </template>
 

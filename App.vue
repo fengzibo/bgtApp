@@ -23,8 +23,10 @@ export default {
 				// #ifdef MP-ALIPAY
 				Vue.prototype.StatusBar = e.statusBarHeight;
 				Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
-				// #endif
+				// #endif	
 				Vue.prototype.pixelRatio = e.pixelRatio;
+				Vue.prototype.windowHeight = e.windowHeight;
+				console.log(e)
 			}
 		});
 	},
@@ -41,7 +43,10 @@ export default {
 /*每个页面公共css */
 @import 'colorui/main.css';
 @import 'colorui/icon.css';
-.scrollPage{
-		height: 100%;
+/* .scrollPage{
+	height: calc(100% - var(--window-bottom) - var(--window-top)  );
+} */
+uni-page-body{
+	height: 100%;
 }
 </style>

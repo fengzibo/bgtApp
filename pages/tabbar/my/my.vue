@@ -4,45 +4,44 @@
 			<block slot="backText">返回</block>
 			<block slot="content">个人中心</block>
 		</cu-custom>
-		<view class="UCenter-bg bg-gradual-blue">
-			<!-- <image src="../../../static/login.png" class="png" mode="widthFix"></image> -->
-			<view class="cu-avatar xl round" style="background-image:url(../../../static/login.png);"></view>
-			<view class="text-xl margin-top-sm">
-				王xx
-				<!-- <text class="text-df">v2.0</text> -->
-			</view>
-			<view class="margin-top-sm">
-				<text class="cuIcon-locationfill margin-right-xs"></text>
-				<text>深圳市龙华区</text>
-			</view>
-			<view class="margin-top-sm"></view>
-			<!-- <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
-		</view>
-		<view class="padding flex text-center text-grey bg-white shadow-warp">
-			<view class="flex flex-sub flex-direction solid-right">
-				<view class="text-xxl text-orange">{{ taskCount }}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-repairfill margin-right-xs"></text>
-					参与任务数
-				</view>
-			</view>
-			<view class="flex flex-sub flex-direction solid-right">
-				<view class="text-xxl text-blue">{{ tiemCount }}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-timefill margin-right-xs"></text>
-					累计工时
-				</view>
-			</view>
-			<view class="flex flex-sub flex-direction">
-				<view class="text-xxl text-green">{{ starCount }}</view>
-				<view class="margin-top-sm">
-					<text class="cuIcon-favorfill margin-right-xs"></text>
-					累计五星次数
-				</view>
-			</view>
-		</view>
-
 		<scroll-view scroll-y class="scrollPage">
+			<view class="UCenter-bg bg-gradual-blue">
+				<!-- <image src="../../../static/login.png" class="png" mode="widthFix"></image> -->
+				<view class="cu-avatar xl round" style="background-image:url(../../../static/login.png);"></view>
+				<view class="text-xl margin-top-sm">
+					王xx
+					<!-- <text class="text-df">v2.0</text> -->
+				</view>
+				<view class="margin-top-sm">
+					<text class="cuIcon-locationfill margin-right-xs"></text>
+					<text>深圳市龙华区</text>
+				</view>
+				<view class="margin-top-sm"></view>
+				<!-- <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
+			</view>
+			<view class="padding flex text-center text-grey bg-white shadow-warp">
+				<view class="flex flex-sub flex-direction solid-right">
+					<view class="text-xxl text-orange">{{ taskCount }}</view>
+					<view class="margin-top-sm">
+						<text class="cuIcon-repairfill margin-right-xs"></text>
+						参与任务数
+					</view>
+				</view>
+				<view class="flex flex-sub flex-direction solid-right">
+					<view class="text-xxl text-blue">{{ tiemCount }}</view>
+					<view class="margin-top-sm">
+						<text class="cuIcon-timefill margin-right-xs"></text>
+						累计工时
+					</view>
+				</view>
+				<view class="flex flex-sub flex-direction">
+					<view class="text-xxl text-green">{{ starCount }}</view>
+					<view class="margin-top-sm">
+						<text class="cuIcon-favorfill margin-right-xs"></text>
+						累计五星次数
+					</view>
+				</view>
+			</view>
 			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
 				<view class="cu-item arrow">
 					<navigator class="content" url="/pages/tabbar/my/myInfo/myInfo" hover-class="none">
@@ -92,6 +91,8 @@ export default {
 	},
 	onLoad() {
 		this.numDH();
+	},
+	computed:{
 	},
 	methods: {
 		numDH() {
@@ -147,14 +148,15 @@ export default {
 	width: 200upx;
 	height: 200upx;
 }
-.layout-scroll{
-	display:flex;
-	flex-direction:column;
-	height:100%;
-	.scrollPage{
-		height: 100%;
-		flex: 1 1 auto;
-	}
-}
 
+.layout-scroll{
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+.scrollPage{
+	flex:1 1 auto;
+	height: 100%;
+	overflow: hidden;
+}
 </style>
