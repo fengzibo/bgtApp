@@ -1,5 +1,9 @@
 <template>
 	<view class="forget">
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content">重置密码</block>
+		</cu-custom>
 		<view class="content">
 			<view class="header"><image src="../../static/login.png"></image></view>
 			<!-- 主体 -->

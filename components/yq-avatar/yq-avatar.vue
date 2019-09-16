@@ -1,6 +1,9 @@
 <template name="yq-avatar">
 	<view>
-		<image :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar"></image>
+		<view v-if="!imgSrc.imgSrc" class="no-url" :style="[ imgStyle ]" @click="fSelect">
+			<slot></slot>
+		</view>
+		<image :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar" v-else></image>
 		<canvas canvas-id="avatar-canvas" id="avatar-canvas" class="my-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false"></canvas>
 		<canvas canvas-id="oper-canvas" id="oper-canvas" class="oper-canvas" :style="{top: styleTop, height: cvsStyleHeight}" disable-scroll="false" @touchstart="fStart" @touchmove="fMove" @touchend="fEnd"></canvas>
 		<canvas canvas-id="prv-canvas" id="prv-canvas" class="prv-canvas" disable-scroll="false" @touchstart="fHideImg"	:style="{ height: cvsStyleHeight, top: prvTop }"></canvas>
@@ -1074,5 +1077,12 @@
 	}
 	.my-slider {
 		flex-grow: 1;
+	}
+	.no-url{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		border: 1px solid #CCCCCC;
 	}
 </style>

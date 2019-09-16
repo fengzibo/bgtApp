@@ -1,5 +1,9 @@
 <template>
 	<view class="register">
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content">注册</block>
+		</cu-custom>
 		<view class="content">
 			<!-- 头部logo -->
 			<view class="header"><image src="../../static/login.png"></image></view>

@@ -48,6 +48,10 @@
             "path" : "pages/tabbar/my/bindPhone/bindPhone",
             "style" : {}
         }
+        ,{
+            "path" : "pages/tabbar/team/addTeam/addTeam",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationStyle": "custom",
