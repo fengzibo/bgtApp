@@ -35,30 +35,44 @@
 			"style": {
 				"navigationBarTitleText": "团队"
 			}
+		}, {
+			"path": "pages/tabbar/my/myInfo/myInfo",
+			"style": {
+				"navigationBarTitleText": "个人信息"
+			}
+		}, {
+			"path": "pages/tabbar/my/myMsg/myMsg",
+			"style": {
+				"navigationBarTitleText": "我的消息"
+			}
+		}, {
+			"path": "pages/tabbar/my/bindPhone/bindPhone",
+			"style": {
+				"navigationBarTitleText": "绑定手机"
+			}
+		}, {
+			"path": "pages/tabbar/team/addTeam/addTeam",
+			"style": {
+				"navigationBarTitleText": "添加团队"
+			}
+		}, {
+			"path": "pages/tabbar/team/auditList/auditList",
+			"style": {
+				"navigationBarTitleText": "审核列表"
+			}
+		}, {
+			"path": "pages/tabbar/team/auditList/auditDetail",
+			"style": {
+				"navigationBarTitleText": "审核详情"
+			}
 		}
-	    ,{
-            "path" : "pages/tabbar/my/myInfo/myInfo",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/tabbar/my/myMsg/myMsg",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/tabbar/my/bindPhone/bindPhone",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/tabbar/team/addTeam/addTeam",
-            "style" : {}
-        }
-    ],
+	],
 	"globalStyle": {
-		"navigationStyle": "custom",
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"navigationStyle": "custom"
+		// "navigationBarTextStyle": "black",
+		// "navigationBarTitleText": "uni-app",
+		// "navigationBarBackgroundColor": "#F8F8F8",
+		// "backgroundColor": "#F8F8F8"
 	},
 	"tabBar": {
 		"color": "#666666",

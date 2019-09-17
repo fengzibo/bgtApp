@@ -1,7 +1,14 @@
 <template>
-	<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100">
-		<msg-list></msg-list>
-	</mescroll-uni>
+	<view>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content">我的消息</block>
+		</cu-custom>
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="0" :top="CustomBar">
+			<msg-list></msg-list>
+		</mescroll-uni>
+	</view>
+	
 </template>
 
 <script>
@@ -19,6 +26,8 @@
 		},
 		components: {
 			msgList
+		},
+		computed:{
 		},
 		methods:{
 			downCallback(mescroll) {

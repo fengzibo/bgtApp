@@ -46,7 +46,7 @@ export default {
 /* .scrollPage{
 	height: calc(100% - var(--window-bottom) - var(--window-top)  );
 } */
-uni-page-body{
+/* uni-page-body{
 	height: 100%;
-}
+} */
 </style>

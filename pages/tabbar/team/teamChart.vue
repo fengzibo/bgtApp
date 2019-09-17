@@ -1,16 +1,22 @@
 <template>
-	<view class="qiun-charts">
-		<canvas
-			canvas-id="canvasColumn"
-			id="canvasColumn"
-			:style="{
-				width: cWidth * pixelRatio + 'px',
-				height: cHeight * pixelRatio + 'px',
-				transform: 'scale(' + 1 / pixelRatio + ') translate(' + (-cWidth * pixelRatio) / 2 + 'px,' + (-cHeight * pixelRatio) / 2 + 'px)'
-			}"
-			@touchstart="touchColumn"
-		></canvas>
+	<view class="charts-box">
+		<view class="charts-main">
+			<canvas
+				canvas-id="canvasColumn"
+				id="canvasColumn"
+				class="charts"
+				:style="{
+					width: cWidth * pixelRatio + 'px',
+					height: cHeight * pixelRatio + 'px',
+					transform: 'scale(' + 1 / pixelRatio + ')',
+					'margin-left': (-cWidth * (pixelRatio - 1)) / 2 + 'px',
+					'margin-top': (-cHeight * (pixelRatio - 1)) / 2 + 'px'
+				}"
+				@touchstart="touchColumn"
+			></canvas>
+		</view>
 	</view>
+	
 </template>
 
 <script>
@@ -91,14 +97,18 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.qiun-charts {
+.charts-box{
+	display: flex;
+}
+.charts-box{
 	width: 750upx;
 	height: 500upx;
-	background-color: #ffffff;
+	overflow: hidden;
 }
 .charts {
-	width: 750upx;
-	height: 500upx;
-	background-color: #ffffff;
+	width: 100%;
+	height: 100%;
+	flex: 1;
+	background-color: #FFFFFF;
 }
 </style>

@@ -80,7 +80,8 @@
 		computed: {
 			// top数值,单位upx,需转成px. 目的是使下拉布局往下偏移
 			numTop(){
-				return uni.upx2px(Number(this.top||0))
+				// return uni.upx2px(Number(this.top||0))
+				return this.top || 0
 			},
 			fixedTop(){
 				return this.fixed ? (this.numTop + this.windowTop) + 'px' : 0

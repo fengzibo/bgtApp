@@ -4,7 +4,7 @@
 			<block slot="backText">返回</block>
 			<block slot="content">个人中心</block>
 		</cu-custom>
-		<scroll-view scroll-y class="scrollPage">
+		<view>
 			<view class="UCenter-bg bg-gradual-blue">
 				<!-- <image src="../../../static/login.png" class="png" mode="widthFix"></image> -->
 				<view class="cu-avatar xl round" style="background-image:url(../../../static/login.png);"></view>
@@ -12,11 +12,12 @@
 					王xx
 					<!-- <text class="text-df">v2.0</text> -->
 				</view>
-				<view class="margin-top-sm">
+				<view class="margin-top-sm margin-bottom-sm">
 					<text class="cuIcon-locationfill margin-right-xs"></text>
 					<text>深圳市龙华区</text>
 				</view>
-				<view class="margin-top-sm"></view>
+				<sunui-star iconName="cuIcon-favorfill" :disabledStar="true"></sunui-star>
+				
 				<!-- <image src="https://image.weilanwl.com/gif/wave.gif" mode="scaleToFill" class="gif-wave"></image> -->
 			</view>
 			<view class="padding flex text-center text-grey bg-white shadow-warp">
@@ -75,11 +76,12 @@
 				</view>
 			</view>
 			<!-- <view class="cu-tabbar-height"></view> -->
-		</scroll-view>
+		</view>
 	</view>
 </template>
 
 <script>
+import sunuiStar from '../../../components/sunui-star/sunui-star.vue'
 let i = 0;
 export default {
 	data() {
@@ -91,6 +93,9 @@ export default {
 	},
 	onLoad() {
 		this.numDH();
+	},
+	components:{
+		sunuiStar
 	},
 	computed:{
 	},

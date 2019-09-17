@@ -1,6 +1,11 @@
 <template>
-	<scroll-view scroll-y class="scrollPage">
-		<form @submit="formSubmit">
+	<view>
+		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content">绑定手机</block>
+		</cu-custom>
+		<view>
+			<form @submit="formSubmit">
 				<view class="cu-form-group">
 					<view class="title">手机号码</view>
 					<input placeholder="请输入手机号" name="phone" :value="form_data.phone"></input>
@@ -14,8 +19,8 @@
 					<button class="cu-btn block  bg-gradual-blue margin-tb-sm lg" :loading="save_loading" formType="submit">提交</button>
 				</view>
 			</form>
-		</scroll-view>
-	</scroll-view>
+		</view>
+	</view>
 </template>
 
 <script>
