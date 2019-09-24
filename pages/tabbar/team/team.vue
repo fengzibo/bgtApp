@@ -46,7 +46,9 @@
 						</view>
 					</view>
 					<view class="flex flex-sub flex-direction">
-						<view class="text-xxl text-green">100</view>
+						<navigator url="/pages/tabbar/team/teamMember/teamMember" hover-class="none">
+							<view class="text-xxl text-green">100</view>
+						</navigator>
 						<view class="margin-top-sm">
 							<!-- <text class="cuIcon-favorfill margin-right-xs"></text> -->
 							总人数
