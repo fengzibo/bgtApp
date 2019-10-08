@@ -187,6 +187,7 @@ export default {
 			}
 			.time {
 				flex: 0 0 auto;
+				margin-left: 10upx;
 			}
 		}
 		.work-intr {

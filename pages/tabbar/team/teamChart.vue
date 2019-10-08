@@ -6,11 +6,11 @@
 				id="canvasColumn"
 				class="charts"
 				:style="{
-					width: cWidth * pixelRatio + 'px',
-					height: cHeight * pixelRatio + 'px',
-					transform: 'scale(' + 1 / pixelRatio + ')',
-					'margin-left': (-cWidth * (pixelRatio - 1)) / 2 + 'px',
-					'margin-top': (-cHeight * (pixelRatio - 1)) / 2 + 'px'
+					width: c_width,
+					height: c_height,
+					transform: c_trsf,
+					'margin-left': c_ml,
+					'margin-top': c_mt
 				}"
 				@touchstart="touchColumn"
 			></canvas>
@@ -50,7 +50,23 @@ export default {
 		this.showColumn('canvasColumn', this.serverData);
 		console.log(this.pixelRatio);
 	},
-	computed: {},
+	computed: {
+		c_width(){
+			return this.cWidth * this.pixelRatio + 'px'
+		},
+		c_height(){
+			return this.cHeight * this.pixelRatio + 'px'
+		},
+		c_trsf(){
+			return 'scale(' + 1 / this.pixelRatio + ')'
+		},
+		c_ml(){
+			return (-this.cWidth * (this.pixelRatio - 1)) / 2 + 'px'
+		},
+		c_mt(){
+			return (-this.cHeight * (this.pixelRatio - 1)) / 2 + 'px'
+		}
+	},
 	methods: {
 		showColumn(canvasId, chartData) {
 			canvaColumn = new uCharts({

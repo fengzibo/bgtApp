@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "团队",
+  "usingComponents": {
+    "t-chart": "/pages/tabbar/team/teamChart"
+  }
+}

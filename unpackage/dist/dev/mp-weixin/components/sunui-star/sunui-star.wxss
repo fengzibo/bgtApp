@@ -1,0 +1,50 @@
+
+.icon-star {
+	font-size: 1.5em;
+}
+
+/* 爱心图标经过颜色 */
+.icon-love-nhover {
+	color: #ddd;
+}
+
+/* 爱心图标经过后颜色 */
+.icon-love-hover {
+	color: #F00;
+}
+
+/* star图标前颜色 */
+.icon-star-nhover {
+	color: #ddd;
+}
+
+/* star图标后颜色 */
+.icon-star-hover {
+	color: #FFCC00;
+}
+.sunui-m {
+	width: 100%;
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	    -ms-flex-wrap: wrap;
+	        flex-wrap: wrap;
+	-webkit-justify-content: space-around;
+	    -ms-flex-pack: distribute;
+	        justify-content: space-around;
+}
+.sunui-stars {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	    -ms-flex-wrap: wrap;
+	        flex-wrap: wrap;
+	-webkit-justify-content: space-around;
+	    -ms-flex-pack: distribute;
+	        justify-content: space-around;
+}
+

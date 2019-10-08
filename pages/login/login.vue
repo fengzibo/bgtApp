@@ -94,7 +94,7 @@ export default {
 					}
 				});
 				
-			}, 3000);
+			}, 1000);
 		},
 		login_weixin() {
 			//微信登录

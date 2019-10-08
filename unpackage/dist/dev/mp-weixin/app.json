@@ -1,0 +1,58 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/login/register",
+    "pages/login/forget",
+    "pages/tabbar/task/task",
+    "pages/tabbar/my/my",
+    "pages/tabbar/community/community",
+    "pages/tabbar/team/team",
+    "pages/tabbar/my/myInfo/myInfo",
+    "pages/tabbar/my/myMsg/myMsg",
+    "pages/tabbar/my/bindPhone/bindPhone",
+    "pages/tabbar/team/addTeam/addTeam",
+    "pages/tabbar/team/auditList/auditList",
+    "pages/tabbar/team/auditList/auditDetail",
+    "pages/tabbar/team/teamMember/teamMember"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#0081ff",
+    "borderStyle": "black",
+    "backgroundColor": "#F8F8F8",
+    "list": [
+      {
+        "pagePath": "pages/tabbar/task/task",
+        "iconPath": "static/task.png",
+        "selectedIconPath": "static/taskHL.png",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/tabbar/community/community",
+        "iconPath": "static/community.png",
+        "selectedIconPath": "static/communityHL.png",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/tabbar/team/team",
+        "iconPath": "static/team.png",
+        "selectedIconPath": "static/teamHL.png",
+        "text": "团队"
+      },
+      {
+        "pagePath": "pages/tabbar/my/my",
+        "iconPath": "static/my.png",
+        "selectedIconPath": "static/myHL.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {
+    "mescroll-uni": "/components/mescroll-uni/mescroll-uni",
+    "cu-custom": "/colorui/components/cu-custom"
+  }
+}
