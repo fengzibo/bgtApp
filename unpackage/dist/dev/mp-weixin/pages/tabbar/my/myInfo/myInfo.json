@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "个人信息",
   "usingComponents": {
-    "avatar": "/components/yq-avatar/yq-avatar"
+    "step-one": "/pages/tabbar/my/myInfo/step1"
   }
 }

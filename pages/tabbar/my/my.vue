@@ -1,15 +1,15 @@
 <template>
 	<view class="layout-scroll">
-		<cu-custom bgColor="bg-gradual-blue" :isBack="true">
+		<cu-custom bgColor="bg-gradual-blue" :isBack="false">
 			<block slot="backText">返回</block>
 			<block slot="content">个人中心</block>
 		</cu-custom>
 		<view>
 			<view class="UCenter-bg bg-gradual-blue">
 				<!-- <image src="../../../static/login.png" class="png" mode="widthFix"></image> -->
-				<view class="cu-avatar xl round" style="background-image:url(../../../static/login.png);"></view>
+				<view class="cu-avatar xl round" :style="{backgroundImage:avatarUrl}"></view>
 				<view class="text-xl margin-top-sm">
-					王xx
+					{{user_info.nickName}}
 					<!-- <text class="text-df">v2.0</text> -->
 				</view>
 				<view class="margin-top-sm margin-bottom-sm">
@@ -44,36 +44,49 @@
 				</view>
 			</view>
 			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
-				<view class="cu-item arrow">
-					<navigator class="content" url="/pages/tabbar/my/myInfo/myInfo" hover-class="none">
+				<navigator class="cu-item arrow" :url="my_info_nav">
+					<view class="content">
 						<text class="cuIcon-myfill text-purple"></text>
-						<text class="text-grey">我的基本信息</text>
-					</navigator>
-				</view>
-				<view class="cu-item arrow">
-					<navigator class="content" url="/pages/tabbar/my/myMsg/myMsg" hover-class="none">
+						<text class="text-grey">{{id?'我的基本信息':'完善信息'}}</text>
+					</view>
+				</navigator>
+				
+				<navigator class="cu-item arrow" v-if="id"  url="/pages/tabbar/my/resume/resume">
+					<view class="content">
+						<text class="cuIcon-formfill text-pink"></text>
+						<text class="text-grey">我的工作履历</text>
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow" url="/pages/tabbar/my/myMsg/myMsg">
+					<view class="content">
 						<text class="cuIcon-commentfill text-blue"></text>
 						<text class="text-grey">我的消息</text>
-					</navigator>
-				</view>
-				<view class="cu-item arrow">
-					<navigator class="content" url="/pages/tabbar/my/bindPhone/bindPhone" hover-class="none">
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow" url="/pages/tabbar/my/bindPhone/bindPhone">
+					<view class="content">
 						<text class="cuIcon-mobilefill text-green"></text>
 						<text class="text-grey">绑定手机</text>
-					</navigator>
-				</view>
-				<view class="cu-item arrow">
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow" url="/pages/tabbar/my/aCode/aCode">
+					<view class="content">
+						<text class="cuIcon-qr_code text-black"></text>
+						<text class="text-grey">我的激活码</text>
+					</view>
+				</navigator>
+				<navigator class="cu-item arrow">
 					<view class="content" bindtap="showQrcode">
 						<text class="cuIcon-questionfill text-red"></text>
 						<text class="text-grey">问题反馈</text>
 					</view>
-				</view>
-				<view class="cu-item arrow">
-					<navigator class="content" url="/pages/login/login" hover-class="none">
+				</navigator>
+				<!-- <navigator class="cu-item arrow" url="/pages/login/login">
+					<view class="content">
 						<text class="cuIcon-exit text-pink"></text>
 						<text class="text-grey">退出</text>
-					</navigator>
-				</view>
+					</view>
+				</navigator> -->
 			</view>
 			<!-- <view class="cu-tabbar-height"></view> -->
 		</view>
@@ -83,6 +96,7 @@
 <script>
 import sunuiStar from '../../../components/sunui-star/sunui-star.vue'
 let i = 0;
+import { mapState,mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -93,11 +107,24 @@ export default {
 	},
 	onLoad() {
 		this.numDH();
+		console.log(this.user_info)
 	},
 	components:{
 		sunuiStar
 	},
 	computed:{
+		...mapState(['user_info']),
+		...mapGetters(['id']),
+		avatarUrl(){
+			return `url(${this.user_info.avatarUrl})`
+		},
+		my_info_nav(){
+			if(this.id){
+				return '/pages/tabbar/my/myInfo/myInfo'
+			}else{
+				return '/pages/tabbar/my/myInfo/createInfo'
+			}
+		}
 	},
 	methods: {
 		numDH() {

@@ -124,7 +124,7 @@ export default {
 .charts {
 	width: 100%;
 	height: 100%;
-	flex: 1;
+	flex: 1 1 auto;
 	background-color: #FFFFFF;
 }
 </style>

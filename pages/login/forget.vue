@@ -25,7 +25,7 @@
 				></lInput>
 			</view>
 
-			<lButton text="重置密码" :rotate="isRotate" @click.native="startRePass()"></lButton>
+			<lButton text="重置密码" :rotate="isRotate" @bClick="startRePass()"></lButton>
 			<view class="footer">
 				<navigator url="login" open-type="navigate">登录</navigator>
 				<text>|</text>

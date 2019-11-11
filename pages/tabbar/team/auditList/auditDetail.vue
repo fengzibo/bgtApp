@@ -7,7 +7,7 @@
 			</cu-custom>
 			<view class="plh-height"></view>
 		</view>
-		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="128" :top="CustomBar">
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="128" :top="c_CustomBar">
 			<view class="padding detail-main">
 				<view class="people-main bg-white">
 					<view class="info">
@@ -100,6 +100,11 @@ export default {
 	},
 	components: {
 		sunuiStar
+	},
+	computed:{
+		c_CustomBar(){
+			return this.CustomBar
+		}
 	},
 	methods: {
 		downCallback(mescroll) {

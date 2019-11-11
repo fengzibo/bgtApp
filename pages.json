@@ -1,26 +1,17 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		 
 		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "登录"
-			}
-		}, {
-			"path": "pages/login/register",
-			"style": {
-				"navigationBarTitleText": "注册"
-			}
-		}, {
-			"path": "pages/login/forget",
-			"style": {
-				"navigationBarTitleText": "重置密码"
-			}
-		}, {
 			"path": "pages/tabbar/task/task",
 			"style": {
 				"navigationBarTitleText": "任务"
 			}
 		}, {
+			"path": "pages/welcome/welcome",
+			"style": {
+				"navigationBarTitleText": "欢迎登录"
+			}
+		},{
 			"path": "pages/tabbar/my/my",
 			"style": {
 				"navigationBarTitleText": "我的"
@@ -65,10 +56,77 @@
 			"style": {
 				"navigationBarTitleText": "审核详情"
 			}
+		}, {
+			"path": "pages/tabbar/team/teamMember/teamMember",
+			"style": {
+				"navigationBarTitleText": "团队成员"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		}, {
+			"path": "pages/login/register",
+			"style": {
+				"navigationBarTitleText": "注册"
+			}
+		}, {
+			"path": "pages/login/forget",
+			"style": {
+				"navigationBarTitleText": "重置密码"
+			}
+		}, {
+			"path": "pages/tabbar/task/taskMain/taskMain",
+			"style": {
+				"navigationBarTitleText": "任务详情"
+			}
+		}, {
+			"path": "pages/tabbar/task/createTask/createTask",
+			"style": {
+				"navigationBarTitleText": "创建任务"
+			}
+		}, {
+			"path": "pages/auditDetail/auditDetail",
+			"style": {
+				"navigationBarTitleText": "申请个人详情"
+			}
+		}, {
+			"path": "pages/tabbar/workbench/workbench",
+			"style": {
+				"navigationBarTitleText": "工作台"
+			}
+		},
+		{
+			"path": "pages/tabbar/task/taskMain/taskMainArtisan",
+			"style": {
+				"navigationBarTitleText": "任务详情"
+			}
+		},
+		{
+			"path": "pages/tabbar/my/myInfo/createInfo",
+			"style": {
+				"navigationBarTitleText": "个人信息完善"
+			}
+		},
+		{
+			"path": "pages/tabbar/my/resume/resume",
+			"style": {
+				"navigationBarTitleText": "个人履历"
+			}
 		}
 	    ,{
-            "path" : "pages/tabbar/team/teamMember/teamMember",
-            "style" : {}
+            "path" : "pages/tabbar/my/aCode/aCode",
+            "style" : {
+				"navigationBarTitleText": "我的激活码"
+			}
+        }
+        ,{
+            "path" : "pages/tabbar/workHours/workHours",
+            "style" : {
+				"navigationBarTitleText": "工时管理"
+			}
         }
     ],
 	"globalStyle": {
@@ -90,10 +148,15 @@
 				"text": "任务"
 			},
 			{
-				"pagePath": "pages/tabbar/community/community",
-				"iconPath": "static/community.png",
-				"selectedIconPath": "static/communityHL.png",
-				"text": "社区"
+				"pagePath": "pages/tabbar/workHours/workHours",
+				"iconPath": "static/hours.png",
+				"selectedIconPath": "static/hoursHL.png",
+				"text": "工时"
+			}, {
+				"pagePath": "pages/tabbar/workbench/workbench",
+				"iconPath": "static/workbench.png",
+				"selectedIconPath": "static/workbenchHL.png",
+				"text": "工作台"
 			}, {
 				"pagePath": "pages/tabbar/team/team",
 				"iconPath": "static/team.png",

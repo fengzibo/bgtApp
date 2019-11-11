@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="no-team" v-if="!has_team">
-			<image src="../../../static/no-team.png" mode="widthFix"></image>
+			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-team.png" mode="widthFix"></image>
 			<button class="cu-btn block bg-blue lg margin-top-lg" @tap="goto_add">
 				<text class="cuIcon-roundadd"></text>
 				添加团队

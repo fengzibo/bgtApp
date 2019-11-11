@@ -12,7 +12,7 @@
 				<lInput v-model="phoneData" type="text" maxlength="11" placeholder="请输入用户名/电话"></lInput>
 				<lInput v-model="passData" type="password" maxlength="11" placeholder="请输入密码" isShowPass></lInput>
 			</view>
-			<lButton text="登 录" :rotate="isRotate" @click.native="startLogin()"></lButton>
+			<lButton text="登 录" :rotate="isRotate" @bClick="startLogin()"></lButton>
 
 			<!-- 其他登录 -->
 			<view class="other_login cuIcon">
@@ -47,6 +47,7 @@ export default {
 	},
 	methods: {
 		startLogin() {
+			console.log(1111)
 			//登录
 			if (this.isRotate) {
 				//判断是否加载中，避免重复点击请求

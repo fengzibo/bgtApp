@@ -4,7 +4,7 @@
 			<block slot="backText">返回</block>
 			<block slot="content">审核列表</block>
 		</cu-custom>
-		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="0" :top="CustomBar">
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="0" :top="c_CustomBar">
 			<view class="audit-list" v-for="(item,index) in list_data" :key="index">
 				<view class="item padding bg-white solid-bottom" @tap="goto_detail">
 					<view class="content">
@@ -53,6 +53,11 @@
 					}
 				]
 			};
+		},
+		computed:{
+			c_CustomBar(){
+				return this.CustomBar
+			}
 		},
 		methods:{
 			downCallback(mescroll) {

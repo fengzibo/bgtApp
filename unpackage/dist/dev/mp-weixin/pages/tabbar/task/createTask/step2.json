@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "q-spicker": "/components/QuShe-picker/QuShe-picker"
+  },
+  "component": true
+}

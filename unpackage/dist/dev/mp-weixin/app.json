@@ -1,9 +1,7 @@
 {
   "pages": [
-    "pages/login/login",
-    "pages/login/register",
-    "pages/login/forget",
     "pages/tabbar/task/task",
+    "pages/welcome/welcome",
     "pages/tabbar/my/my",
     "pages/tabbar/community/community",
     "pages/tabbar/team/team",
@@ -13,7 +11,19 @@
     "pages/tabbar/team/addTeam/addTeam",
     "pages/tabbar/team/auditList/auditList",
     "pages/tabbar/team/auditList/auditDetail",
-    "pages/tabbar/team/teamMember/teamMember"
+    "pages/tabbar/team/teamMember/teamMember",
+    "pages/login/login",
+    "pages/login/register",
+    "pages/login/forget",
+    "pages/tabbar/task/taskMain/taskMain",
+    "pages/tabbar/task/createTask/createTask",
+    "pages/auditDetail/auditDetail",
+    "pages/tabbar/workbench/workbench",
+    "pages/tabbar/task/taskMain/taskMainArtisan",
+    "pages/tabbar/my/myInfo/createInfo",
+    "pages/tabbar/my/resume/resume",
+    "pages/tabbar/my/aCode/aCode",
+    "pages/tabbar/workHours/workHours"
   ],
   "subPackages": [],
   "window": {
@@ -32,10 +42,16 @@
         "text": "任务"
       },
       {
-        "pagePath": "pages/tabbar/community/community",
-        "iconPath": "static/community.png",
-        "selectedIconPath": "static/communityHL.png",
-        "text": "社区"
+        "pagePath": "pages/tabbar/workHours/workHours",
+        "iconPath": "static/hours.png",
+        "selectedIconPath": "static/hoursHL.png",
+        "text": "工时"
+      },
+      {
+        "pagePath": "pages/tabbar/workbench/workbench",
+        "iconPath": "static/workbench.png",
+        "selectedIconPath": "static/workbenchHL.png",
+        "text": "工作台"
       },
       {
         "pagePath": "pages/tabbar/team/team",
@@ -50,6 +66,9 @@
         "text": "我的"
       }
     ]
+  },
+  "networkTimeout": {
+    "uploadFile": 300000
   },
   "usingComponents": {
     "mescroll-uni": "/components/mescroll-uni/mescroll-uni",

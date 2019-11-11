@@ -1,6 +1,7 @@
 <script>
 import Vue from 'vue';
 import pageAnimation from './components/page-animation';
+import store from './store'
 export default {
 	mixins: [pageAnimation],
 	onLaunch: function() {

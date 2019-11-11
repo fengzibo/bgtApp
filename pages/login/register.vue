@@ -14,7 +14,7 @@
 				<lInput v-model="verCode" type="number" maxlength="4" placeholder="验证码" isShowCode ref="runCode" @setCode="getVerCode()"></lInput>
 			</view>
 
-			<lButton text="注 册" :rotate="isRotate" @click.native="startReg()"></lButton>
+			<lButton text="注 册" :rotate="isRotate" @bClick="startReg()"></lButton>
 
 			<!-- 底部信息 -->
 			<view class="footer">

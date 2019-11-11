@@ -4,11 +4,14 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": false
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.7.0",
-	"appid": "touristappid",
+	"appid": "wx6d2818e2adb8d93a",
 	"projectname": "bgtApp",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
@@ -21,13 +24,28 @@
 			"current": -1,
 			"list": []
 		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
 		"game": {
+			"current": -1,
+			"list": []
+		},
+		"gamePlugin": {
 			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": -1,
+					"name": "pages/tabbar/task/createTask/createTask",
+					"pathName": "pages/tabbar/task/createTask/createTask",
+					"scene": null
+				}
+			]
 		}
 	}
 }

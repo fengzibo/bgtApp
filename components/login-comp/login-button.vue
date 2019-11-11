@@ -1,7 +1,7 @@
 <template>
 	<view class="dlbutton-box">
 		<!-- 按钮 -->
-		<button :class="['buttonBorder', !_rotate ? 'dlbutton' : 'dlbutton_loading']" :style="{ background: bgColor, color: fontColor }">
+		<button :class="['buttonBorder', !_rotate ? 'dlbutton' : 'dlbutton_loading']" :style="{ background: bgColor, color: fontColor }" @tap="bClick()">
 			<view :class="_rotate ? 'rotate_loop' : ''">
 				<text v-if="_rotate" class="cuIcon cuIcon-loading1 "></text>
 				<text v-if="!_rotate">{{ text }}</text>
@@ -34,6 +34,11 @@ export default {
 		_rotate() {
 			//处理值
 			return String(this.rotate) !== 'false';
+		}
+	},
+	methods:{
+		bClick(){
+			this.$emit('bClick')
 		}
 	}
 };

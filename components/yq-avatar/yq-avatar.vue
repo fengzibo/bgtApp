@@ -1,6 +1,6 @@
 <template name="yq-avatar">
 	<view>
-		<view v-if="!imgSrc.imgSrc" class="no-url" :style="[ imgStyle ]" @click="fSelect">
+		<view v-if="!imgSrc.imgSrc" class="no-url" :style="[imgStyle]" @click="fSelect">
 			<slot></slot>
 		</view>
 		<image :src="imgSrc.imgSrc" @click="fSelect" :style="[ imgStyle ]" class="my-avatar" v-else></image>

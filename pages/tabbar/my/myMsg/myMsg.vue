@@ -4,7 +4,7 @@
 			<block slot="backText">返回</block>
 			<block slot="content">我的消息</block>
 		</cu-custom>
-		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="0" :top="CustomBar">
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="0" :top="c_CustomBar">
 			<msg-list></msg-list>
 		</mescroll-uni>
 	</view>
@@ -28,6 +28,9 @@
 			msgList
 		},
 		computed:{
+			c_CustomBar(){
+				return this.CustomBar
+			}
 		},
 		methods:{
 			downCallback(mescroll) {

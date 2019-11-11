@@ -2,7 +2,7 @@
 	<uni-swipe-action :options="options">
 		<view class="cu-list menu-avatar">
 			<view class="cu-item">
-				<view class="cu-avatar round lg"  style="background-image:url(../../../static/login.png);"></view>
+				<view class="cu-avatar round lg" style="background-image:url(../../../../static/login.png);"></view>
 				<view class="content">
 					<view class="text-grey">王xx</view>
 					<view class="text-gray text-sm flex">

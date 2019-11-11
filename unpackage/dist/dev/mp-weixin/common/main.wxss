@@ -42,6 +42,7 @@
 
 
 
+
 /*每个页面公共css */
 /*
   ColorUi for uniApp  v2.1.6 | by 文晓港 2019-05-31 10:44:24
@@ -2483,10 +2484,11 @@ to {
 	right: -20rpx;
 	margin: auto;
 }
-.cu-form-group textarea[disabled],
+/* .cu-form-group textarea[disabled],
 .cu-form-group textarea[disabled] .placeholder {
 	color: transparent;
 }
+ */
 /* ==================
          模态窗口
  ==================== */
