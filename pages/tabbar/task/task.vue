@@ -4,12 +4,12 @@
 			<block slot="backText">返回</block>
 			<block slot="content">任务中心</block>
 		</cu-custom>
-		<view class="no-task" v-if="!has_task">
+		<view class="no-task" v-if="!has_task && !loading">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
 			<text class="text-grey text-xl">没有任务</text><br>
 			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_add">前往创建任务</button>
 		</view>
-		<template v-if="user_role=== 'head' && has_task">
+		<template v-if="user_role=== 'head' && has_task && !loading">
 			<view class="tab-list bg-white">
 				<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
 					<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
@@ -19,32 +19,32 @@
 				<swiper-item class="swiper-item" v-for="(tab, index1) in tab_list" :key="index1">
 					<scroll-view class="scroll-v" scroll-y @scrolltolower="loadMore(index1)">
 						<view class="list">
-							<view class="list-item bg-white " v-for="(item, index2) in tab.data" :key="index2" @tap="go_detail(item)">
+							<view class="list-item bg-white " v-for="(item, index2) in tab.data" :key="item.id" @tap="go_detail(item)">
 								<view class="top-main text-grey">
-									<text class="title">{{ item.name }}</text>
-									<text class="time">交期：{{ item.time }}</text>
+									<text class="title">{{ item.deviceName }}({{item.deviceNum}})</text>
+									<text class="time">交期：{{ deliveryPeriod(item.deliveryPeriod) }}</text>
 								</view>
 								<view class="center-main">
 									<view class="schedule">
-										<text class="schedule-num">进度 {{ item.schedule }}</text>
-										<view class="schedule-bar" :style="{width: item.schedule}"></view>
+										<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
+										<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
 									</view>
 									<view class="com-view">
-										<text class="num">{{ item.hour }}</text>
+										<text class="num">{{ item.limit }}</text>
 										<text class="tip text-grey">累计工时</text>
 									</view>
 									<view class="com-view">
-										<text class="num">{{ item.cost }}</text>
-										<text class="tip text-grey">累计成本</text>
+										<text class="num err-color">{{ item.err || 0 }}</text>
+										<text class="tip text-grey">累计异常</text>
 									</view>
 									<view class="com-view">
-										<text class="num err-color">{{ item.err }}</text>
-										<text class="tip text-grey">累计异常</text>
+										<text class="num"><text class="text-blue">{{item.ss || 0}}</text>/ <text >{{ item.budget }}</text> </text>
+										<text class="tip text-grey">实时/预算</text>
 									</view>
 								</view>
 								<view class="bottom-main text-gray">
 									<text class="cuIcon-locationfill margin-right-xs"></text>
-									<text>{{ item.address }}</text>
+									<text>{{ item.scompany }}</text>
 								</view>
 							</view>
 						</view>
@@ -72,80 +72,19 @@ export default {
 				{
 					name: '当前任务',
 					id: 'dcrw',
-					data: [
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '100%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						},
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '80%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						},
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '60%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						}
-					]
-				},
-				{
-					name: '待点评',
-					id: 'ddp',
-					data: [
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '80%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						},
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '80%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						}
-					]
+					data: []
 				},
 				{
 					name: '已完成',
 					id: 'ywc',
-					data: [
-						{
-							name: '全自动热压机',
-							time: '2019-09-30',
-							schedule: '80%',
-							hour: 210,
-							cost: 40000,
-							err: 20,
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301'
-						}
-					]
+					data: []
 				}
 			],
 			current_tab: {
 				id: 'dcrw',
 				index: 0
-			}
+			},
+			loading:true
 		};
 	},
 	onLoad() {
@@ -158,6 +97,7 @@ export default {
 		    		url: '../../welcome/welcome'
 		    	})
 		    }else{
+				this.init()
 		    }
 		} catch (e) {
 		    // error
@@ -172,6 +112,24 @@ export default {
 		...mapGetters(['user_role'])
 	},
 	methods: {
+		init(){
+			Promise.all([this.get_dcrw_list(),this.get_ywc_list()]).then(values =>{
+				console.log(values)
+				this.tab_list[0].data = values[0].data.data
+				this.tab_list[1].data = values[1].data.data
+				this.loading = false
+			})
+		},
+		get_dcrw_list(){
+			return this.$http.get('personwx.projectinfolist/1.0/',{
+				isFinish:'0',
+			})
+		},
+		get_ywc_list(){
+			return this.$http.get('personwx.projectinfolist/1.0/',{
+				isFinish:'1',
+			})
+		},
 		select_tab(id, index) {
 			this.current_tab.id = id;
 			this.current_tab.index = index;
@@ -187,16 +145,40 @@ export default {
 		},
 		go_detail(item){
 			console.log(item)
-			uni.navigateTo({
-				url: '/pages/tabbar/task/taskMain/taskMain'
-			});
+			let status = this.$utils._get(item,'status','0')
+			switch (status){
+				case '0' || '1':
+					uni.navigateTo({
+						url: `/pages/tabbar/task/createTask/createTask?id=${item.id}`
+					});
+					break;
+				case '0' || '1':
+					uni.switchTab({
+						url:"/pages/tabbar/workbench/workbench"
+					})
+					break;
+				default:
+					break;
+			}
+			
+			// if(this.$utils._get(item,'status','0') == '0'){
+			// 	uni.switchTab({
+			// 		url:"/pages/tabbar/workbench/workbench"
+			// 	})
+			// }else{
+			// 	uni.navigateTo({
+			// 		url: '/pages/tabbar/task/taskMain/taskMain'
+			// 	});
+			// }
 		},
 		goto_add(){
 			uni.navigateTo({
 				url: '/pages/tabbar/task/createTask/createTask'
 			});
 		},
-		
+		deliveryPeriod(time){
+			return this.$utils.format_date(time)
+		}
 	}
 };
 </script>

@@ -195,8 +195,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       num: 0,
       scrollTop: 0,
       old: {
-        scrollTop: 0 } };
+        scrollTop: 0 },
 
+      task_id: '' };
 
   },
   components: {
@@ -205,22 +206,29 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
     stepThree: stepThree,
     stepFour: stepFour },
 
-  onLoad: function onLoad() {
-
+  onLoad: function onLoad(option) {
+    console.log(option.id);
   },
   methods: {
-    next: function next() {
+    next: function next() {var _this = this;
       switch (this.num) {
         case 0:
-          // this.$refs.stepOne.formSubmit(() =>{
+          this.$refs.stepOne.formSubmit(function (id) {
 
-          // 	this.num++
-          // })
+            _this.num++;
+            _this.task_id = id;
+          });
+          break;
+        case 1:
+          this.$refs.stepTwo.formSubmit(function () {
+
+            _this.num++;
+          });
           break;
         default:
           break;}
 
-      this.num++;
+      // this.num++
       this.scrollTop = this.old.scrollTop;
       this.$nextTick(function () {
         this.scrollTop = 0;

@@ -1,1 +1,1 @@
-<view>工时</view>
+<view><cu-custom vue-id="1" bgColor="bg-gradual-blue" bind:__l="__l" vue-slots="{{['backText','content']}}"><view slot="backText">返回</view><view slot="content">任务中心</view></cu-custom></view>

@@ -1,6 +1,9 @@
 <template>
 	<view>
-		工时
+		<cu-custom bgColor="bg-gradual-blue">
+			<block slot="backText">返回</block>
+			<block slot="content">任务中心</block>
+		</cu-custom>
 	</view>
 </template>
 

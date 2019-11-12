@@ -229,11 +229,9 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
           description: this.form_data.remark }).
         then(function (res) {
           console.log(res);
-          if (res.data.data.success) {
-            uni.showToast({ title: "提交成功!", icon: "success" });
-            uni.hideLoading();
-            cb();
-          }
+          uni.showToast({ title: "提交成功!", icon: "success" });
+          uni.hideLoading();
+          cb(res.data.data.id);
 
         });
 

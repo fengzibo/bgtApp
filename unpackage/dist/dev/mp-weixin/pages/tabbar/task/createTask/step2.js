@@ -212,7 +212,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
-var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var QSpicker = function QSpicker() {return Promise.all(/*! import() | components/QuShe-picker/QuShe-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/QuShe-picker/QuShe-picker")]).then(__webpack_require__.bind(null, /*! @/components/QuShe-picker/QuShe-picker.vue */ 375));};var _default =
+var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var QSpicker = function QSpicker() {return Promise.all(/*! import() | components/QuShe-picker/QuShe-picker */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/QuShe-picker/QuShe-picker")]).then(__webpack_require__.bind(null, /*! @/components/QuShe-picker/QuShe-picker.vue */ 339));};var _default2 =
 
 {
   data: function data() {
@@ -225,7 +225,7 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
         start_time: currentDate,
         task_cycle: '',
         cycle_particle: '天',
-        work_place: '',
+        work_place: '请选择工作地点',
         explain: '',
         valid_date: currentDate },
 
@@ -269,11 +269,45 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
 
 
   },
+  props: {
+    task_id: {
+      type: String,
+      default: function _default() {
+        return '';
+      } } },
+
+
   components: {
     QSpicker: QSpicker },
 
-  computed: {},
-
+  computed: {
+    requirementInfo: function requirementInfo() {
+      var arr = [];
+      this.member_type.forEach(function (item) {
+        if (item.checked) {
+          var obj = {};
+          obj.type = item.data.name;
+          obj.num = item.data.people;
+          obj.price = item.data.price;
+          arr.push(obj);
+        }
+      });
+      return arr;
+    },
+    workRequest: function workRequest() {
+      var arr = [];
+      this.select_claim.forEach(function (item) {
+        arr.push(item.itemValue);
+      });
+      return "{" + arr.join() + "}";
+    },
+    welfareInfo: function welfareInfo() {
+      var arr = [];
+      this.select_welfare.forEach(function (item) {
+        arr.push(item.itemValue);
+      });
+      return "{" + arr.join() + "}";
+    } },
 
   mounted: function mounted() {
     this.init();
@@ -284,44 +318,78 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
         title: '加载中' });
 
       this.loading = true;
+      Promise.all([
       this.$http.post('personwx.hyxx/1.0/', {
-        dictId: '1a52c05cef9d569b88a03cf8f2884965' }).
-      then(function (res) {
-        console.log('工作要求', res);
-        _this.claim_array = res.data.data.data;
+        dictId: '1a52c05cef9d569b88a03cf8f2884965' }),
+
+      this.$http.post('personwx.hyxx/1.0/', {
+        dictId: '3dd875e620061483a0af551098c99e91' })]).
+
+      then(function (values) {
+        console.log(values);
+        _this.claim_array = values[0].data.data.data;
+        _this.welfare_array = values[1].data.data.data;
         uni.hideLoading();
         _this.loading = false;
       });
-      this.$http.post('personwx.hyxx/1.0/', {
-        dictId: '3dd875e620061483a0af551098c99e91' }).
-      then(function (res) {
-        _this.welfare_array = res.data.data.data;
-        console.log('福利信息', res);
-      });
+
+      // this.$http.post('personwx.hyxx/1.0/',{
+      // 	dictId:'1a52c05cef9d569b88a03cf8f2884965'
+      // }).then(res =>{
+      // 	console.log('工作要求',res)
+      // 	this.claim_array = res.data.data.data
+      // 	uni.hideLoading();
+      // 	this.loading = false
+      // })
+      // this.$http.post('personwx.hyxx/1.0/',{
+      // 	dictId:'3dd875e620061483a0af551098c99e91'
+      // }).then(res =>{
+      // 	this.welfare_array = res.data.data.data
+      // 	console.log('福利信息',res)
+      // })
     },
     startDateChange: function startDateChange(e) {
       this.form_data.start_time = e.detail.value;
     },
     validDateChange: function validDateChange(e) {
       this.form_data.valid_date = e.detail.value;
+
     },
-    formSubmit: function formSubmit(e) {
+    formSubmit: function formSubmit(cb) {
       //将下列代码加入到对应的检查位置
       //定义表单规则
-      var rule = [
-      { name: "task_name", checkType: "notnull", checkRule: "", errorMsg: "任务名称不能为空" },
-      { name: "industry", checkType: "notnull", checkRule: "", errorMsg: "任务行业不能为空" },
-      { name: "equipment_name", checkType: "notnull", checkRule: "", errorMsg: "设备名称不能为空" },
-      { name: "company", checkType: "notnull", checkRule: "", errorMsg: "服务公司不能为空" }];
+      // let rule = [
+      // 	{name:"task_name", checkType : "notnull", checkRule:"",  errorMsg:"任务名称不能为空"},
+      // 	{name:"industry", checkType : "notnull", checkRule:"",  errorMsg:"任务行业不能为空"},
+      // 	{name:"equipment_name", checkType : "notnull", checkRule:"",  errorMsg:"设备名称不能为空"},
+      // 	{name:"company", checkType : "notnull", checkRule:"",  errorMsg:"服务公司不能为空"},
+      // ];
+      // //进行表单检查
+      // // let formData = e.detail.value;
+      // let checkRes = graceChecker.check(this.form_data, rule);
+      // if(checkRes){
+      // 	uni.showToast({title:"验证通过!", icon:"none"});
+      // }else{
+      // 	uni.showToast({ title: graceChecker.error, icon: "none" });
+      // }
+      var pamars = {
+        title: this.form_data.recruiting_name,
+        requirementInfo: this.requirementInfo,
+        startData: this.form_data.start_time,
+        duration: this.form_data.task_cycle,
+        unit: this.form_data.cycle_particle,
+        workAddress: this.form_data.work_place,
+        workRequest: this.workRequest,
+        welfareInfo: this.welfareInfo,
+        remark: this.form_data.explain,
+        validityPeriod: this.form_data.valid_date,
+        proId: this.task_id };
 
-      //进行表单检查
-      // let formData = e.detail.value;
-      var checkRes = graceChecker.check(this.form_data, rule);
-      if (checkRes) {
-        uni.showToast({ title: "验证通过!", icon: "none" });
-      } else {
-        uni.showToast({ title: graceChecker.error, icon: "none" });
-      }
+      console.log(pamars);
+      this.$http.post('personwx.projectrecruitadd/1.0/', pamars).then(function (res) {
+        console.log(res);
+        cb();
+      });
     },
     checkboxChange: function checkboxChange(e) {
       var items = this.member_type,
@@ -339,6 +407,7 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
     cycleChange: function cycleChange(e) {
       console.log(e);
       this.particle_index = e.target.value;
+      this.form_data.cycle_particle = this.particle[this.particle_index];
     },
     is_in_selectClaim: function is_in_selectClaim(item, arr) {
       var index = arr.findIndex(function (o) {
@@ -382,7 +451,8 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 280);var 
     },
     confirm: function confirm(res) {
       console.log('获取了用户选择----->' + JSON.stringify(res));
-    } } };exports.default = _default;
+      this.form_data.work_place = res.data.label;
+    } } };exports.default = _default2;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

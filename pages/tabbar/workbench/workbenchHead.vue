@@ -3,7 +3,13 @@
 		<view class="padding">
 			<view class="bg-white padding skills-card">
 				<view class="info-main" :style="{ height: is_unfold ? 'auto' : '220rpx' }">
-					<view class="text-lg text-black">全自动热压机装配</view>
+					<view class="flex justify-between">
+						<view class="text-lg text-black">全自动热压机装配</view>
+						<view class="text-lg">
+							<text class="cuIcon-writefill text-blue"></text>
+						</view>
+					</view>
+					
 					<view class="info-box">
 						<view class="label text-gray">开工日期：</view>
 						<view class="text text-black">2019-10-30</view>
@@ -13,7 +19,7 @@
 						<view class="text text-black">深圳市龙华区大浪街</view>
 					</view>
 					<view class="info-box">
-						<view class="label text-gray">住院事项：</view>
+						<view class="label text-gray">注意事项：</view>
 						<view class="text text-black">
 							<view class="margin-bottom-sm">1.记得带上身份证</view>
 							<view class="margin-bottom-sm">2.记得带上身份证</view>
@@ -106,7 +112,13 @@ export default {
 			]
 		};
 	},
+	mounted() {
+		this.init()
+	},
 	methods: {
+		init(){
+			
+		},
 		status_class(status_no) {
 			if (status_no === 1) {
 				return 'text-green';

@@ -26,7 +26,7 @@
 							<step-one ref="stepOne"></step-one>
 						</template>
 						<template v-if="num === 1">
-							<step-two ref="stepTwo"></step-two>
+							<step-two ref="stepTwo" :task_id="task_id"></step-two>
 						</template>
 						<template v-if="num === 2">
 							<step-three ref="stepThree"></step-three>
@@ -72,7 +72,8 @@ export default {
 			scrollTop: 0,
 			old: {
 				scrollTop: 0
-			}
+			},
+			task_id:'',
 		};
 	},
 	components: {
@@ -81,22 +82,29 @@ export default {
 		stepThree,
 		stepFour
 	},
-	onLoad() {
-		
+	onLoad(option) {
+		console.log(option.id)
 	},
 	methods: {
 		next(){
 			switch (this.num){
 				case 0:
-					// this.$refs.stepOne.formSubmit(() =>{
+					this.$refs.stepOne.formSubmit((id) =>{
 						
-					// 	this.num++
-					// })
+						this.num++
+						this.task_id = id
+					})
+					break;
+				case 1:
+					this.$refs.stepTwo.formSubmit(() =>{
+						
+						this.num++
+					})
 					break;
 				default:
 					break;
 			}
-			this.num++
+			// this.num++
 			this.scrollTop = this.old.scrollTop
 			this.$nextTick(function() {
 				this.scrollTop = 0

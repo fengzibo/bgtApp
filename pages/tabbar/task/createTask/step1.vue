@@ -23,8 +23,8 @@
 				<input class="text-right" placeholder="设备数量" name="deviceNum" type="number" v-model="form_data.deviceNum" />
 			</view>
 			<view class="cu-form-group">
-				<view class="title">任务号</view>
-				<input class="text-right" placeholder="请输入任务号" name="task_no" v-model="form_data.task_no" />
+				<view class="title">生产任务</view>
+				<input class="text-right" placeholder="请输入生产任务" name="task_no" v-model="form_data.task_no" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">服务公司</view>
@@ -122,11 +122,9 @@ export default {
 					description:this.form_data.remark,
 				}).then(res =>{
 					console.log(res)
-					if(res.data.data.success){
-						uni.showToast({title:"提交成功!", icon:"success"});
-						uni.hideLoading();
-						cb()
-					}
+					uni.showToast({title:"提交成功!", icon:"success"});
+					uni.hideLoading();
+					cb(res.data.data.id)
 					
 				})
 				

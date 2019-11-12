@@ -194,6 +194,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -235,7 +241,13 @@ var _default =
 
 
   },
+  mounted: function mounted() {
+    this.init();
+  },
   methods: {
+    init: function init() {
+
+    },
     status_class: function status_class(status_no) {
       if (status_no === 1) {
         return 'text-green';
