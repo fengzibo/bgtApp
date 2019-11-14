@@ -23,7 +23,9 @@
     "pages/tabbar/my/myInfo/createInfo",
     "pages/tabbar/my/resume/resume",
     "pages/tabbar/my/aCode/aCode",
-    "pages/tabbar/workHours/workHours"
+    "pages/tabbar/workHours/workHours",
+    "pages/personList/personList",
+    "pages/logBack/logBack"
   ],
   "subPackages": [],
   "window": {
@@ -74,5 +76,5 @@
     "mescroll-uni": "/components/mescroll-uni/mescroll-uni",
     "cu-custom": "/colorui/components/cu-custom"
   },
-  "sitemapLocation": "sitemap4.json"
+  "sitemapLocation": "sitemap72.json"
 }

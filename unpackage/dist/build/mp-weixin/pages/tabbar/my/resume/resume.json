@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "个人履历",
+  "usingComponents": {
+    "step-two": "/pages/tabbar/my/myInfo/step2"
+  }
+}

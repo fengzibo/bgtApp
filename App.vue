@@ -1,7 +1,7 @@
 <script>
 import Vue from 'vue';
 import pageAnimation from './components/page-animation';
-import store from './store'
+import store from './store';
 export default {
 	mixins: [pageAnimation],
 	onLaunch: function() {
@@ -24,10 +24,10 @@ export default {
 				// #ifdef MP-ALIPAY
 				Vue.prototype.StatusBar = e.statusBarHeight;
 				Vue.prototype.CustomBar = e.statusBarHeight + e.titleBarHeight;
-				// #endif	
+				// #endif
 				Vue.prototype.pixelRatio = e.pixelRatio;
 				Vue.prototype.windowHeight = e.windowHeight;
-				console.log(e)
+				console.log(e);
 			}
 		});
 	},

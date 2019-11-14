@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "创建任务",
+  "usingComponents": {
+    "step-one": "/pages/tabbar/task/createTask/step1",
+    "step-two": "/pages/tabbar/task/createTask/step2",
+    "step-three": "/pages/tabbar/task/createTask/step3",
+    "step-four": "/pages/tabbar/task/createTask/step4"
+  }
+}

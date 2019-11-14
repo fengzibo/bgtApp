@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "个人信息完善",
+  "usingComponents": {
+    "step-one": "/pages/tabbar/my/myInfo/step1",
+    "step-two": "/pages/tabbar/my/myInfo/step2",
+    "step-three": "/pages/tabbar/my/myInfo/step3"
+  }
+}

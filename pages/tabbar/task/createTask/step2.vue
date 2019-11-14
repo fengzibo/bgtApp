@@ -46,20 +46,27 @@
 			<view class="cu-form-group">
 				<view class="title">工作地点</view>
 				<!-- <input class="text-right" placeholder="请输入工作地点" name="input" v-model="form_data.work_place"/> -->
-				<view class="flex-sub work-place text-right"  @tap="changeShow('QS_Picekr_city')">
+				<!-- <view class="flex-sub work-place text-right"  @tap="changeShow('QS_Picekr_city')">
 					{{form_data.work_place}}
-				</view>
+				</view> -->
+				<!-- #ifndef H5 || APP-PLUS || MP-ALIPAY -->
+				<picker mode="region" @change="RegionChange" :value="region">
+					<view class="picker">
+						{{region[0]}}，{{region[1]}}，{{region[2]}}
+					</view>
+				</picker>
+				<!-- #endif -->
 			</view>
 			<view class="cu-form-group">
 				<view class="title">要求补充</view>
 				<view class="tag-layout">
-					<view class="type-tag cu-tag " :class="[is_in_selectClaim(item,select_claim)?'bg-blue':'line-grey']" v-for="item in claim_array" :key="item" @tap="selectClaim(item,select_claim)">{{item.itemValue}}</view>
+					<view class="type-tag cu-tag " :class="[is_in_selectClaim(item,select_claim)?'bg-blue':'line-grey']" v-for="item in claim_array" :key="item.itemValue" @tap="selectClaim(item,select_claim)">{{item.itemValue}}</view>
 				</view>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">福利信息</view>
 				<view class="tag-layout">
-					<view class="type-tag cu-tag " :class="[is_in_selectClaim(item,select_welfare)?'bg-blue':'line-grey']" v-for="item in welfare_array" :key="item" @tap="selectClaim(item,select_welfare)">{{item.itemValue}}</view>
+					<view class="type-tag cu-tag " :class="[is_in_selectClaim(item,select_welfare)?'bg-blue':'line-grey']" v-for="item in welfare_array" :key="item.itemValue" @tap="selectClaim(item,select_welfare)">{{item.itemValue}}</view>
 				</view>
 			</view>
 			<view class="cu-form-group">
@@ -73,15 +80,15 @@
 				</picker>
 			</view>
 		</form>
-		<QSpicker type="city" ref="QS_Picekr_city" pickerId="city_1" :dataSet="citySet" showReset @hideQSPicker="hideQSPicker($event)"
-		 @showQSPicker="showQSPicker($event)" @confirm="confirm($event)" />
+		<!-- <QSpicker type="city" ref="QS_Picekr_city" pickerId="city_1" :dataSet="citySet" showReset @hideQSPicker="hideQSPicker($event)"
+		 @showQSPicker="showQSPicker($event)" @confirm="confirm($event)" /> -->
 	</view>
 </template>
 
 <script>
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
 const  graceChecker = require("@/common/graceChecker.js");
-import QSpicker from '@/components/QuShe-picker/QuShe-picker.vue';
+// import QSpicker from '@/components/QuShe-picker/QuShe-picker.vue';
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -132,9 +139,10 @@ export default {
 			select_claim:[],
 			welfare_array:['包吃','包住'],
 			select_welfare:[],
-			citySet: {
-				defaultValue: [0, 0, 0]
-			},
+			// citySet: {
+			// 	defaultValue: [0, 0, 0]
+			// },
+			region: ['广东省', '广州市', '海珠区']
 		};
 	},
 	props: {
@@ -143,10 +151,22 @@ export default {
 			default() {
 				return '';
 			}
+		},
+		route_id: {
+			type: String,
+			default() {
+				return '';
+			}
+		},
+		recruiting_info:{
+			type:Object,
+			default(){
+				return {}
+			}
 		}
 	},
 	components:{
-		QSpicker
+		// QSpicker
 	},
 	computed:{
 		requirementInfo(){
@@ -167,14 +187,15 @@ export default {
 			this.select_claim.forEach(item =>{
 				arr.push(item.itemValue)
 			})
-			return "{" + arr.join() + "}"
+			
+			return JSON.stringify(arr)
 		},
 		welfareInfo(){
 			let arr = []
 			this.select_welfare.forEach(item =>{
 				arr.push(item.itemValue)
 			})
-			return "{" + arr.join() + "}"
+			return JSON.stringify(arr)
 		}
 	},
 	mounted() {
@@ -197,24 +218,59 @@ export default {
 				console.log(values)
 				this.claim_array = values[0].data.data.data
 				this.welfare_array = values[1].data.data.data
+				console.log(this.recruiting_info)
+				if(JSON.stringify(this.recruiting_info) !== "{}"){
+					this.set_data()
+				}
 				uni.hideLoading();
 				this.loading = false
+				
 			})
 			
-			// this.$http.post('personwx.hyxx/1.0/',{
-			// 	dictId:'1a52c05cef9d569b88a03cf8f2884965'
-			// }).then(res =>{
-			// 	console.log('工作要求',res)
-			// 	this.claim_array = res.data.data.data
-			// 	uni.hideLoading();
-			// 	this.loading = false
-			// })
-			// this.$http.post('personwx.hyxx/1.0/',{
-			// 	dictId:'3dd875e620061483a0af551098c99e91'
-			// }).then(res =>{
-			// 	this.welfare_array = res.data.data.data
-			// 	console.log('福利信息',res)
-			// })
+		},
+		set_data(){
+			this.form_data.recruiting_name = this.recruiting_info.title
+			this.form_data.start_time = this.$utils.format_date(this.recruiting_info.startData)
+			this.form_data.task_cycle = this.recruiting_info.duration
+			this.form_data.cycle_particle = this.recruiting_info.unit
+			this.particle_index = this.particle.indexOf(this.recruiting_info.unit)
+			this.form_data.explain = this.recruiting_info.remark
+			this.form_data.valid_date = this.$utils.format_date(this.recruiting_info.validityPeriod)
+			
+			try {
+				let requirementInfo = JSON.parse(this.recruiting_info.requirementInfo)
+				console.log(requirementInfo)
+				requirementInfo.forEach(value =>{
+					for (let i = 0; i < this.member_type.length; i++) {
+						let item = this.member_type[i]
+						if(value.type == item.name){
+							this.$set(item,'checked',true)
+							item.data.name = value.type
+							item.data.people = value.num
+							item.data.price = value.price
+							break
+						}
+					}
+				})
+			    this.set_select_data(JSON.parse(this.recruiting_info.workRequest),this.claim_array,this.select_claim)
+			    this.set_select_data(JSON.parse(this.recruiting_info.welfareInfo),this.welfare_array,this.select_welfare)
+			    this.region = JSON.parse(this.recruiting_info.workAddress)
+			} catch (e) {
+			    // error
+				console.log(e)
+			}
+			
+		},
+		set_select_data(arr,p_arr,set_arr){
+			arr.forEach(item =>{
+				for (let i = 0; i < p_arr.length; i++) {
+					let obj = p_arr[i]
+					if(item == obj.itemValue){
+						set_arr.push(obj)
+						break
+					}
+				}
+			})
 		},
 		startDateChange(e) {
 			this.form_data.start_time = e.detail.value;
@@ -240,9 +296,10 @@ export default {
 			// }else{
 			// 	uni.showToast({ title: graceChecker.error, icon: "none" });
 			// }
+			this.form_data.work_place = JSON.stringify(this.region)
 			let pamars = {
 				title:this.form_data.recruiting_name,
-				requirementInfo:this.requirementInfo,
+				requirementInfo:JSON.stringify(this.requirementInfo),
 				startData:this.form_data.start_time,
 				duration:this.form_data.task_cycle,
 				unit:this.form_data.cycle_particle,
@@ -251,10 +308,16 @@ export default {
 				welfareInfo:this.welfareInfo,
 				remark:this.form_data.explain,
 				validityPeriod:this.form_data.valid_date,
-				proId:this.task_id
+				proId:this.route_id?this.route_id:this.task_id
 			}
+			let url = 'personwx.projectrecruitadd/1.0/'
 			console.log(pamars)
-			this.$http.post('personwx.projectrecruitadd/1.0/',pamars).then(res =>{
+			if(JSON.stringify(this.recruiting_info) !== "{}"){
+				url = 'personwx.projectrecruitupdate/1.0/'
+				pamars.Id = this.recruiting_info.id
+			}
+			// return 
+			this.$http.post(url,pamars).then(res =>{
 				console.log(res)
 				cb()
 			})
@@ -307,20 +370,23 @@ export default {
 			day = day > 9 ? day : '0' + day;
 			return `${year}-${month}-${day}`;
 		},
-		changeShow(name) {
-			this.$refs[name].show();
+		// changeShow(name) {
+		// 	this.$refs[name].show();
+		// },
+		// showQSPicker(res) {
+		// 	console.log(res)
+		// 	console.log(`pickerId为${res},类型为${res.type}的QS-picker显示了`);
+		// },
+		// hideQSPicker(res) {
+		// 	console.log(`pickerId为${res.pickerId},类型为${res.type}的QS-picker隐藏了了`);
+		// },
+		// confirm(res) {
+		// 	console.log('获取了用户选择----->' + JSON.stringify(res));
+		// 	this.form_data.work_place = JSON.stringify(res.data)
+		// },
+		RegionChange(e) {
+			this.region = e.detail.value
 		},
-		showQSPicker(res) {
-			console.log(res)
-			console.log(`pickerId为${res},类型为${res.type}的QS-picker显示了`);
-		},
-		hideQSPicker(res) {
-			console.log(`pickerId为${res.pickerId},类型为${res.type}的QS-picker隐藏了了`);
-		},
-		confirm(res) {
-			console.log('获取了用户选择----->' + JSON.stringify(res));
-			this.form_data.work_place = res.data.label
-		}
 	}
 };
 </script>

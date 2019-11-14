@@ -145,7 +145,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
   onLoad: function onLoad() {
   },
   methods: _objectSpread({},
-  (0, _vuex.mapMutations)(['setUserInfo', 'setIsHead']), {
+  (0, _vuex.mapMutations)(['setUserInfo', 'setIsHead', 'setRefreshJwt']), {
     getUserInfoCb: function getUserInfoCb(res) {var _this = this;
       console.log(res);
       if (res.detail.errMsg === 'getUserInfo:ok') {
@@ -180,7 +180,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
                 var ishead = _this.$utils._get(res, 'data.data.isHead', '');
                 _this.setIsHead(ishead);
                 _this.setUserInfo(userInfo);
-
+                uni.setStorageSync('version', '1.1.1');
+                _this.setRefreshJwt(false);
                 uni.switchTab({
                   url: '../tabbar/task/task' });
 

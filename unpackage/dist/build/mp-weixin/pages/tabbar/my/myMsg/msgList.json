@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "uni-swipe-action": "/components/uni-swipe-action/uni-swipe-action"
+  },
+  "component": true
+}

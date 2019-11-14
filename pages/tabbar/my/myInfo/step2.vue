@@ -327,6 +327,7 @@ export default {
 				this.type_picker.push(this.type_level_data[0])
 				this.type_picker_copy = JSON.parse(JSON.stringify(this.type_picker)) 
 				console.log(this.type_level_data)
+				console.log(this)
 				this.get_card_list()
 				this.get_work_list()
 				if(this.has_res){
@@ -349,6 +350,7 @@ export default {
 			this.form_data.addr = this.res.expectedPlace
 			this.form_data.homeAddress = this.res.homeAddress
 			this.type_index = this.$utils._get(this.get_typeLevel_obj(this.res),'type_index',[0,0])
+			console.log(this.$utils._get(this.get_typeLevel_obj(this.res),'type_index',[0,0]))
 			this.type_picker[1] = this.type_level_data[this.type_index[0]]
 		},
 		typeChange(e){
@@ -565,7 +567,9 @@ export default {
 					break
 				}
 			}
-			
+			if(type_index.length == 0){
+				type_index = [0,0]
+			}
 			return {
 				obj:obj,
 				type_index:type_index

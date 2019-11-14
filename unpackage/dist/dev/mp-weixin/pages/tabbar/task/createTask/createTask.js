@@ -90,6 +90,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  if (!_vm._isMounted) {
+    _vm.e0 = function($event) {
+      _vm.show_modal = true
+    }
+
+    _vm.e1 = function($event) {
+      _vm.show_modal = !_vm.show_modal
+    }
+  }
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -122,7 +131,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var stepOne = function stepOne() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step1 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step1")]).then(__webpack_require__.bind(null, /*! ./step1.vue */ 275));};var stepTwo = function stepTwo() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step2 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step2")]).then(__webpack_require__.bind(null, /*! ./step2.vue */ 283));};var stepThree = function stepThree() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step3 */ "pages/tabbar/task/createTask/step3").then(__webpack_require__.bind(null, /*! ./step3.vue */ 290));};var stepFour = function stepFour() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step4 */ "pages/tabbar/task/createTask/step4").then(__webpack_require__.bind(null, /*! ./step4.vue */ 297));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
 
 
 
@@ -174,6 +183,23 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var stepOne = function stepOne() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step1 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step1")]).then(__webpack_require__.bind(null, /*! ./step1.vue */ 285));};var stepTwo = function stepTwo() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step2 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step2")]).then(__webpack_require__.bind(null, /*! ./step2.vue */ 293));};var stepThree = function stepThree() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step3 */ "pages/tabbar/task/createTask/step3").then(__webpack_require__.bind(null, /*! ./step3.vue */ 300));};var stepFour = function stepFour() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step4 */ "pages/tabbar/task/createTask/step4").then(__webpack_require__.bind(null, /*! ./step4.vue */ 307));};var _default =
 {
   data: function data() {
     return {
@@ -197,7 +223,11 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       old: {
         scrollTop: 0 },
 
-      task_id: '' };
+      task_id: '',
+      route_id: '',
+      loading: true,
+      recruiting_info: {},
+      show_modal: false };
 
   },
   components: {
@@ -207,8 +237,23 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
     stepFour: stepFour },
 
   onLoad: function onLoad(option) {
+    console.log(getCurrentPages());
     console.log(option.id);
+    this.route_id = option.id;
+    if (this.route_id) {
+      var status = this.current_task.status;
+      if (status == '0') {
+        this.num = 1;
+      } else if (status == '1') {
+        this.num = 2;
+      }
+
+    }
+    this.loading = false;
   },
+  computed: _objectSpread({},
+  (0, _vuex.mapState)(['current_task'])),
+
   methods: {
     next: function next() {var _this = this;
       switch (this.num) {
@@ -228,14 +273,10 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
         default:
           break;}
 
-      // this.num++
       this.scrollTop = this.old.scrollTop;
       this.$nextTick(function () {
         this.scrollTop = 0;
       });
-      if (this.num == 2) {
-        this.$store.commit('setHasTask', true);
-      }
     },
     prev: function prev() {
       this.num--;
@@ -243,7 +284,35 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
     scroll: function scroll(e) {
       // console.log(e)
       this.old.scrollTop = e.detail.scrollTop;
+    },
+    update_recruiting_info: function update_recruiting_info(data) {
+      this.recruiting_info = data;
+    },
+    endCreate: function endCreate(e) {var _this2 = this;
+      var pamars = {
+        proId: this.recruiting_info.proId,
+        recId: this.recruiting_info.id,
+        formId: e.detail.formId,
+        path: 'pages/tabbar/task/task' };
+
+      console.log(pamars);
+      // return 
+      this.$http.post('personwx.finishrecruit/1.0/', pamars).then(function (res) {
+        console.log(res);
+        _this2.scrollTop = _this2.old.scrollTop;
+        _this2.$nextTick(function () {
+          this.scrollTop = 0;
+        });
+        _this2.num++;
+        // this.$store.commit('setHasTask',true)
+      });
+    },
+    goto_recruiting: function goto_recruiting() {
+      uni.navigateTo({
+        url: "/pages/personList/personList?recId=".concat(this.recruiting_info.id) });
+
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

@@ -7,7 +7,11 @@
 		<view class="no-task" v-if="!has_task && !loading">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
 			<text class="text-grey text-xl">没有任务</text><br>
-			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_add">前往创建任务</button>
+			<view class="flex margin-top justify-around">
+				<button class="cu-btn round bg-gradual-green lg" @tap="init">刷新任务</button>
+				<button class="cu-btn round bg-gradual-blue lg" @tap="goto_add">前往创建任务</button>
+				
+			</view>
 		</view>
 		<template v-if="user_role=== 'head' && has_task && !loading">
 			<view class="tab-list bg-white">
@@ -19,15 +23,20 @@
 				<swiper-item class="swiper-item" v-for="(tab, index1) in tab_list" :key="index1">
 					<scroll-view class="scroll-v" scroll-y @scrolltolower="loadMore(index1)">
 						<view class="list">
-							<view class="list-item bg-white " v-for="(item, index2) in tab.data" :key="item.id" @tap="go_detail(item)">
+							<view class="list-item bg-white " v-for="item in tab.data" :key="item.id" @tap="go_detail(item)">
 								<view class="top-main text-grey">
 									<text class="title">{{ item.deviceName }}({{item.deviceNum}})</text>
 									<text class="time">交期：{{ deliveryPeriod(item.deliveryPeriod) }}</text>
 								</view>
 								<view class="center-main">
 									<view class="schedule">
-										<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
-										<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
+										<template v-if="item.status == '3'">
+											<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
+											<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
+										</template>
+										<view class="schedule-num text-green" v-else>
+											{{item.status == '2'?'待启动':'招募中'}}
+										</view>
 									</view>
 									<view class="com-view">
 										<text class="num">{{ item.limit }}</text>
@@ -58,7 +67,7 @@
 				<view class="cuIcon-add text-white text-df"></view>
 			</view>
 		</template>
-		<task-artisan v-if="user_role=== 'artisan' && has_task" class="task-artisan"></task-artisan>
+		<task-artisan v-if="user_role=== 'artisan'" class="task-artisan"></task-artisan>
 	</view>
 </template>
 
@@ -72,12 +81,12 @@ export default {
 				{
 					name: '当前任务',
 					id: 'dcrw',
-					data: []
+					data:[]
 				},
 				{
 					name: '已完成',
 					id: 'ywc',
-					data: []
+					data:[]
 				}
 			],
 			current_tab: {
@@ -88,35 +97,58 @@ export default {
 		};
 	},
 	onLoad() {
-		
 		try {
-		    const value = uni.getStorageSync('user_info');
-		    if (!value) {
-		        console.log(value);
-		    	uni.reLaunch ({
-		    		url: '../../welcome/welcome'
-		    	})
-		    }else{
-				this.init()
-		    }
+			const version = uni.getStorageSync('version')
+			console.log('version',version)
+			if(version !== '1.1.1'){
+				uni.clearStorageSync();
+				uni.reLaunch ({
+					url: '/pages/welcome/welcome'
+				})
+				return 
+			}
+			const value = uni.getStorageSync('user_info');
+			console.log(value)
+			if (!value) {
+				uni.reLaunch ({
+					url: '/pages/welcome/welcome'
+				})
+			}else{
+				if(this.user_role=== 'head'){
+					this.init()
+				}
+			}
 		} catch (e) {
 		    // error
 			console.log(e)
 		}
 	},
+	
 	components:{
 		taskArtisan
 	},
+	watch:{
+		user_role(val){
+			console.log(val)
+			if(val=== 'head'){
+				this.init()
+			}
+		}
+	},
 	computed: {
-		...mapState(['has_task']),
-		...mapGetters(['user_role'])
+		// ...mapState(['has_task']),
+		...mapGetters(['user_role']),
+		has_task(){
+			console.log('has_task',this.tab_list[this.current_tab.index])
+			return this.$utils._get(this.tab_list[this.current_tab.index],'data',[]).length>0
+		}
 	},
 	methods: {
 		init(){
 			Promise.all([this.get_dcrw_list(),this.get_ywc_list()]).then(values =>{
 				console.log(values)
-				this.tab_list[0].data = values[0].data.data
-				this.tab_list[1].data = values[1].data.data
+				this.tab_list[0].data = this.$utils._get(values[0],'data.data',[]) 
+				this.tab_list[1].data = this.$utils._get(values[1],'data.data',[]) 
 				this.loading = false
 			})
 		},
@@ -146,13 +178,15 @@ export default {
 		go_detail(item){
 			console.log(item)
 			let status = this.$utils._get(item,'status','0')
+			this.$store.commit('setCurrentTask',item)
 			switch (status){
-				case '0' || '1':
+				case '0':
+				case '1':
 					uni.navigateTo({
 						url: `/pages/tabbar/task/createTask/createTask?id=${item.id}`
 					});
 					break;
-				case '0' || '1':
+				case '2':
 					uni.switchTab({
 						url:"/pages/tabbar/workbench/workbench"
 					})

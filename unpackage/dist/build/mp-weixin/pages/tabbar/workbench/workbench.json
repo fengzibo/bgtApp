@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "工作台",
+  "usingComponents": {
+    "w-head": "/pages/tabbar/workbench/workbenchHead",
+    "w-artisan": "/pages/tabbar/workbench/workbenchArtisan"
+  }
+}

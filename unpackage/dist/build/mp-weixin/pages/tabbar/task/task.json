@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "任务",
+  "usingComponents": {
+    "task-artisan": "/pages/tabbar/task/taskArtisan"
+  }
+}

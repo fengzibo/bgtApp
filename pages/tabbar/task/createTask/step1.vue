@@ -16,7 +16,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">设备名称</view>
-				<input class="text-right" placeholder="设备类型" name="equipment_name" v-model="form_data.equipment_name" />
+				<input class="text-right" placeholder="设备名称" name="equipment_name" v-model="form_data.equipment_name" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">设备数量</view>
@@ -51,8 +51,10 @@
 <script>
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
 const  graceChecker = require("@/common/graceChecker.js");
+import { mapState,mapGetters } from 'vuex';
 export default {
 	data() {
+		const currentDate = this.$utils.format_date(new Date())
 		return {
 			form_data: {
 				task_name: '',
@@ -61,7 +63,7 @@ export default {
 				task_no: '',
 				company: '',
 				budget: '',
-				delivery: '2019-09-01',
+				delivery: currentDate,
 				remark: '',
 				deviceNum:''
 			},
@@ -70,10 +72,20 @@ export default {
 			loading:true,
 		};
 	},
+	props: {
+		route_id: {
+			type: String,
+			default() {
+				return '';
+			}
+		}
+	},
 	computed:{
+		...mapState(['current_task']),
 	},
 	mounted() {
 		this.init()
+		console.log(this.route_id)
 	},
 	methods: {
 		init(){
@@ -85,12 +97,29 @@ export default {
 				dictId:'e7f70f44ebf3d55e2fac4af73e29ba36'
 			}).then(res =>{
 				console.log(res)
-				this.industry_list = this.$utils._get(res,'data.data.data')
+				this.industry_list = this.$utils._get(res,'data.data.data',[])
 				this.form_data.industry = this.industry_list[0].description
+				if(this.route_id){
+					this.form_data.task_name = this.current_task.deviceName
+					let index  = this.industry_list.findIndex(o =>{
+						return o.id == this.current_task.industry
+					})
+					this.industry_index = index<0?0:index
+					console.log(this.industry_index)
+					this.form_data.industry = this.industry_list[this.industry_index].description
+					this.form_data.equipment_name = this.current_task.deviceName
+					this.form_data.deviceNum = this.current_task.deviceNum
+					this.form_data.task_no = this.current_task.proNumber
+					this.form_data.company = this.current_task.scompany
+					this.form_data.budget = this.current_task.budget
+					this.form_data.delivery = this.$utils.format_date(this.current_task.deliveryPeriod) 
+					this.form_data.remark = this.current_task.description
+				}
 				 uni.hideLoading();
 				 this.loading = false
 			})
 		},
+		
 		DateChange(e) {
 			this.form_data.delivery = e.detail.value;
 		},
@@ -120,6 +149,7 @@ export default {
 					budget:this.form_data.budget,
 					deliveryPeriod:this.form_data.delivery,
 					description:this.form_data.remark,
+					id:this.route_id?this.route_id:''
 				}).then(res =>{
 					console.log(res)
 					uni.showToast({title:"提交成功!", icon:"success"});

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="welcom" v-if="!has_team">
+		<view class="welcom">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-team.png" mode="aspectFit"></image>
 			<button class="cu-btn block bg-blue lg margin-top-lg" open-type="getUserInfo" @getuserinfo="getUserInfoCb">
 				微信授权登录
@@ -21,7 +21,7 @@
 		onLoad() {
 		},
 		methods:{
-			...mapMutations(['setUserInfo','setIsHead']),
+			...mapMutations(['setUserInfo','setIsHead','setRefreshJwt']),
 			getUserInfoCb(res){
 				console.log(res)
 				if(res.detail.errMsg === 'getUserInfo:ok'){
@@ -56,7 +56,8 @@
 									let ishead = this.$utils._get(res,'data.data.isHead','')
 									this.setIsHead(ishead)
 									this.setUserInfo(userInfo)
-									
+									uni.setStorageSync('version', '1.1.1');
+									this.setRefreshJwt(false)
 									uni.switchTab({
 										url:'../tabbar/task/task',
 									})

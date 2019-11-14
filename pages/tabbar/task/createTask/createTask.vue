@@ -20,28 +20,44 @@
 						{{form_title[num]}}
 					</view>
 				</view>
-				<view class="content">
+				<view class="content" v-if="!loading">
 					<scroll-view class="scroll-v" scroll-y :scroll-top="scrollTop" @scroll="scroll">
 						<template v-if="num === 0">
-							<step-one ref="stepOne"></step-one>
+							<step-one ref="stepOne" :route_id="route_id"></step-one>
 						</template>
 						<template v-if="num === 1">
-							<step-two ref="stepTwo" :task_id="task_id"></step-two>
+							<step-two ref="stepTwo" :task_id="task_id" :route_id="route_id" :recruiting_info="recruiting_info"></step-two>
 						</template>
 						<template v-if="num === 2">
-							<step-three ref="stepThree"></step-three>
+							<step-three ref="stepThree" :task_id="task_id" :route_id="route_id" @update_recruiting_info="update_recruiting_info" @show_modal="show_modal=true"></step-three>
 						</template>
 					</scroll-view>
 				</view>
 			</view>
 			<view class="footer-tool bg-white padding">
 				<button class="cu-btn round bg-blue" @tap="prev" v-if="num>0">上一步</button>
-				<button class="cu-btn round bg-blue" @tap="next" v-if="num<3">{{num == 2?'结束人员招募并完成创建':'下一步'}}</button>
+				<button class="cu-btn round bg-blue" @tap="next" v-if="num<2">下一步</button>
+				<form @submit="endCreate" v-if="num == 2" :report-submit="true">
+					<button class="cu-btn round bg-blue" form-type="submit">结束人员招募并完成创建</button>
+				</form>
 			</view>
 		</template>
 		<template v-if="num === 3">
 			<step-four></step-four>
 		</template>
+		<view class="cu-modal bottom-modal" :class="show_modal?'show':''" @tap="show_modal=!show_modal">
+			<view class="cu-dialog" @tap.stop="">
+				<view class="padding-xl">
+					<button class="cu-btn block bg-blue margin-tb-sm lg" open-type="share">
+						发送到群招募
+					</button>
+					<button class="cu-btn block bg-blue margin-tb-sm lg" @tap="goto_recruiting">
+						<!-- <text class="cuIcon-loading2 cuIconfont-spin"></text> -->
+						精准人员招募
+					</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -50,6 +66,7 @@ import stepOne from './step1.vue';
 import stepTwo from './step2.vue';
 import stepThree from './step3.vue';
 import stepFour from './step4.vue';
+import { mapState,mapGetters } from 'vuex';
 export default {
 	data() {
 		return {
@@ -74,6 +91,10 @@ export default {
 				scrollTop: 0
 			},
 			task_id:'',
+			route_id:'',
+			loading:true,
+			recruiting_info:{},
+			show_modal:false,
 		};
 	},
 	components: {
@@ -83,7 +104,22 @@ export default {
 		stepFour
 	},
 	onLoad(option) {
+		console.log(getCurrentPages())
 		console.log(option.id)
+		this.route_id = option.id
+		if(this.route_id){
+			let status = this.current_task.status
+			if( status == '0'){
+				this.num = 1
+			}else if(status == '1'){
+				this.num = 2
+			}
+			
+		}
+		this.loading = false
+	},
+	computed:{
+		...mapState(['current_task']),
 	},
 	methods: {
 		next(){
@@ -104,14 +140,10 @@ export default {
 				default:
 					break;
 			}
-			// this.num++
 			this.scrollTop = this.old.scrollTop
 			this.$nextTick(function() {
 				this.scrollTop = 0
 			});
-			if(this.num ==2){
-				this.$store.commit('setHasTask',true)
-			}
 		},
 		prev(){
 			this.num--
@@ -119,6 +151,33 @@ export default {
 		scroll(e){
 			// console.log(e)
 			this.old.scrollTop = e.detail.scrollTop
+		},
+		update_recruiting_info(data){
+			this.recruiting_info = data
+		},
+		endCreate(e){
+			let pamars = {
+				proId:this.recruiting_info.proId,
+				recId:this.recruiting_info.id,
+				formId:e.detail.formId,
+				path:'pages/tabbar/task/task',
+			}
+			console.log(pamars)
+			// return 
+			this.$http.post('personwx.finishrecruit/1.0/',pamars).then(res =>{
+				console.log(res)
+				this.scrollTop = this.old.scrollTop
+				this.$nextTick(function() {
+					this.scrollTop = 0
+				});
+				this.num ++ 
+				// this.$store.commit('setHasTask',true)
+			})
+		},
+		goto_recruiting(){
+			uni.navigateTo({
+				url: `/pages/personList/personList?recId=${this.recruiting_info.id}`
+			});
 		},
 	}
 };

@@ -1,6 +1,6 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		 
+
 		{
 			"path": "pages/tabbar/task/task",
 			"style": {
@@ -11,7 +11,7 @@
 			"style": {
 				"navigationBarTitleText": "欢迎登录"
 			}
-		},{
+		}, {
 			"path": "pages/tabbar/my/my",
 			"style": {
 				"navigationBarTitleText": "我的"
@@ -115,20 +115,28 @@
 			"style": {
 				"navigationBarTitleText": "个人履历"
 			}
-		}
-	    ,{
-            "path" : "pages/tabbar/my/aCode/aCode",
-            "style" : {
+		}, {
+			"path": "pages/tabbar/my/aCode/aCode",
+			"style": {
 				"navigationBarTitleText": "我的激活码"
 			}
-        }
-        ,{
-            "path" : "pages/tabbar/workHours/workHours",
-            "style" : {
+		}, {
+			"path": "pages/tabbar/workHours/workHours",
+			"style": {
 				"navigationBarTitleText": "工时管理"
 			}
-        }
-    ],
+		}, {
+			"path": "pages/personList/personList",
+			"style": {
+				"navigationBarTitleText": "招募列表"
+			}
+		}, {
+			"path": "pages/logBack/logBack",
+			"style": {
+				"navigationBarTitleText": "登录过期"
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationStyle": "custom"
 		// "navigationBarTextStyle": "black",

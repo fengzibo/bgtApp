@@ -248,9 +248,10 @@ var _default = {
         equipment: '全自动热压机',
         type: '电工',
         task_cycle: '20天',
-        work_date: '2019-09-21 ~ 2019-10-21' }] };
+        work_date: '2019-09-21 ~ 2019-10-21' }],
 
 
+      id: '' };
 
   },
   components: {
@@ -261,6 +262,9 @@ var _default = {
       return this.CustomBar;
     } },
 
+  onLoad: function onLoad(option) {
+    this.id = option.id;
+  },
   methods: {
     downCallback: function downCallback(mescroll) {
       // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
@@ -275,9 +279,20 @@ var _default = {
         mescroll.endErr();
       }, 1000);
     },
-    go_back: function go_back() {
-      uni.navigateBack({
-        delta: 1 });
+    go_back: function go_back(status) {
+      var pamars = {
+        delta: 1,
+        status: status };
+
+      this.$http.post('personwx.checkrecruitperson/1.0/', pamars).then(function (res) {
+        console.log(res);
+        if (res.data.code == '0') {
+          uni.navigateBack({
+            delta: 1 });
+
+        }
+
+      });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

@@ -91,7 +91,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   var l1 = _vm.__map(_vm.tab_list, function(tab, index1) {
-    var l0 = _vm.__map(tab.data, function(item, index2) {
+    var l0 = _vm.__map(tab.data, function(item, __i0__) {
       var m0 = _vm.deliveryPeriod(item.deliveryPeriod)
       return {
         $orig: _vm.__get_orig(item),
@@ -210,7 +210,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var taskArtisan = function taskArtisan() {return __webpack_require__.e(/*! import() | pages/tabbar/task/taskArtisan */ "pages/tabbar/task/taskArtisan").then(__webpack_require__.bind(null, /*! ./taskArtisan.vue */ 217));};var _default =
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var taskArtisan = function taskArtisan() {return __webpack_require__.e(/*! import() | pages/tabbar/task/taskArtisan */ "pages/tabbar/task/taskArtisan").then(__webpack_require__.bind(null, /*! ./taskArtisan.vue */ 235));};var _default =
 
 {
   data: function data() {
@@ -235,35 +244,58 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
   },
   onLoad: function onLoad() {
-
     try {
-      var value = uni.getStorageSync('user_info');
-      if (!value) {
-        console.log(value);
+      var version = uni.getStorageSync('version');
+      console.log('version', version);
+      if (version !== '1.1.1') {
+        uni.clearStorageSync();
         uni.reLaunch({
-          url: '../../welcome/welcome' });
+          url: '/pages/welcome/welcome' });
+
+        return;
+      }
+      var value = uni.getStorageSync('user_info');
+      console.log(value);
+      if (!value) {
+        uni.reLaunch({
+          url: '/pages/welcome/welcome' });
 
       } else {
-        this.init();
+        if (this.user_role === 'head') {
+          this.init();
+        }
       }
     } catch (e) {
       // error
       console.log(e);
     }
   },
+
   components: {
     taskArtisan: taskArtisan },
 
+  watch: {
+    user_role: function user_role(val) {
+      console.log(val);
+      if (val === 'head') {
+        this.init();
+      }
+    } },
+
   computed: _objectSpread({},
-  (0, _vuex.mapState)(['has_task']),
-  (0, _vuex.mapGetters)(['user_role'])),
+
+  (0, _vuex.mapGetters)(['user_role']), {
+    has_task: function has_task() {
+      console.log('has_task', this.tab_list[this.current_tab.index]);
+      return this.$utils._get(this.tab_list[this.current_tab.index], 'data', []).length > 0;
+    } }),
 
   methods: {
     init: function init() {var _this = this;
       Promise.all([this.get_dcrw_list(), this.get_ywc_list()]).then(function (values) {
         console.log(values);
-        _this.tab_list[0].data = values[0].data.data;
-        _this.tab_list[1].data = values[1].data.data;
+        _this.tab_list[0].data = _this.$utils._get(values[0], 'data.data', []);
+        _this.tab_list[1].data = _this.$utils._get(values[1], 'data.data', []);
         _this.loading = false;
       });
     },
@@ -293,13 +325,15 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     go_detail: function go_detail(item) {
       console.log(item);
       var status = this.$utils._get(item, 'status', '0');
+      this.$store.commit('setCurrentTask', item);
       switch (status) {
-        case '0' || false:
+        case '0':
+        case '1':
           uni.navigateTo({
             url: "/pages/tabbar/task/createTask/createTask?id=".concat(item.id) });
 
           break;
-        case '0' || false:
+        case '2':
           uni.switchTab({
             url: "/pages/tabbar/workbench/workbench" });
 

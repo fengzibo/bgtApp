@@ -6,8 +6,8 @@ import MescrollUni from "./components/mescroll-uni/mescroll-uni.vue";
 import Http from './http/index.js'
 import Config from './http/config'
 import utils from './utils/utils.js'
-Vue.component('mescroll-uni',MescrollUni)
-Vue.component('cu-custom',cuCustom)
+Vue.component('mescroll-uni', MescrollUni)
+Vue.component('cu-custom', cuCustom)
 Vue.config.productionTip = false
 Vue.prototype.$store = store
 Vue.prototype.$http = Http
@@ -18,6 +18,6 @@ App.mpType = 'app'
 
 const app = new Vue({
 	store,
-    ...App
+	...App
 })
 app.$mount()

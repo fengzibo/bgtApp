@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "登录",
+  "usingComponents": {
+    "l-input": "/components/login-comp/login-input",
+    "l-button": "/components/login-comp/login-button"
+  }
+}

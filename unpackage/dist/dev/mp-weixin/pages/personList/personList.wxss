@@ -1,0 +1,33 @@
+.person-list.data-v-fbc63a0c {
+  padding: 0 30rpx;
+}
+.person-list .item-left.data-v-fbc63a0c {
+  margin-right: 10rpx;
+}
+.person-list .item-right .cu-avatar.data-v-fbc63a0c {
+  margin-right: 10rpx;
+}
+.person-list .item-right .score.data-v-fbc63a0c {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 100%;
+  line-height: 50rpx;
+  text-align: center;
+}
+.no-data .no-data-img.data-v-fbc63a0c {
+  width: 60%;
+  margin: 0 auto;
+  display: block;
+}
+.footer-tool.data-v-fbc63a0c {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+.footer-tool button.data-v-fbc63a0c {
+  border: none;
+  padding: 0;
+  border-radius: 0;
+}
+

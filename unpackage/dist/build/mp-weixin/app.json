@@ -1,0 +1,80 @@
+{
+  "pages": [
+    "pages/tabbar/task/task",
+    "pages/welcome/welcome",
+    "pages/tabbar/my/my",
+    "pages/tabbar/community/community",
+    "pages/tabbar/team/team",
+    "pages/tabbar/my/myInfo/myInfo",
+    "pages/tabbar/my/myMsg/myMsg",
+    "pages/tabbar/my/bindPhone/bindPhone",
+    "pages/tabbar/team/addTeam/addTeam",
+    "pages/tabbar/team/auditList/auditList",
+    "pages/tabbar/team/auditList/auditDetail",
+    "pages/tabbar/team/teamMember/teamMember",
+    "pages/login/login",
+    "pages/login/register",
+    "pages/login/forget",
+    "pages/tabbar/task/taskMain/taskMain",
+    "pages/tabbar/task/createTask/createTask",
+    "pages/auditDetail/auditDetail",
+    "pages/tabbar/workbench/workbench",
+    "pages/tabbar/task/taskMain/taskMainArtisan",
+    "pages/tabbar/my/myInfo/createInfo",
+    "pages/tabbar/my/resume/resume",
+    "pages/tabbar/my/aCode/aCode",
+    "pages/tabbar/workHours/workHours",
+    "pages/personList/personList",
+    "pages/logBack/logBack"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#0081ff",
+    "borderStyle": "black",
+    "backgroundColor": "#F8F8F8",
+    "list": [
+      {
+        "pagePath": "pages/tabbar/task/task",
+        "iconPath": "static/task.png",
+        "selectedIconPath": "static/taskHL.png",
+        "text": "任务"
+      },
+      {
+        "pagePath": "pages/tabbar/workHours/workHours",
+        "iconPath": "static/hours.png",
+        "selectedIconPath": "static/hoursHL.png",
+        "text": "工时"
+      },
+      {
+        "pagePath": "pages/tabbar/workbench/workbench",
+        "iconPath": "static/workbench.png",
+        "selectedIconPath": "static/workbenchHL.png",
+        "text": "工作台"
+      },
+      {
+        "pagePath": "pages/tabbar/team/team",
+        "iconPath": "static/team.png",
+        "selectedIconPath": "static/teamHL.png",
+        "text": "团队"
+      },
+      {
+        "pagePath": "pages/tabbar/my/my",
+        "iconPath": "static/my.png",
+        "selectedIconPath": "static/myHL.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "networkTimeout": {
+    "uploadFile": 300000
+  },
+  "usingComponents": {
+    "mescroll-uni": "/components/mescroll-uni/mescroll-uni",
+    "cu-custom": "/colorui/components/cu-custom"
+  },
+  "sitemapLocation": "sitemap.json"
+}

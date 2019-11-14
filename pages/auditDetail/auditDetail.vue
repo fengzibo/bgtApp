@@ -93,8 +93,8 @@
 		</mescroll-uni>
 		<view class="bottom-btn bg-white">
 			<view class="main">
-				<button class="bg-gradual-blue cu-btn lg" @tap="go_back">录用</button>
-				<button class="bg-gradual-red cu-btn lg"  @tap="go_back">不录用</button>
+				<button class="bg-gradual-blue cu-btn lg" @tap="go_back('5')">录用</button>
+				<button class="bg-gradual-red cu-btn lg"  @tap="go_back('4')">不录用</button>
 			</view>
 		</view>
 	</view>
@@ -126,7 +126,8 @@ export default {
 					task_cycle:'20天',
 					work_date:'2019-09-21 ~ 2019-10-21'
 				},
-			]
+			],
+			id:''
 		};
 	},
 	components: {
@@ -136,6 +137,9 @@ export default {
 		c_CustomBar(){
 			return this.CustomBar
 		}
+	},
+	onLoad(option) {
+		this.id = option.id
 	},
 	methods: {
 		downCallback(mescroll) {
@@ -151,11 +155,22 @@ export default {
 				mescroll.endErr();
 			}, 1000);
 		},
-		go_back(){
-			uni.navigateBack({
-			    delta: 1
-			});
-		}
+		go_back(status){
+			let pamars = {
+				delta: 1,
+				status:status
+			}
+			this.$http.post('personwx.checkrecruitperson/1.0/',pamars).then(res =>{
+				console.log(res)
+				if(res.data.code == '0'){
+					uni.navigateBack({
+					    delta: 1
+					});
+				}
+				
+			})
+			
+		},
 	}
 };
 </script>
