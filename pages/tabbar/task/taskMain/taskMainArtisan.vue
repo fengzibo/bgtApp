@@ -11,34 +11,27 @@
 						<text class="cuIcon-titles text-orange "></text>
 						工作概要
 					</view>
-					<view class="action text-red">有效期：2019-10-29</view>
+					<view class="action text-red">有效期：{{validityPeriod}}</view>
 				</view>
 				<view class="job-summary bg-white">
-					<view class="text-black text-xl">招自动化设备电工钳工师傅</view>
+					<view class="text-black text-xl">{{r_item.title}}</view>
 					<view class="people margin-top-sm">
-						<text class="want text-sm">
-							钳工工价：
-							<text class="text-red text-df">30元/时</text>
-						</text>
-						<text class="want text-sm margin-left">
-							电工工价：
-							<text class="text-red text-df">30元/时</text>
+						<text class="want text-sm" v-for="item in requirementInfo" :key="item.type">
+							{{item.type}}工价：
+							<text class="text-red text-df">{{item.price}}元/时</text>
 						</text>
 					</view>
-					<view class="tags margin-top-sm">
-						<view class="cu-tag radius bg-red">包吃包住</view>
-						<view class="cu-tag radius bg-red">要面试</view>
-						<view class="cu-tag radius bg-red">经验不限</view>
-						<view class="cu-tag radius bg-red">月结</view>
+					<view class="tags margin-top-sm flex-wrap">
+						<view class="cu-tag radius bg-red" v-for="item in item_tag" :key="item">{{item}}</view>
 					</view>
-					<view class="boss margin-top-sm">
+					<!-- <view class="boss margin-top-sm">
 						<view class="cu-avatar round bg-red">王</view>
 						<text class="text-grey margin-left-sm">王老板</text>
 						<view class="tel margin-left-sm text-xl">
 							<text class="cuIcon-phone text-blue"></text>
 							<text class="text-df">13666666666</text>
 						</view>
-					</view>
+					</view> -->
 				</view>
 				<view class="cu-bar bg-white solid-bottom margin-top">
 					<view class="action">
@@ -47,7 +40,9 @@
 					</view>
 				</view>
 				<view class="requirements bg-white">
-					<text class="requirements-main text-black text-df">1.本工作包吃包住\n 2.上工前需要面试，面试合格将录用。\n 3.工资按月结算，不拖欠款。</text>
+					<text class="requirements-main text-black text-df">
+						<text v-for="(item,index) in item_tag" :key="index">{{item}}\n</text>
+					</text>
 				</view>
 				<view class="cu-bar bg-white solid-bottom margin-top">
 					<view class="action">
@@ -56,7 +51,7 @@
 					</view>
 				</view>
 				<view class="requirements bg-white">
-					<text class="requirements-main text-black text-df">1.人数：电工 10人，钳工：10人\n 2.上工日期为：2019-10-30\n 3.工作地点：深圳市龙华新区大浪。</text>
+					<text class="requirements-main text-black text-df">1.人数：<text v-for="(item,index) in requirementInfo" :key="index">{{item.type}} {{item.num}}人{{comma(index)}}</text>\n 2.上工日期为：{{validityPeriod}}\n 3.工作地点：{{workAddress}}。</text>
 				</view>
 				<view class="cu-bar bg-white solid-bottom margin-top">
 					<view class="action">
@@ -103,9 +98,13 @@
 			</scroll-view>
 		</view>
 		<view class="footer-tool bg-white padding solid-top">
-			<button class="cu-btn round bg-blue" @tap="goto_work">我要接工作</button>
+			<form @submit="submitWork" :report-submit="true">
+				<button class="cu-btn round bg-blue"  form-type="submit">我要接工作</button>
+			</form>
 			<button class="cu-btn round bg-blue" @tap="go_back">我考虑下</button>
-			<button class="cu-btn round bg-blue" @tap="go_back">不想接</button>
+			<form @submit="refusedWork" :report-submit="true">
+				<button class="cu-btn round bg-blue" form-type="submit">不想接</button>
+			</form>
 		</view>
 	</view>
 </template>
@@ -123,10 +122,51 @@ export default {
 				err: 20,
 				address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
 				member: 7
-			}
+			},
+			r_item:{}
 		};
 	},
+	onLoad: function (option) {
+		
+	    this.r_item = JSON.parse(decodeURIComponent(option.item));
+	},
+	computed:{
+		validityPeriod(){
+			return this.$utils.format_date(this._get('validityPeriod',''))
+		},
+		workAddress(){
+			let address = JSON.parse(this._get('workAddress',''))
+			if(Array.isArray(address)){
+				return address.join()
+			}else{
+				return address
+			}
+			
+		},
+		item_tag(){
+			try{
+				let welfareInfo = JSON.parse(this._get('welfareInfo',[]))
+				let workRequest = JSON.parse(this._get('workRequest',[]))
+				return welfareInfo.concat(workRequest)
+			}catch(e){
+				//TODO handle the exception
+			}
+		},
+		requirementInfo(){
+			let r_info= []
+			try{
+				 r_info= JSON.parse(this._get('requirementInfo',[]))
+			}catch(e){
+				//TODO handle the exception
+			}
+			return r_info
+		},
+		
+	},
 	methods: {
+		_get(key,defaultValue){
+			return this.$utils._get(this.r_item,key,defaultValue)
+		},
 		goto_work(){
 			this.$store.commit('setArtisanWorkState','waitStart')
 			uni.switchTab({
@@ -137,6 +177,49 @@ export default {
 			uni.navigateBack({
 			    delta: 1
 			});
+		},
+		submitWork(e){
+			console.log(e)
+			this.$http.post('personwx.recpersonchangestatus/1.0/',{
+				id:this._get('rpId',''),
+				status: '2',
+				formId:e.detail.formId
+			}).then(res =>{
+				console.log(res)
+				if(res.data.code == '0'){
+					uni.showToast({
+					    title: '接工成功',
+					    duration: 2000,
+						success:() =>{
+							this.go_back()
+						}
+					});
+					
+				}
+			})
+		},
+		refusedWork(e){
+			console.log('sds',e)
+			this.$http.post('personwx.recpersonchangestatus/1.0/',{
+				id:this._get('rpId',''),
+				status: '3',
+				formId:e.detail.formId
+			}).then(res =>{
+				console.log(res)
+				if(res.data.code == '0'){
+					uni.showToast({
+					    title: '已拒绝',
+					    duration: 2000,
+						success:() =>{
+							this.go_back()
+						}
+					});
+					
+				}
+			})
+		},
+		comma(index){
+			return index<this.requirementInfo.length-1?'，':''
 		}
 	}
 };
@@ -173,6 +256,9 @@ export default {
 	.tags {
 		display: flex;
 		align-items: center;
+		.cu-tag{
+			margin: 5rpx 0 5rpx 10rpx;
+		}
 	}
 	.boss {
 		display: flex;

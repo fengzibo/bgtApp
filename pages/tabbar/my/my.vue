@@ -109,11 +109,19 @@ export default {
 		this.numDH();
 		console.log(this.user_info)
 	},
+	onShow(){
+		console.log('show')
+	},
+	watch:{
+		refresh_num(val){
+			console.log('my_refresh_num',val)
+		}
+	},
 	components:{
 		sunuiStar
 	},
 	computed:{
-		...mapState(['user_info']),
+		...mapState(['user_info','refresh_num']),
 		...mapGetters(['id']),
 		avatarUrl(){
 			return `url(${this.user_info.avatarUrl})`

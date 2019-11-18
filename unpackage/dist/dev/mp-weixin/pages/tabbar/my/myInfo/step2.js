@@ -341,6 +341,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default2 =
 {
   props: {
@@ -390,7 +395,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       CustomBar: this.CustomBar,
       loadProgress: 0,
       exper_edit: false,
-      current_exper_id: '' };
+      current_exper_id: '',
+      education_index: 0,
+      education_pick: ['初中', '高中', '高职', '大专', '本科', '研究生', '博士'] };
 
   },
   computed: _objectSpread({},
@@ -421,7 +428,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         pid: this.id }).
       then(function (res) {
         console.log('work_list', res);
-        _this2.work_list = res.data.data.data;
+        _this2.work_list = _this2.$utils._get(res, 'data.data.data', []);
       });
     },
     get_card_list: function get_card_list() {var _this3 = this;
@@ -429,7 +436,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         pid: this.id }).
       then(function (res) {
         console.log('card_list', res);
-        _this3.card_list = res.data.data.data;
+        _this3.card_list = _this3.$utils._get(res, 'data.data.data', []);
       });
     },
     get_type_list: function get_type_list() {var _this4 = this;
@@ -440,7 +447,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       this.$http.post('personwx.tylelist/1.0/').then(function (res) {
         console.log(res);
         var type_picker_arr = [];
-        res.data.data.data.forEach(function (item, index) {
+        var res_default = _this4.$utils._get(res, 'data.data.data', []);
+        res_default.forEach(function (item, index) {
           if (item.pid == '0') {
             type_picker_arr.push(item);
           }
@@ -448,7 +456,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         _this4.type_picker.push(type_picker_arr);
         type_picker_arr.forEach(function (obj) {
           var arr = [];
-          res.data.data.data.forEach(function (item, index) {
+          res_default.forEach(function (item, index) {
             if (obj.id == item.pid) {
               arr.push(item);
             }
@@ -477,6 +485,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     init_info: function init_info() {
       console.log(this.res);
       this.form_data.education = this.res.education;
+      this.education_index = this.education_pick.indexOf(this.res.education);
       this.form_data.limit = this.res.workYear;
       this.form_data.addr = this.res.expectedPlace;
       this.form_data.homeAddress = this.res.homeAddress;
@@ -735,6 +744,10 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         console.log(res);
         _this9.get_card_list();
       });
+    },
+    educationChange: function educationChange(e) {
+      this.education_index = e.detail.value;
+      this.form_data.education = this.education_pick[e.detail.value];
     } } };exports.default = _default2;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

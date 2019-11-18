@@ -90,6 +90,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.__map(_vm.requirementInfo, function(item, index) {
+    var m0 = _vm.comma(index)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -233,7 +249,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 var _default =
 {
   data: function data() {
@@ -246,11 +261,52 @@ var _default =
         cost: 40000,
         err: 20,
         address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-        member: 7 } };
+        member: 7 },
 
+      r_item: {} };
 
   },
+  onLoad: function onLoad(option) {
+
+    this.r_item = JSON.parse(decodeURIComponent(option.item));
+  },
+  computed: {
+    validityPeriod: function validityPeriod() {
+      return this.$utils.format_date(this._get('validityPeriod', ''));
+    },
+    workAddress: function workAddress() {
+      var address = JSON.parse(this._get('workAddress', ''));
+      if (Array.isArray(address)) {
+        return address.join();
+      } else {
+        return address;
+      }
+
+    },
+    item_tag: function item_tag() {
+      try {
+        var welfareInfo = JSON.parse(this._get('welfareInfo', []));
+        var workRequest = JSON.parse(this._get('workRequest', []));
+        return welfareInfo.concat(workRequest);
+      } catch (e) {
+        //TODO handle the exception
+      }
+    },
+    requirementInfo: function requirementInfo() {
+      var r_info = [];
+      try {
+        r_info = JSON.parse(this._get('requirementInfo', []));
+      } catch (e) {
+        //TODO handle the exception
+      }
+      return r_info;
+    } },
+
+
   methods: {
+    _get: function _get(key, defaultValue) {
+      return this.$utils._get(this.r_item, key, defaultValue);
+    },
     goto_work: function goto_work() {
       this.$store.commit('setArtisanWorkState', 'waitStart');
       uni.switchTab({
@@ -261,6 +317,49 @@ var _default =
       uni.navigateBack({
         delta: 1 });
 
+    },
+    submitWork: function submitWork(e) {var _this = this;
+      console.log(e);
+      this.$http.post('personwx.recpersonchangestatus/1.0/', {
+        id: this._get('rpId', ''),
+        status: '2',
+        formId: e.detail.formId }).
+      then(function (res) {
+        console.log(res);
+        if (res.data.code == '0') {
+          uni.showToast({
+            title: '接工成功',
+            duration: 2000,
+            success: function success() {
+              _this.go_back();
+            } });
+
+
+        }
+      });
+    },
+    refusedWork: function refusedWork(e) {var _this2 = this;
+      console.log('sds', e);
+      this.$http.post('personwx.recpersonchangestatus/1.0/', {
+        id: this._get('rpId', ''),
+        status: '3',
+        formId: e.detail.formId }).
+      then(function (res) {
+        console.log(res);
+        if (res.data.code == '0') {
+          uni.showToast({
+            title: '已拒绝',
+            duration: 2000,
+            success: function success() {
+              _this2.go_back();
+            } });
+
+
+        }
+      });
+    },
+    comma: function comma(index) {
+      return index < this.requirementInfo.length - 1 ? '，' : '';
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

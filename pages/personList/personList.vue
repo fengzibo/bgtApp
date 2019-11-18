@@ -22,16 +22,16 @@
 				--没有数据--
 			</view>
 		</view>
-		<form @submit="formSubmit" v-if="!loading && !no_data" :report-submit="true">
-			<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100" :top="c_CustomBar">
-				<view class="person-list bg-white">
+		
+			<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100" :top="c_CustomBar" v-if="!loading && !no_data">
+				<view class="person-list bg-white" >
 					<checkbox-group @change="checkboxChange">
 						<label class="flex align-center" v-for="item in p_list" :key="item.id">
 							<view class="item-left">
 								<checkbox :value="item.id" :checked="item.checked" style="transform:scale(0.7)"/>
 							</view>
-							<view class="flex-sub solid-bottom flex align-center item-right" >
-								<view class="cu-avatar round lg" :style="[{'backgroundUrl':item.avatarUrl}]"></view>
+							<view class="flex-sub solid-bottom flex align-center item-right padding-tb-sm" >
+								<view class="cu-avatar lg round" :style="{backgroundImage: avatarUrl(item.avatarUrl)}"></view>
 								<view class="flex-sub align-center">
 									<view class="flex justify-between align-center">
 										<view class="name text-black text-lg">
@@ -48,7 +48,7 @@
 											学习强
 										</view>
 									</view>
-									<view class="flex justify-between text-gray text-sm padding-bottom-sm">
+									<view class="flex justify-between text-gray text-sm ">
 										<view class="introduce">
 											完成任务总数231次,工时2300时
 										</view>
@@ -62,13 +62,15 @@
 					</checkbox-group>
 				</view>
 			</mescroll-uni>
-			<view class="cu-bar bg-white tabbar border footer-tool">
+			<view class="cu-bar bg-white tabbar border footer-tool" v-if="!loading && !no_data">
 				<view class="action text-orange text-xs">
 					已选择：<text class="text-red">{{check_length}}</text>人
 				</view>
-				<button class="bg-red submit" form-type="submit">完成</button>
+				<form @submit="formSubmit"  :report-submit="true">
+					<button class="bg-red submit" form-type="submit">完成</button>
+				</form>
 			</view>
-		</form>
+		
 		<view class="cu-modal drawer-modal justify-end" :class="conditions_modal?'show':''" @tap="hideModal">
 			<view class="cu-dialog basis-xl" @tap.stop="" :style="[{top:CustomBar+'px',height:'calc(100vh - ' + CustomBar + 'px)'}]">
 				<view class="cu-form-group">
@@ -243,6 +245,9 @@
 						});
 					}
 				})
+			},
+			avatarUrl(avatarUrl){
+				return `url(${avatarUrl})`
 			},
 		}
 	}

@@ -97,10 +97,11 @@ export default {
 		};
 	},
 	onLoad() {
+		console.log('onLoad')
 		try {
 			const version = uni.getStorageSync('version')
 			console.log('version',version)
-			if(version !== '1.1.1'){
+			if(version !== '1.1.2'){
 				uni.clearStorageSync();
 				uni.reLaunch ({
 					url: '/pages/welcome/welcome'
@@ -122,8 +123,29 @@ export default {
 		    // error
 			console.log(e)
 		}
+		uni.$on('refreshList',() =>{
+			console.log('refreshList')
+			if(this.user_role=== 'head'){
+				this.init()
+			}
+		})
+		uni.$on('refreshJwt',(data) =>{
+			console.log('refreshJwt',data)
+			if(this.user_role=== 'head'){
+				this.init()
+			}
+		})
 	},
-	
+	onShow() {
+		console.log('show')
+	},
+	onReady() {
+		console.log('ready')
+	},
+	onUnload() {
+		uni.$off('refreshList')
+		uni.$off('refreshJwt')
+	},
 	components:{
 		taskArtisan
 	},
@@ -133,10 +155,13 @@ export default {
 			if(val=== 'head'){
 				this.init()
 			}
+		},
+		refresh_num(val){
+			console.log('task_refresh_num',val)
 		}
 	},
 	computed: {
-		// ...mapState(['has_task']),
+		...mapState(['refresh_num']),
 		...mapGetters(['user_role']),
 		has_task(){
 			console.log('has_task',this.tab_list[this.current_tab.index])
@@ -227,7 +252,7 @@ export default {
 .tab-list {
 	padding: 0 30rpx;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: center;
 	height: 90rpx;
 	flex: 0 0 auto;

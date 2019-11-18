@@ -180,7 +180,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
                 var ishead = _this.$utils._get(res, 'data.data.isHead', '');
                 _this.setIsHead(ishead);
                 _this.setUserInfo(userInfo);
-                uni.setStorageSync('version', '1.1.1');
+                uni.setStorageSync('version', '1.1.2');
                 _this.setRefreshJwt(false);
                 uni.switchTab({
                   url: '../tabbar/task/task' });

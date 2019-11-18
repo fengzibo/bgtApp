@@ -56,7 +56,7 @@
 									let ishead = this.$utils._get(res,'data.data.isHead','')
 									this.setIsHead(ishead)
 									this.setUserInfo(userInfo)
-									uni.setStorageSync('version', '1.1.1');
+									uni.setStorageSync('version', '1.1.2');
 									this.setRefreshJwt(false)
 									uni.switchTab({
 										url:'../tabbar/task/task',

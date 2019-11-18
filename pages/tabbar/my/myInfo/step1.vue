@@ -153,9 +153,17 @@ export default {
 				},
 				success: res => {
 					console.log('uploadImage success, res is:', res);
-					
-					
-					u_data = JSON.parse(res.data).data
+					let json_res = JSON.parse(res.data)
+					if(json_res.code == '1'){
+						this.progress_model = false
+						uni.showToast({
+							title: json_res.msg,
+							icon: 'none',
+							duration: 3000
+						});
+						return 
+					}
+					u_data = json_res.data
 					console.log(u_data)
 					this.form_data.name = u_data.name
 					this.form_data.sex = u_data.sex
@@ -226,19 +234,20 @@ export default {
 				// if(this.has_res){
 				// 	return 
 				// }
-				let uinfo = JSON.parse(JSON.stringify(this.user_info)) 
-				uinfo.id = this.$utils._get(res,'data.data.data.data.pid','')
-				uinfo.loginName = this.$utils._get(this.form_data,'name',uinfo.nickName)
-				this.$store.commit('setUserInfo',uinfo)
-				uni.hideLoading()
-				if(this.has_res){
-					uni.navigateBack({
-					    delta: 1
-					});
+				if(res.data.code == '0'){
+					let uinfo = JSON.parse(JSON.stringify(this.user_info))
+					uinfo.id = this.$utils._get(res,'data.data.data.data.pid','')
+					uinfo.loginName = this.$utils._get(this.form_data,'name',uinfo.nickName)
+					this.$store.commit('setUserInfo',uinfo)
+					uni.hideLoading()
+					if(this.has_res){
+						uni.navigateBack({
+						    delta: 1
+						});
+					}
+					this.$emit('next')
+					this.$emit('showTips','更完整的工作信息将会给您带来更多的工作机会')
 				}
-				this.$emit('next')
-				this.$emit('showTips','更完整的工作信息将会给您带来更多的工作机会')
-				
 			})
 			
 		}

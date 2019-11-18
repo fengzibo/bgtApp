@@ -106,6 +106,10 @@ export default {
 	onLoad(option) {
 		console.log(getCurrentPages())
 		console.log(option.id)
+		setTimeout(() => {
+			this.$store.commit('setRefreshNum',Math.random())
+			
+		}, 3000);
 		this.route_id = option.id
 		if(this.route_id){
 			let status = this.current_task.status
@@ -129,17 +133,19 @@ export default {
 						
 						this.num++
 						this.task_id = id
+						uni.$emit('refreshList')
 					})
 					break;
 				case 1:
 					this.$refs.stepTwo.formSubmit(() =>{
-						
+						uni.$emit('refreshList')
 						this.num++
 					})
 					break;
 				default:
 					break;
 			}
+			
 			this.scrollTop = this.old.scrollTop
 			this.$nextTick(function() {
 				this.scrollTop = 0

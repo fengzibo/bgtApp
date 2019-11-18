@@ -18,12 +18,12 @@
 			<template v-for="item in member_type">
 				<view class="cu-form-group" v-if="item.checked" :key="item.name">
 					<view class="title">
-						<input placeholder="请输入类型" name="input"   v-model="item.data.name" v-if="item.name === '其他'"/>
+						<input placeholder="请输入类型" name="input" class="text-right"   v-model="item.data.name" v-if="item.name === '其他'"/>
 						<text v-else>{{item.data.name}}</text>
 					</view>
 					<view class="group-right-layout">
-						<input class="text-right" placeholder="请输入人员数量" name="input" type="number"  v-model="item.data.people"/>人
-						<input class="text-right" placeholder="请输入价格" name="input" type="number"  v-model="item.data.price"/>元/时
+						<input class="text-right" placeholder="人数" name="input" type="number"  v-model="item.data.people"/>人
+						<input class="text-right" placeholder="工价" name="input" type="number"  v-model="item.data.price"/>元/时
 					</view>
 					
 				</view>
@@ -106,35 +106,7 @@ export default {
 			},
 			particle:['天','周','月','年'],
 			particle_index:0,
-			member_type:[
-				{
-					value:'dg',
-					name:'电工',
-					data:{
-						name:'电工',
-						people:'',
-						price:''
-					}
-				},
-				{
-					value:'qz',
-					name:'钳工',
-					data:{
-						name:'钳工',
-						people:'',
-						price:''
-					}
-				},
-				{
-					value:'qt',
-					name:'其他',
-					data:{
-						name:'',
-						people:'',
-						price:''
-					}
-				}
-			],
+			member_type:[],
 			claim_array:['面试','工作经验不限','熟手'],
 			select_claim:[],
 			welfare_array:['包吃','包住'],
@@ -213,18 +185,37 @@ export default {
 				}),
 				this.$http.post('personwx.hyxx/1.0/',{
 					dictId:'3dd875e620061483a0af551098c99e91'
-				})
+				}),
+				this.$http.post('personwx.tylelist/1.0/')
 			]).then(values =>{
 				console.log(values)
 				this.claim_array = values[0].data.data.data
 				this.welfare_array = values[1].data.data.data
 				console.log(this.recruiting_info)
+				let type_picker_arr = []
+				let res_default = this.$utils._get(values[2],'data.data.data',[])
+				res_default.forEach((item,index) =>{
+					if(item.pid == '0'){
+						type_picker_arr.push(item)
+					}
+				})
+				type_picker_arr.forEach(item =>{
+					let obj = {
+						value:item.id,
+						name:item.typeName,
+						data:{
+							name:item.typeName,
+							people:'',
+							price:''
+						}
+					}
+					this.member_type.push(obj)
+				})
 				if(JSON.stringify(this.recruiting_info) !== "{}"){
 					this.set_data()
 				}
 				uni.hideLoading();
 				this.loading = false
-				
 			})
 			
 		},

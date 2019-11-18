@@ -122,20 +122,21 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
     return {
@@ -157,17 +158,27 @@ var _default =
     }
 
   },
-  computed: {},
+  computed: _objectSpread({},
+  (0, _vuex.mapState)(['user_info'])),
 
   methods: {
     logBack: function logBack() {var _this = this;
       uni.showLoading({
         title: '登录中' });
 
+      var userI = this.user_info;
       uni.request({
         url: this.$api_url + 'personwx.refreshJWT/1.0/',
         data: {
-          openId: this.$store.getters.openId },
+          openId: this.$store.getters.openId,
+          loginName: userI.loginName,
+          city: userI.city,
+          country: userI.country,
+          gender: userI.gender,
+          language: userI.language,
+          nickName: userI.nickName,
+          province: userI.province,
+          avatarUrl: userI.avatarUrl },
 
         method: 'GET',
         header: {
@@ -176,24 +187,28 @@ var _default =
         success: function success(res) {
           console.log(res.data);
           var uinfo = _this.$store.state.user_info;
-          uinfo.id = res.data.data.id;
-          uinfo.jwt = res.data.data.jwt;
-          uinfo.openid = res.data.data.openId;
-          uinfo.loginName = res.data.data.loginName;
+          uinfo.id = _this.$utils._get(res, 'data.data.id', '');
+          uinfo.jwt = _this.$utils._get(res, 'data.data.jwt', '');
+          uinfo.openid = _this.$utils._get(res, 'data.data.openId', '');
+          uinfo.loginName = _this.$utils._get(res, 'data.data.loginName', '');
           _this.$store.commit('setUserInfo', uinfo);
           _this.$store.commit('setRefreshJwt', false);
           uni.hideLoading();
           uni.showToast({
             title: '登录成功',
             duration: 2000,
-            icon: 'none' });
+            icon: 'none',
+            success: function success() {
+              uni.navigateBack({
+                delta: 1 });
 
-          // uni.navigateBack({
-          //     delta: 1
-          // });
-          uni.navigateTo({
-            url: _this.from_url });
+              uni.$emit('refreshJwt');
+            } });
 
+
+          // uni.navigateTo({
+          // 	url: this.from_url
+          // })
         } });
 
 

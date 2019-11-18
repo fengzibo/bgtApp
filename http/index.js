@@ -30,7 +30,7 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 
     switch(response.statusCode){
         case 200:
-			if(response.data.code == '21'){
+			if(response.data.code == '21' || response.data.code == '90' || response.data.code == '-9'){
 				console.log(Store.state.refresh_jwt)
 				if(Store.state.refresh_jwt){
 					return
@@ -41,55 +41,7 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 						Store.commit('setRefreshJwt',true)
 					}
 				});
-				// uni.showModal({
-				//     title: '提示',
-				//     content: '登录已过期，请重新登录',
-				// 	showCancel:false,
-				// 	confirmText:'重新登录',
-				// 	confirmColor:'#007AFF',
-				//     success: function (res) {
-				//         if (res.confirm) {
-				//             console.log('用户点击确定');
-				// 			// http.get('personwx.refreshJWT/1.0/',{
-				// 			// 	openId:Store.getters.openId
-				// 			// }).then(res =>{
-				// 			// 	console.log(res)
-				// 			// })
-				// 			uni.showLoading({
-				// 			    title: '登录中'
-				// 			});
-				// 			uni.request({
-				// 			    url: AppConfig.api_url+'personwx.refreshJWT/1.0/', //仅为示例，并非真实接口地址。
-				// 			    data: {
-				// 			        openId:Store.getters.openId
-				// 			    },
-				// 				method:'GET',
-				// 			    header: {
-				// 			        "Content-Type": "application/x-www-form-urlencoded", //自定义请求头信息
-				// 			    },
-				// 			    success: (res) => {
-				// 			        console.log(res.data);
-				// 					let uinfo = Store.state.user_info
-				// 					uinfo.id = res.data.data.id
-				// 					uinfo.jwt = res.data.data.jwt
-				// 					uinfo.openid = res.data.data.openId
-				// 					uinfo.loginName = res.data.data.loginName
-				// 					Store.commit('setUserInfo',uinfo)
-				// 					uni.hideLoading();
-				// 					uni.showToast({
-				// 					    title: '登录成功',
-				// 					    duration: 2000,
-				// 						icon:'none'
-				// 					}); 
-				// 					uni.navigateBack({
-				// 					    delta: 1
-				// 					});
-				// 			    }
-				// 			});
-				//         }
-				//     }
-				// });
-				// return
+				
 			}
             break;
 

@@ -12,6 +12,7 @@
 </template>
 
 <script>
+	import { mapState,mapGetters } from 'vuex';
 	export default {
 		data() {
 			return {
@@ -34,16 +35,26 @@
 			
 		},
 		computed:{
+			...mapState(['user_info']),
 		},
 		methods: {
 			logBack(){
 				uni.showLoading({
 				    title: '登录中'
 				});
+				let userI = this.user_info
 				uni.request({
 				    url: this.$api_url+'personwx.refreshJWT/1.0/', 
 				    data: {
-				        openId:this.$store.getters.openId
+				        openId:this.$store.getters.openId,
+						loginName:userI.loginName,
+						city:userI.city,
+						country:userI.country,
+						gender:userI.gender,
+						language:userI.language,
+						nickName:userI.nickName,
+						province:userI.province,
+						avatarUrl:userI.avatarUrl,
 				    },
 					method:'GET',
 				    header: {
@@ -52,24 +63,28 @@
 				    success: (res) => {
 				        console.log(res.data);
 						let uinfo = this.$store.state.user_info
-						uinfo.id = res.data.data.id
-						uinfo.jwt = res.data.data.jwt
-						uinfo.openid = res.data.data.openId
-						uinfo.loginName = res.data.data.loginName
+						uinfo.id = this.$utils._get(res,'data.data.id','')
+						uinfo.jwt = this.$utils._get(res,'data.data.jwt','')
+						uinfo.openid = this.$utils._get(res,'data.data.openId','')
+						uinfo.loginName = this.$utils._get(res,'data.data.loginName','')
 						this.$store.commit('setUserInfo',uinfo)
 						this.$store.commit('setRefreshJwt',false)
 						uni.hideLoading();
 						uni.showToast({
 						    title: '登录成功',
 						    duration: 2000,
-							icon:'none'
+							icon:'none',
+							success: () => {
+								uni.navigateBack({
+								    delta: 1
+								});
+								uni.$emit('refreshJwt')
+							}
 						});
-						// uni.navigateBack({
-						//     delta: 1
-						// });
-						uni.navigateTo({
-							url: this.from_url
-						})
+						
+						// uni.navigateTo({
+						// 	url: this.from_url
+						// })
 				    }
 				});
 				

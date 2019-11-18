@@ -238,35 +238,7 @@ var _default2 = {
 
       particle: ['天', '周', '月', '年'],
       particle_index: 0,
-      member_type: [
-      {
-        value: 'dg',
-        name: '电工',
-        data: {
-          name: '电工',
-          people: '',
-          price: '' } },
-
-
-      {
-        value: 'qz',
-        name: '钳工',
-        data: {
-          name: '钳工',
-          people: '',
-          price: '' } },
-
-
-      {
-        value: 'qt',
-        name: '其他',
-        data: {
-          name: '',
-          people: '',
-          price: '' } }],
-
-
-
+      member_type: [],
       claim_array: ['面试', '工作经验不限', '熟手'],
       select_claim: [],
       welfare_array: ['包吃', '包住'],
@@ -344,19 +316,38 @@ var _default2 = {
         dictId: '1a52c05cef9d569b88a03cf8f2884965' }),
 
       this.$http.post('personwx.hyxx/1.0/', {
-        dictId: '3dd875e620061483a0af551098c99e91' })]).
+        dictId: '3dd875e620061483a0af551098c99e91' }),
 
+      this.$http.post('personwx.tylelist/1.0/')]).
       then(function (values) {
         console.log(values);
         _this.claim_array = values[0].data.data.data;
         _this.welfare_array = values[1].data.data.data;
         console.log(_this.recruiting_info);
+        var type_picker_arr = [];
+        var res_default = _this.$utils._get(values[2], 'data.data.data', []);
+        res_default.forEach(function (item, index) {
+          if (item.pid == '0') {
+            type_picker_arr.push(item);
+          }
+        });
+        type_picker_arr.forEach(function (item) {
+          var obj = {
+            value: item.id,
+            name: item.typeName,
+            data: {
+              name: item.typeName,
+              people: '',
+              price: '' } };
+
+
+          _this.member_type.push(obj);
+        });
         if (JSON.stringify(_this.recruiting_info) !== "{}") {
           _this.set_data();
         }
         uni.hideLoading();
         _this.loading = false;
-
       });
 
     },

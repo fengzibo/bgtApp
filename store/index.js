@@ -12,6 +12,7 @@ const store = new Vuex.Store({
 		isHead: uni.getStorageSync('isHead') || '0',
 		current_task: uni.getStorageSync('current_task') || {},
 		refresh_jwt:false,
+		refresh_num:0,
 	},
 	mutations: {
 		setHasTeam(state, data) {
@@ -61,6 +62,9 @@ const store = new Vuex.Store({
 		},
 		setRefreshJwt(state,data){
 			state.refresh_jwt = data
+		},
+		setRefreshNum(state,data){
+			state.refresh_num = data
 		}
 	},
 	actions: {

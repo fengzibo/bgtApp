@@ -57,6 +57,9 @@
       -ms-flex-align: center;
           align-items: center;
 }
+.job-summary .tags .cu-tag.data-v-be7c9dee {
+  margin: 5rpx 0 5rpx 10rpx;
+}
 .job-summary .boss.data-v-be7c9dee {
   display: -webkit-box;
   display: -webkit-flex;

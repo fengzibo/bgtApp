@@ -243,11 +243,12 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       loading: true };
 
   },
-  onLoad: function onLoad() {
+  onLoad: function onLoad() {var _this = this;
+    console.log('onLoad');
     try {
       var version = uni.getStorageSync('version');
       console.log('version', version);
-      if (version !== '1.1.1') {
+      if (version !== '1.1.2') {
         uni.clearStorageSync();
         uni.reLaunch({
           url: '/pages/welcome/welcome' });
@@ -269,8 +270,29 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       // error
       console.log(e);
     }
+    uni.$on('refreshList', function () {
+      console.log('refreshList');
+      if (_this.user_role === 'head') {
+        _this.init();
+      }
+    });
+    uni.$on('refreshJwt', function (data) {
+      console.log('refreshJwt', data);
+      if (_this.user_role === 'head') {
+        _this.init();
+      }
+    });
   },
-
+  onShow: function onShow() {
+    console.log('show');
+  },
+  onReady: function onReady() {
+    console.log('ready');
+  },
+  onUnload: function onUnload() {
+    uni.$off('refreshList');
+    uni.$off('refreshJwt');
+  },
   components: {
     taskArtisan: taskArtisan },
 
@@ -280,10 +302,13 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       if (val === 'head') {
         this.init();
       }
+    },
+    refresh_num: function refresh_num(val) {
+      console.log('task_refresh_num', val);
     } },
 
   computed: _objectSpread({},
-
+  (0, _vuex.mapState)(['refresh_num']),
   (0, _vuex.mapGetters)(['user_role']), {
     has_task: function has_task() {
       console.log('has_task', this.tab_list[this.current_tab.index]);
@@ -291,12 +316,12 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     } }),
 
   methods: {
-    init: function init() {var _this = this;
+    init: function init() {var _this2 = this;
       Promise.all([this.get_dcrw_list(), this.get_ywc_list()]).then(function (values) {
         console.log(values);
-        _this.tab_list[0].data = _this.$utils._get(values[0], 'data.data', []);
-        _this.tab_list[1].data = _this.$utils._get(values[1], 'data.data', []);
-        _this.loading = false;
+        _this2.tab_list[0].data = _this2.$utils._get(values[0], 'data.data', []);
+        _this2.tab_list[1].data = _this2.$utils._get(values[1], 'data.data', []);
+        _this2.loading = false;
       });
     },
     get_dcrw_list: function get_dcrw_list() {

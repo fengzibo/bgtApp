@@ -73,6 +73,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l1 = _vm.__map(_vm.tab_list, function(tab, index1) {
+    var l0 = _vm.__map(tab.data, function(item, __i0__) {
+      var m0 = _vm.item_price(item)
+      var m1 = _vm.item_start_date(item.startData)
+      var m2 = _vm.item_work_address(item.workAddress)
+      return {
+        $orig: _vm.__get_orig(item),
+        m0: m0,
+        m1: m1,
+        m2: m2
+      }
+    })
+
+    return {
+      $orig: _vm.__get_orig(tab),
+      l0: l0
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l1: l1
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -166,69 +193,52 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
   data: function data() {
     return {
       tab_list: [
-      {
-        name: '正在招工',
-        id: 'zzzg',
-        data: [
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' },
-
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' },
-
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' }] },
-
-
-
+      // {
+      // 	name: '正在招工',
+      // 	id: 'zzzg',
+      // 	data: [
+      // 		{
+      // 			name: '招自动化设备电工钳工师傅',
+      // 			time: '2019-09-30',
+      // 			time_limit: '2个月',
+      // 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+      // 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+      // 			price: '30-35元/时'
+      // 		},
+      // 		{
+      // 			name: '招自动化设备电工钳工师傅',
+      // 			time: '2019-09-30',
+      // 			time_limit: '2个月',
+      // 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+      // 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+      // 			price: '30-35元/时'
+      // 		},
+      // 		{
+      // 			name: '招自动化设备电工钳工师傅',
+      // 			time: '2019-09-30',
+      // 			time_limit: '2个月',
+      // 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+      // 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+      // 			price: '30-35元/时'
+      // 		}
+      // 	]
+      // },
       {
         name: '待我回复',
         id: 'dwhf',
-        data: [
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' },
-
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' }] },
+        data: [] }],
 
 
 
-      {
-        name: '我参与过的',
-        id: 'wcygd',
-        data: [
-        {
-          name: '招自动化设备电工钳工师傅',
-          time: '2019-09-30',
-          time_limit: '2个月',
-          tags: ['包吃包住', '要面试', '经验不限', '月结'],
-          address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-          price: '30-35元/时' }] }],
+
+
+
+
+
+
+
+
+
 
 
 
@@ -265,7 +275,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
   },
   methods: {
-    init: function init() {
+    init: function init() {var _this2 = this;
       if (!this.id) {
         uni.showModal({
           titel: '提示',
@@ -286,6 +296,15 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           } });
 
       }
+      this.$http.get('personwx.personreclist/1.0/', {
+        status: '0',
+        rpStatus: '1' }).
+      then(function (res) {
+        console.log('personreclist', res);
+        if (res.data.code == '0') {
+          _this2.tab_list[0].data = res.data.data;
+        }
+      });
     },
     select_tab: function select_tab(id, index) {
       this.current_tab.id = id;
@@ -300,9 +319,52 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     loadMore: function loadMore(index) {
       console.log(index);
     },
-    go_detail: function go_detail(iitem) {
+    go_detail: function go_detail(item) {
       uni.navigateTo({
-        url: '/pages/tabbar/task/taskMain/taskMainArtisan' });
+        url: '/pages/tabbar/task/taskMain/taskMainArtisan?item=' + encodeURIComponent(JSON.stringify(item)) });
+
+    },
+    item_price: function item_price(item) {
+      console.log(item);
+      var r_info = [];
+      try {
+        r_info = JSON.parse(item.requirementInfo);
+      } catch (e) {
+        //TODO handle the exception
+      }
+
+      var min = 0,max = 0;
+      r_info.forEach(function (val, index) {
+        var price = Number.parseFloat(val.price);
+        if (index == 0) {
+          min = price;
+          max = price;
+        } else {
+          min = price < min ? price : min;
+          max = price > max ? price : max;
+        }
+      });
+      return "".concat(min, " - ").concat(max, "\u5143/\u65F6");
+    },
+    item_tag: function item_tag(item) {
+      try {
+        var welfareInfo = JSON.parse(item.welfareInfo);
+        var workRequest = JSON.parse(item.workRequest);
+        return welfareInfo.concat(workRequest);
+      } catch (e) {
+        //TODO handle the exception
+      }
+    },
+    item_start_date: function item_start_date(time) {
+      return this.$utils.format_date(time);
+    },
+    item_work_address: function item_work_address(addr) {
+      var address = JSON.parse(addr);
+      if (Array.isArray(address)) {
+        return address.join();
+      } else {
+        return address;
+      }
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

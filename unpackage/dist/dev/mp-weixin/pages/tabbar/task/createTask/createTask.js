@@ -236,9 +236,13 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     stepThree: stepThree,
     stepFour: stepFour },
 
-  onLoad: function onLoad(option) {
+  onLoad: function onLoad(option) {var _this = this;
     console.log(getCurrentPages());
     console.log(option.id);
+    setTimeout(function () {
+      _this.$store.commit('setRefreshNum', Math.random());
+
+    }, 3000);
     this.route_id = option.id;
     if (this.route_id) {
       var status = this.current_task.status;
@@ -255,23 +259,25 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
   (0, _vuex.mapState)(['current_task'])),
 
   methods: {
-    next: function next() {var _this = this;
+    next: function next() {var _this2 = this;
       switch (this.num) {
         case 0:
           this.$refs.stepOne.formSubmit(function (id) {
 
-            _this.num++;
-            _this.task_id = id;
+            _this2.num++;
+            _this2.task_id = id;
+            uni.$emit('refreshList');
           });
           break;
         case 1:
           this.$refs.stepTwo.formSubmit(function () {
-
-            _this.num++;
+            uni.$emit('refreshList');
+            _this2.num++;
           });
           break;
         default:
           break;}
+
 
       this.scrollTop = this.old.scrollTop;
       this.$nextTick(function () {
@@ -288,7 +294,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     update_recruiting_info: function update_recruiting_info(data) {
       this.recruiting_info = data;
     },
-    endCreate: function endCreate(e) {var _this2 = this;
+    endCreate: function endCreate(e) {var _this3 = this;
       var pamars = {
         proId: this.recruiting_info.proId,
         recId: this.recruiting_info.id,
@@ -299,11 +305,11 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       // return 
       this.$http.post('personwx.finishrecruit/1.0/', pamars).then(function (res) {
         console.log(res);
-        _this2.scrollTop = _this2.old.scrollTop;
-        _this2.$nextTick(function () {
+        _this3.scrollTop = _this3.old.scrollTop;
+        _this3.$nextTick(function () {
           this.scrollTop = 0;
         });
-        _this2.num++;
+        _this3.num++;
         // this.$store.commit('setHasTask',true)
       });
     },

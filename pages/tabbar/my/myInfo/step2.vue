@@ -14,12 +14,17 @@
 			<view class="bg-white skills-card">
 				<view class="cu-form-group">
 					<view class="title">学历</view>
-					<input placeholder="请输入学历" name="education" v-model="form_data.education"></input>
+					<!-- <input placeholder="请输入学历" class="text-right" name="education" v-model="form_data.education"></input> -->
+					<picker @change="educationChange" :value="education_index" :range="education_pick"  name="education">
+						<view class="picker">
+							{{form_data.education}}
+						</view>
+					</picker>
 				</view>
 				
 				<view class="cu-form-group">
 					<view class="title">工作年限</view>
-					<input placeholder="请输入工作年限" name="limit" v-model="form_data.limit"></input>
+					<input placeholder="请输入工作年限" class="text-right" name="limit" v-model="form_data.limit"></input>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">技工类型</view>
@@ -45,11 +50,11 @@
 				</view>
 				<view class="cu-form-group">
 					<view class="title">期望工作地</view>
-					<input placeholder="请输入期望工作地" name="addr" v-model="form_data.addr"></input>
+					<input placeholder="请输入期望工作地" class="text-right" name="addr" v-model="form_data.addr"></input>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">现居地址</view>
-					<input placeholder="请输入现居地址" name="homeAddress" v-model="form_data.homeAddress"></input>
+					<input placeholder="请输入现居地址" class="text-right" name="homeAddress" v-model="form_data.homeAddress"></input>
 				</view>
 			</view>
 			<view class="block-title text-lg">
@@ -57,7 +62,7 @@
 			</view>
 			<view class="bg-white skills-card grid col-3">
 				<view class="radius padding-sm text-center certificate" v-for="item in card_list" :key="item.id">
-					<image :src="'https://zzy-wx.mynatapp.cc'+item.filePath" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
+					<image :src="'https://zzy.zwch.ltd'+item.filePath" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
 					<text class="text-grey text-df margin-top-sm">{{item.fileName}}</text>
 					<view class="remove bg-red text-lg" @tap="removeCard(item)">
 						<text class="text-white cuIcon-close"></text>
@@ -152,11 +157,11 @@
 				<view class="text-left bg-white">
 					<view class="cu-form-group">
 						<view class="title">服务公司</view>
-						<input placeholder="请输入服务公司" name="company" v-model="exper_data.company"></input>
+						<input placeholder="请输入服务公司" class="text-right" name="company" v-model="exper_data.company"></input>
 					</view>
 					<view class="cu-form-group">
 						<view class="title">设备类型</view>
-						<input placeholder="请输入设备类型" name="equipment" v-model="exper_data.equipment"></input>
+						<input placeholder="请输入设备类型" class="text-right" name="equipment" v-model="exper_data.equipment"></input>
 					</view>
 					<view class="cu-form-group">
 						<view class="title">技工类型</view>
@@ -173,7 +178,7 @@
 					</view>
 					<view class="cu-form-group">
 						<view class="title">工价</view>
-						<input placeholder="请输入工价" name="equipment" v-model="exper_data.price"></input>
+						<input placeholder="请输入工价" class="text-right" name="equipment" v-model="exper_data.price"></input>
 					</view>
 					<view class="cu-form-group picker-no-icon">
 						<view class="title">服务时间</view>
@@ -193,7 +198,7 @@
 					</view>
 					<view class="cu-form-group" v-if="exper_model">
 						<view class="title">服务备注</view>
-						<textarea maxlength="-1"  name="remark" placeholder="请输入服务备注" auto-height v-model="exper_data.remark" ></textarea>
+						<textarea maxlength="-1" class="text-right" name="remark" placeholder="请输入服务备注" auto-height v-model="exper_data.remark" ></textarea>
 					</view>
 					<view class="cu-form-group">
 						<view class="title">公司地址</view>
@@ -260,6 +265,8 @@ export default {
 			loadProgress:0,
 			exper_edit:false,
 			current_exper_id:'',
+			education_index:0,
+			education_pick:['初中','高中','高职','大专','本科','研究生','博士']
 		};
 	},
 	computed: {
@@ -290,7 +297,7 @@ export default {
 				pid:this.id
 			}).then(res =>{
 				console.log('work_list',res)
-				this.work_list = res.data.data.data
+				this.work_list = this.$utils._get(res,'data.data.data',[])
 			})
 		},
 		get_card_list(){
@@ -298,7 +305,7 @@ export default {
 				pid:this.id
 			}).then(res =>{
 				console.log('card_list',res)
-				this.card_list = res.data.data.data
+				this.card_list = this.$utils._get(res,'data.data.data',[])
 			})
 		},
 		get_type_list(){
@@ -309,7 +316,8 @@ export default {
 			this.$http.post('personwx.tylelist/1.0/').then(res =>{
 				console.log(res)
 				let type_picker_arr = []
-				res.data.data.data.forEach((item,index) =>{
+				let res_default = this.$utils._get(res,'data.data.data',[])
+				res_default.forEach((item,index) =>{
 					if(item.pid == '0'){
 						type_picker_arr.push(item)
 					}
@@ -317,7 +325,7 @@ export default {
 				this.type_picker.push(type_picker_arr)
 				type_picker_arr.forEach(obj =>{
 					let arr = []
-					res.data.data.data.forEach((item,index) =>{
+					res_default.forEach((item,index) =>{
 						if(obj.id == item.pid){
 							arr.push(item)
 						}
@@ -346,6 +354,7 @@ export default {
 		init_info(){
 			console.log(this.res)
 			this.form_data.education = this.res.education
+			this.education_index = this.education_pick.indexOf(this.res.education)
 			this.form_data.limit = this.res.workYear
 			this.form_data.addr = this.res.expectedPlace
 			this.form_data.homeAddress = this.res.homeAddress
@@ -604,6 +613,10 @@ export default {
 				console.log(res)
 				this.get_card_list()
 			})
+		},
+		educationChange(e){
+			this.education_index = e.detail.value
+			this.form_data.education = this.education_pick[e.detail.value]
 		}
 	}
 };

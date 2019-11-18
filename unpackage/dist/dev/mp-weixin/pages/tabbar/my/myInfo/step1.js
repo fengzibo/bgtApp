@@ -260,9 +260,17 @@ var u_data = null;var _default2 = { props: { res: { type: Object, default: funct
 
         success: function success(res) {
           console.log('uploadImage success, res is:', res);
+          var json_res = JSON.parse(res.data);
+          if (json_res.code == '1') {
+            _this2.progress_model = false;
+            uni.showToast({
+              title: json_res.msg,
+              icon: 'none',
+              duration: 3000 });
 
-
-          u_data = JSON.parse(res.data).data;
+            return;
+          }
+          u_data = json_res.data;
           console.log(u_data);
           _this2.form_data.name = u_data.name;
           _this2.form_data.sex = u_data.sex;
@@ -333,19 +341,20 @@ var u_data = null;var _default2 = { props: { res: { type: Object, default: funct
         // if(this.has_res){
         // 	return 
         // }
-        var uinfo = JSON.parse(JSON.stringify(_this3.user_info));
-        uinfo.id = _this3.$utils._get(res, 'data.data.data.data.pid', '');
-        uinfo.loginName = _this3.$utils._get(_this3.form_data, 'name', uinfo.nickName);
-        _this3.$store.commit('setUserInfo', uinfo);
-        uni.hideLoading();
-        if (_this3.has_res) {
-          uni.navigateBack({
-            delta: 1 });
+        if (res.data.code == '0') {
+          var uinfo = JSON.parse(JSON.stringify(_this3.user_info));
+          uinfo.id = _this3.$utils._get(res, 'data.data.data.data.pid', '');
+          uinfo.loginName = _this3.$utils._get(_this3.form_data, 'name', uinfo.nickName);
+          _this3.$store.commit('setUserInfo', uinfo);
+          uni.hideLoading();
+          if (_this3.has_res) {
+            uni.navigateBack({
+              delta: 1 });
 
+          }
+          _this3.$emit('next');
+          _this3.$emit('showTips', '更完整的工作信息将会给您带来更多的工作机会');
         }
-        _this3.$emit('next');
-        _this3.$emit('showTips', '更完整的工作信息将会给您带来更多的工作机会');
-
       });
 
     } } };exports.default = _default2;

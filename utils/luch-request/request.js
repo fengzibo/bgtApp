@@ -5,6 +5,8 @@
  * @Date 2019-06-05
  * @Email webwork.s@qq.com
  * **/
+import Store from '../../store';
+import utils from '../../utils/utils.js';
 export default class Request {
 	config = {
 		baseUrl: '',
@@ -99,14 +101,23 @@ export default class Request {
 
 	get(url, data, options = {}) {
 		options.url = url
-		options.data = data
+		let default_data = {
+			loginName:utils._get(Store,'state.user_info.loginName',''),
+			loginUserId:utils._get(Store,'state.user_info.id',''),
+		}
+		
+		options.data = Object.assign(default_data,data)
 		options.method = 'GET'
 		return this.request(options)
 	}
 
 	post(url, data, options = {}) {
 		options.url = url
-		options.data = data
+		let default_data = {
+			loginName:utils._get(Store,'state.user_info.loginName',''),
+			loginUserId:utils._get(Store,'state.user_info.id',''),
+		}
+		options.data = Object.assign(default_data,data)
 		options.method = 'POST'
 		return this.request(options)
 	}

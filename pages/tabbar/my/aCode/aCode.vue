@@ -5,7 +5,8 @@
 			<block slot="content">我的激活码</block>
 		</cu-custom>
 		<view class="code-main">
-			<view class="text-lg text-grey text-center padding" v-if="ishead">
+			<view class="text-lg text-grey text-center padding" style="width: 100%;" v-if="ishead">
+				<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/p-compute.png" mode="aspectFit" style="width: 100%"></image>
 				已激活
 			</view>
 			<template v-else>
@@ -51,20 +52,20 @@
 							icon:'none',
 						});
 						return 
+					}else if(this.$utils._get(res,'data.data.code','') == '0'){
+						let ishead = this.$utils._get(res,'data.data.data.head','')
+						this.$store.commit('setIsHead',ishead)
+						uni.showToast({
+						    title: '激活成功',
+						    duration: 2000,
+							icon:'success',
+							success() {
+								uni.navigateBack({
+								    delta: 1
+								});
+							}
+						});
 					}
-					let ishead = this.$utils._get(res,'data.data.data.head','')
-					this.$store.commit('setIsHead',ishead)
-					uni.showToast({
-					    title: '激活成功',
-					    duration: 2000,
-						icon:'success',
-						success() {
-							uni.navigateBack({
-							    delta: 1
-							});
-						}
-					});
-					
 				})
 			}
 		}

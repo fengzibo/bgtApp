@@ -209,21 +209,28 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 //
 //
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
-var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 290);var _default2 = { data: function data() {var currentDate = this.$utils.format_date(new Date());return { form_data: { task_name: '', industry: '请选择任务行业', equipment_name: '', task_no: '', company: '', budget: '', delivery: currentDate, remark: '', deviceNum: '' }, industry_list: [], industry_index: 0, loading: true };}, props: { route_id: { type: String, default: function _default() {return '';} } }, computed: _objectSpread({}, (0, _vuex.mapState)(['current_task'])), mounted: function mounted() {this.init();console.log(this.route_id);}, methods: { init: function init() {var _this = this;uni.showLoading({ title: '加载中' });this.loading = true;this.$http.post('personwx.hyxx/1.0/', { dictId: 'e7f70f44ebf3d55e2fac4af73e29ba36' }).then(function (res) {console.log(res);_this.industry_list = _this.$utils._get(res, 'data.data.data', []);_this.form_data.industry = _this.industry_list[0].description;if (_this.route_id) {_this.form_data.task_name = _this.current_task.deviceName;var index = _this.industry_list.findIndex(function (o) {return o.id == _this.current_task.industry;
-          });
-          _this.industry_index = index < 0 ? 0 : index;
-          console.log(_this.industry_index);
-          _this.form_data.industry = _this.industry_list[_this.industry_index].description;
-          _this.form_data.equipment_name = _this.current_task.deviceName;
-          _this.form_data.deviceNum = _this.current_task.deviceNum;
-          _this.form_data.task_no = _this.current_task.proNumber;
-          _this.form_data.company = _this.current_task.scompany;
-          _this.form_data.budget = _this.current_task.budget;
-          _this.form_data.delivery = _this.$utils.format_date(_this.current_task.deliveryPeriod);
-          _this.form_data.remark = _this.current_task.description;
+var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 290);var _default2 = { data: function data() {var currentDate = this.$utils.format_date(new Date());return { form_data: { // task_name: '',
+        industry: '请选择任务行业', equipment_name: '', task_no: '', company: '', budget: '', delivery: currentDate, remark: '', deviceNum: '' }, industry_list: [], industry_index: 0, loading: true };}, props: { route_id: { type: String, default: function _default() {return '';} } }, computed: _objectSpread({}, (0, _vuex.mapState)(['current_task'])), onReady: function onReady() {console.log('ready');}, mounted: function mounted() {console.log('mounted');this.init();console.log(this.route_id);}, methods: { init: function init() {var _this = this;uni.showLoading({ title: '加载中' });this.loading = true;this.$http.post('personwx.hyxx/1.0/', { dictId: 'e7f70f44ebf3d55e2fac4af73e29ba36' }).then(function (res) {console.log(res);if (res.data.code == '0') {_this.industry_list = _this.$utils._get(res, 'data.data.data', []);_this.form_data.industry = _this.industry_list[0].description;
+          if (_this.route_id) {
+            // this.form_data.task_name = this.current_task.deviceName
+            var index = _this.industry_list.findIndex(function (o) {
+              return o.id == _this.current_task.industry;
+            });
+            _this.industry_index = index < 0 ? 0 : index;
+            console.log(_this.industry_index);
+            _this.form_data.industry = _this.industry_list[_this.industry_index].description;
+            _this.form_data.equipment_name = _this.current_task.deviceName;
+            _this.form_data.deviceNum = _this.current_task.deviceNum;
+            _this.form_data.task_no = _this.current_task.proNumber;
+            _this.form_data.company = _this.current_task.scompany;
+            _this.form_data.budget = _this.current_task.budget;
+            _this.form_data.delivery = _this.$utils.format_date(_this.current_task.deliveryPeriod);
+            _this.form_data.remark = _this.current_task.description;
+          }
+          uni.hideLoading();
+          _this.loading = false;
         }
-        uni.hideLoading();
-        _this.loading = false;
+
       });
     },
 
@@ -237,7 +244,7 @@ var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 290);var 
         title: '' });
 
       var rule = [
-      { name: "task_name", checkType: "notnull", checkRule: "", errorMsg: "任务名称不能为空" },
+      // {name:"task_name", checkType : "notnull", checkRule:"",  errorMsg:"任务名称不能为空"},
       { name: "industry", checkType: "notnull", checkRule: "", errorMsg: "任务行业不能为空" },
       { name: "equipment_name", checkType: "notnull", checkRule: "", errorMsg: "设备名称不能为空" },
       { name: "company", checkType: "notnull", checkRule: "", errorMsg: "服务公司不能为空" }];

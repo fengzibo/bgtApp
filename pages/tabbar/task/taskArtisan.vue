@@ -9,20 +9,20 @@
 			<swiper-item class="swiper-item" v-for="(tab, index1) in tab_list" :key="index1">
 				<scroll-view class="scroll-v" scroll-y @scrolltolower="loadMore(index1)">
 					<view class="list">
-						<view class="list-item bg-white " v-for="(item, index2) in tab.data" :key="index2" @tap="go_detail(item)">
+						<view class="list-item bg-white " v-for="item in tab.data" :key="item.id" @tap="go_detail(item)">
 							<view class="top-main text-grey">
-								<text class="title text-black text-df">{{ item.name }}</text>
-								<text class="price text-red text-xl">{{ item.price }}</text>
+								<text class="title text-black text-df">{{ item.title }}</text>
+								<text class="price text-red text-xl">{{ item_price(item)}}</text>
 							</view>
 							<view class="center-main">
-								<view class="cu-tag radius bg-red" v-for="(tag, tIndex) in item.tags" :key="tIndex">{{ tag }}</view>
+								<view class="cu-tag radius bg-red" v-for="(tag, tIndex) in item_tag(item)" :key="tIndex">{{ tag }}</view>
 							</view>
 							<view class="text-grey margin-bottom-sm">
-								<text>上工日期{{ item.time }}/工期{{item.time_limit}}</text>
+								<text>上工日期{{ item_start_date(item.startData) }}/工期{{item.limit}}{{item.unit}}</text>
 							</view>
 							<view class="bottom-main text-gray">
 								<text class="cuIcon-locationfill margin-right-xs"></text>
-								<text>{{ item.address }}</text>
+								<text>{{ item_work_address(item.workAddress)}}</text>
 							</view>
 						</view>
 					</view>
@@ -59,72 +59,55 @@ export default {
 	data() {
 		return {
 			tab_list: [
-				{
-					name: '正在招工',
-					id: 'zzzg',
-					data: [
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						},
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						},
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						}
-					]
-				},
+				// {
+				// 	name: '正在招工',
+				// 	id: 'zzzg',
+				// 	data: [
+				// 		{
+				// 			name: '招自动化设备电工钳工师傅',
+				// 			time: '2019-09-30',
+				// 			time_limit: '2个月',
+				// 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+				// 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+				// 			price: '30-35元/时'
+				// 		},
+				// 		{
+				// 			name: '招自动化设备电工钳工师傅',
+				// 			time: '2019-09-30',
+				// 			time_limit: '2个月',
+				// 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+				// 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+				// 			price: '30-35元/时'
+				// 		},
+				// 		{
+				// 			name: '招自动化设备电工钳工师傅',
+				// 			time: '2019-09-30',
+				// 			time_limit: '2个月',
+				// 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+				// 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+				// 			price: '30-35元/时'
+				// 		}
+				// 	]
+				// },
 				{
 					name: '待我回复',
 					id: 'dwhf',
-					data: [
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						},
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						}
-					]
+					data: []
 				},
-				{
-					name: '我参与过的',
-					id: 'wcygd',
-					data: [
-						{
-							name: '招自动化设备电工钳工师傅',
-							time: '2019-09-30',
-							time_limit: '2个月',
-							tags: ['包吃包住', '要面试', '经验不限', '月结'],
-							address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
-							price: '30-35元/时'
-						}
-					]
-				}
+				// {
+				// 	name: '我参与过的',
+				// 	id: 'wcygd',
+				// 	data: [
+				// 		{
+				// 			name: '招自动化设备电工钳工师傅',
+				// 			time: '2019-09-30',
+				// 			time_limit: '2个月',
+				// 			tags: ['包吃包住', '要面试', '经验不限', '月结'],
+				// 			address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
+				// 			price: '30-35元/时'
+				// 		}
+				// 	]
+				// }
 			],
 			current_tab: {
 				id: 'zzzg',
@@ -179,6 +162,15 @@ export default {
 					}
 				})
 			}
+			this.$http.get('personwx.personreclist/1.0/',{
+				status:'0',
+				rpStatus:'1'
+			}).then(res =>{
+				console.log('personreclist',res)
+				if(res.data.code == '0'){
+					this.tab_list[0].data = res.data.data
+				}
+			})
 		},
 		select_tab(id, index) {
 			this.current_tab.id = id;
@@ -193,10 +185,53 @@ export default {
 		loadMore(index) {
 			console.log(index);
 		},
-		go_detail(iitem) {
+		go_detail(item) {
 			uni.navigateTo({
-				url: '/pages/tabbar/task/taskMain/taskMainArtisan'
+				url: '/pages/tabbar/task/taskMain/taskMainArtisan?item='+encodeURIComponent(JSON.stringify(item))
 			});
+		},
+		item_price(item){
+			console.log(item)
+			let r_info= []
+			try{
+				 r_info= JSON.parse(item.requirementInfo)
+			}catch(e){
+				//TODO handle the exception
+			}
+			
+			let min = 0,max = 0;
+			r_info.forEach((val,index) =>{
+				let price = Number.parseFloat(val.price)
+				if(index == 0){
+					min = price
+					max = price
+				}else{
+					min = price<min?price:min
+					max = price>max?price:max
+				}
+			})
+			return `${min} - ${max}元/时`
+		},
+		item_tag(item){
+			try{
+				let welfareInfo = JSON.parse(item.welfareInfo)
+				let workRequest = JSON.parse(item.workRequest)
+				return welfareInfo.concat(workRequest)
+			}catch(e){
+				//TODO handle the exception
+			}
+		},
+		item_start_date(time){
+			return this.$utils.format_date(time)
+		},
+		item_work_address(addr){
+			let address = JSON.parse(addr)
+			if(Array.isArray(address)){
+				return address.join()
+			}else{
+				return address
+			}
+			
 		}
 	}
 };
@@ -212,7 +247,7 @@ export default {
 .tab-list {
 	padding: 0 30rpx;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
 	align-items: center;
 	height: 90rpx;
 	flex: 0 0 auto;

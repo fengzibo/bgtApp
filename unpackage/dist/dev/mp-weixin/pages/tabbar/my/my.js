@@ -233,11 +233,19 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     this.numDH();
     console.log(this.user_info);
   },
+  onShow: function onShow() {
+    console.log('show');
+  },
+  watch: {
+    refresh_num: function refresh_num(val) {
+      console.log('my_refresh_num', val);
+    } },
+
   components: {
     sunuiStar: sunuiStar },
 
   computed: _objectSpread({},
-  (0, _vuex.mapState)(['user_info']),
+  (0, _vuex.mapState)(['user_info', 'refresh_num']),
   (0, _vuex.mapGetters)(['id']), {
     avatarUrl: function avatarUrl() {
       return "url(".concat(this.user_info.avatarUrl, ")");

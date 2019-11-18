@@ -90,11 +90,28 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.__map(_vm.p_list, function(item, __i0__) {
+    var m0 = _vm.avatarUrl(item.avatarUrl)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
   if (!_vm._isMounted) {
     _vm.e0 = function($event) {
       _vm.conditions_modal = true
     }
   }
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -128,6 +145,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
 //
 //
 //
@@ -372,6 +391,9 @@ var _default =
 
         }
       });
+    },
+    avatarUrl: function avatarUrl(_avatarUrl) {
+      return "url(".concat(_avatarUrl, ")");
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
