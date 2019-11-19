@@ -263,13 +263,13 @@ var _default =
 
       conditions: {
         status: '0',
-        isHead: '1' },
+        isHead: '0' },
 
       p_list: [],
       loading: true,
       conditions_modal: false,
       status_radio: '0',
-      switch_is_head: true,
+      switch_is_head: false,
       recId: '' };
 
   },
@@ -364,7 +364,7 @@ var _default =
       this.conditions_modal = false;
       this.init();
     },
-    formSubmit: function formSubmit(e) {
+    formSubmit: function formSubmit(e) {var _this2 = this;
       console.log('form发生了submit事件，携带数据为：', e);
       var formId = e.detail.formId,
       Ids = [],
@@ -385,7 +385,7 @@ var _default =
       console.log(params);
       this.$http.post('personwx.chooseperson/1.0/', params).then(function (res) {
         console.log(res);
-        if (res.data.code == '0') {
+        if (_this2.$utils._get(res, 'data.success', false)) {
           uni.navigateBack({
             delta: 1 });
 

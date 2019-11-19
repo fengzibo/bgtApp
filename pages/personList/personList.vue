@@ -22,7 +22,7 @@
 				--没有数据--
 			</view>
 		</view>
-		
+		<form @submit="formSubmit"  :report-submit="true">
 			<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100" :top="c_CustomBar" v-if="!loading && !no_data">
 				<view class="person-list bg-white" >
 					<checkbox-group @change="checkboxChange">
@@ -66,11 +66,11 @@
 				<view class="action text-orange text-xs">
 					已选择：<text class="text-red">{{check_length}}</text>人
 				</view>
-				<form @submit="formSubmit"  :report-submit="true">
+				
 					<button class="bg-red submit" form-type="submit">完成</button>
-				</form>
+				
 			</view>
-		
+		</form>
 		<view class="cu-modal drawer-modal justify-end" :class="conditions_modal?'show':''" @tap="hideModal">
 			<view class="cu-dialog basis-xl" @tap.stop="" :style="[{top:CustomBar+'px',height:'calc(100vh - ' + CustomBar + 'px)'}]">
 				<view class="cu-form-group">
@@ -117,13 +117,13 @@
 				},
 				conditions:{
 					status:'0',
-					isHead:'1'
+					isHead:'0'
 				},
 				p_list:[],
 				loading:true,
 				conditions_modal:false,
 				status_radio:'0',
-				switch_is_head:true,
+				switch_is_head:false,
 				recId:''
 			};
 		},
@@ -239,7 +239,7 @@
 				console.log(params)
 				this.$http.post('personwx.chooseperson/1.0/',params).then(res =>{
 					console.log(res)
-					if(res.data.code == '0'){
+					if(this.$utils._get(res,'data.success',false)){
 						uni.navigateBack({
 						    delta: 1
 						});
