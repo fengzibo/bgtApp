@@ -66,9 +66,14 @@
 						uinfo.id = this.$utils._get(res,'data.data.id','')
 						uinfo.jwt = this.$utils._get(res,'data.data.jwt','')
 						uinfo.openid = this.$utils._get(res,'data.data.openId','')
-						uinfo.loginName = this.$utils._get(res,'data.data.loginName','')
+						uinfo.loginName = this.$utils._get(res,'data.data.loginName',uinfo.nickName)
+						uinfo.status = this.$utils._get(res,'data.data.status','0')
 						this.$store.commit('setUserInfo',uinfo)
 						this.$store.commit('setRefreshJwt',false)
+						let ishead = this.$utils._get(res, 'data.data.isHead', '0')
+						let isSubscribe = this.$utils._get(res,'data.data.isSubscribe',false)
+						this.$store.commit('setIsHead',ishead)
+						this.$store.commit('setIsSubscribe',isSubscribe === '1'?true:false)
 						uni.hideLoading();
 						uni.showToast({
 						    title: '登录成功',

@@ -14,64 +14,63 @@
 			</view>
 		</view>
 		<template v-if="user_role=== 'head' && has_task && !loading">
-			<view class="tab-list bg-white">
-				<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
-					<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
+			<mescroll-uni @down="downCallback" @up="upCallback" :up="upOption"  @scroll="scroll" :down="downOption" @init="mescrollInit" :top="c_CustomBar">
+				<view class="tab-list bg-white">
+					<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
+						<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
+					</view>
 				</view>
-			</view>
-			<swiper :current="current_tab.index" class="swiper-box" :duration="300" @change="ontabchange">
-				<swiper-item class="swiper-item" v-for="(tab, index1) in tab_list" :key="index1">
-					<scroll-view class="scroll-v" scroll-y @scrolltolower="loadMore(index1)">
-						<view class="list">
-							<view class="list-item bg-white " v-for="item in tab.data" :key="item.id" @tap="go_detail(item)">
-								<view class="top-main text-grey">
-									<text class="title">{{ item.deviceName }}({{item.deviceNum}})</text>
-									<text class="time">交期：{{ deliveryPeriod(item.deliveryPeriod) }}</text>
-								</view>
-								<view class="center-main">
-									<view class="schedule">
-										<template v-if="item.status == '3'">
-											<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
-											<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
-										</template>
-										<view class="schedule-num text-green" v-else>
-											{{item.status == '2'?'待启动':'招募中'}}
-										</view>
-									</view>
-									<view class="com-view">
-										<text class="num">{{ item.limit }}</text>
-										<text class="tip text-grey">累计工时</text>
-									</view>
-									<view class="com-view">
-										<text class="num err-color">{{ item.err || 0 }}</text>
-										<text class="tip text-grey">累计异常</text>
-									</view>
-									<view class="com-view">
-										<text class="num"><text class="text-blue">{{item.ss || 0}}</text>/ <text >{{ item.budget }}</text> </text>
-										<text class="tip text-grey">实时/预算</text>
-									</view>
-								</view>
-								<view class="bottom-main text-gray">
-									<text class="cuIcon-locationfill margin-right-xs"></text>
-									<text>{{ item.scompany }}</text>
+				<view class="list">
+					<view class="list-item bg-white " v-for="item in p_list" :key="item.id" @tap="go_detail(item)">
+						<view class="top-main text-grey">
+							<text class="title">{{ item.deviceName }}({{item.deviceNum}})</text>
+							<text class="time">交期：{{ deliveryPeriod(item.deliveryPeriod) }}</text>
+						</view>
+						<view class="center-main">
+							<view class="schedule">
+								<template v-if="item.status == '3'">
+									<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
+									<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
+								</template>
+								<view class="schedule-num text-green" v-else>
+									{{item.status == '2'?'待启动':'招募中'}}
 								</view>
 							</view>
+							<view class="com-view">
+								<text class="num">{{ item.limit }}</text>
+								<text class="tip text-grey">累计工时</text>
+							</view>
+							<view class="com-view">
+								<text class="num err-color">{{ item.err || 0 }}</text>
+								<text class="tip text-grey">累计异常</text>
+							</view>
+							<view class="com-view">
+								<text class="num"><text class="text-blue">{{item.ss || 0}}</text>/ <text >{{ item.budget }}</text> </text>
+								<text class="tip text-grey">实时/预算</text>
+							</view>
 						</view>
-						<!-- <view class="loading-more">
-			                <text class="loading-more-text">{{tab.loadingText}}</text>
-			            </view> -->
-					</scroll-view>
-				</swiper-item>
-			</swiper>
+						<view class="bottom-main text-gray">
+							<view class="flex align-center">
+								<text class="cuIcon-locationfill margin-right-xs"></text>
+								<text>{{ item.scompany }}</text>
+							</view>
+							<view>
+								{{deliveryPeriod(item.createdTime)}}
+							</view>
+						</view>
+					</view>
+				</view>
+			</mescroll-uni>
 			<view class="fixed-add shadow bg-blue" @tap="goto_add">
 				<view class="cuIcon-add text-white text-df"></view>
 			</view>
 		</template>
-		<task-artisan v-if="user_role=== 'artisan'" class="task-artisan"></task-artisan>
+		<task-artisan v-if="user_role=== 'artisan' && show_artisan" class="task-artisan"></task-artisan>
 	</view>
 </template>
 
 <script>
+import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import { mapState,mapGetters } from 'vuex';
 import 	taskArtisan from './taskArtisan.vue'
 export default {
@@ -81,19 +80,32 @@ export default {
 				{
 					name: '当前任务',
 					id: 'dcrw',
-					data:[]
+					data:[],
+					y: 0,
 				},
 				{
 					name: '已完成',
 					id: 'ywc',
-					data:[]
+					data:[],
+					y: 0,
 				}
 			],
 			current_tab: {
 				id: 'dcrw',
 				index: 0
 			},
-			loading:true
+			loading:true,
+			show_artisan:false,
+			mescroll: null, //mescroll实例对象
+			upOption: {
+				onScroll: true, // 是否监听滚动事件, 默认false (配置为true时,可@scroll="scroll"获取到滚动条位置和方向)
+				isLock:true,
+				auto:false
+			},
+			downOption:{
+				auto:false
+			},
+			preIndex:0
 		};
 	},
 	onLoad() {
@@ -101,8 +113,9 @@ export default {
 		try {
 			const version = uni.getStorageSync('version')
 			console.log('version',version)
-			if(version !== '1.1.2'){
+			if(version !== '1.1.7'){
 				uni.clearStorageSync();
+				this.show_artisan = false
 				uni.reLaunch ({
 					url: '/pages/welcome/welcome'
 				})
@@ -111,12 +124,15 @@ export default {
 			const value = uni.getStorageSync('user_info');
 			console.log(value)
 			if (!value) {
+				this.show_artisan = false
 				uni.reLaunch ({
 					url: '/pages/welcome/welcome'
 				})
 			}else{
 				if(this.user_role=== 'head'){
 					this.init()
+				}else{
+					this.show_artisan = true
 				}
 			}
 		} catch (e) {
@@ -127,12 +143,16 @@ export default {
 			console.log('refreshList')
 			if(this.user_role=== 'head'){
 				this.init()
+			}else{
+				this.show_artisan = true
 			}
 		})
 		uni.$on('refreshJwt',(data) =>{
 			console.log('refreshJwt',data)
 			if(this.user_role=== 'head'){
 				this.init()
+			}else{
+				this.show_artisan = true
 			}
 		})
 	},
@@ -147,7 +167,8 @@ export default {
 		uni.$off('refreshJwt')
 	},
 	components:{
-		taskArtisan
+		taskArtisan,
+		MescrollUni
 	},
 	watch:{
 		user_role(val){
@@ -164,8 +185,26 @@ export default {
 		...mapState(['refresh_num']),
 		...mapGetters(['user_role']),
 		has_task(){
-			console.log('has_task',this.tab_list[this.current_tab.index])
-			return this.$utils._get(this.tab_list[this.current_tab.index],'data',[]).length>0
+			// console.log('has_task',this.tab_list[this.current_tab.index])
+			// return this.$utils._get(this.tab_list[this.current_tab.index],'data',[]).length>0
+			return this.tab_list.some((item,index) =>{
+				return item.data.length>0
+			})
+		},
+		p_list(){
+			return this.tab_list[this.current_tab.index].data
+		},
+		c_CustomBar() {
+			return this.CustomBar;
+		},
+		workbench_id_list(){
+			let list = []
+			this.tab_list[0].data.forEach(item =>{
+				if(item.status == '2' || item.status == '3'){
+					list.push(item)
+				}
+			})
+			return list
 		}
 	},
 	methods: {
@@ -187,9 +226,21 @@ export default {
 				isFinish:'1',
 			})
 		},
+		up_get_data(){
+			this.$http.get('personwx.projectinfolist/1.0/',{
+				isFinish:JSON.stringify(this.current_tab.index),
+			}).then(res =>{
+				console.log(res)
+				this.tab_list[this.current_tab.index].data = this.$utils._get(res,'data.data',[])
+				this.mescroll.endSuccess()
+			})
+		},
 		select_tab(id, index) {
 			this.current_tab.id = id;
 			this.current_tab.index = index;
+			let preTab = this.tab_list[this.preIndex];
+			preTab.y = this.mescroll.getScrollTop(); // 滚动条位置
+			this.preIndex = index;
 		},
 		ontabchange(event) {
 			console.log(event);
@@ -212,6 +263,9 @@ export default {
 					});
 					break;
 				case '2':
+				case '3':
+					this.$store.commit('set_bgt_c_task',this.workbench_id_list)
+					this.$store.commit('set_bgt_ct_id',item.id)
 					uni.switchTab({
 						url:"/pages/tabbar/workbench/workbench"
 					})
@@ -237,7 +291,34 @@ export default {
 		},
 		deliveryPeriod(time){
 			return this.$utils.format_date(time)
-		}
+		},
+		// mescroll组件初始化的回调,可获取到mescroll对象
+		mescrollInit(mescroll) {
+			this.mescroll = mescroll;
+		},
+		/*下拉刷新的回调 */
+		downCallback(mescroll) {
+			// 这里加载你想下拉刷新的数据, 比如刷新轮播数据
+			// loadSwiper();
+			// 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
+			mescroll.resetUpScroll();
+		},
+		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
+		upCallback(mescroll) {
+			setTimeout(() => {
+				this.up_get_data()
+			}, 300);
+		},
+		// 滚动事件 (需在up配置onScroll:true才生效)
+		scroll(mescroll) {
+			console.log('滚动条位置 = ' + mescroll.getScrollTop() + ', navTop = ' + this.navTop);
+			// 菜单悬浮的原理: 监听滚动条的位置大于某个值时,控制顶部菜单的显示和隐藏
+			if (mescroll.getScrollTop() >= this.navTop) {
+				this.isShowSticky = true; // 显示悬浮菜单
+			} else {
+				this.isShowSticky = false; // 隐藏悬浮菜单
+			}
+		},
 	}
 };
 </script>
@@ -268,14 +349,7 @@ export default {
 		}
 	}
 }
-.swiper-box {
-	flex: 1 1 0;
-	height: 100%;
-	overflow: hidden;
-	.scroll-v {
-		height: 100%;
-	}
-	.list{
+.list{
 		padding-top: 10rpx;
 	}
 	.list-item {
@@ -343,10 +417,10 @@ export default {
 		.bottom-main {
 			display: flex;
 			align-items: center;
+			justify-content: space-between;
 			font-size: 10px;
 		}
 	}
-}
 .fixed-add{
 	position: absolute;
 	bottom: 30rpx;
@@ -357,6 +431,7 @@ export default {
 	width: 60rpx;
 	height: 60rpx;
 	border-radius: 100%;
+	z-index: 100;
 }
 .no-task{
 	text-align: center;

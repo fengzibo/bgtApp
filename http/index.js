@@ -17,6 +17,9 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
         Authorization:'Bearer '+Store.getters.jwt,
         ...config.header,
     }
+	// uni.showLoading({
+	//     title: '加载中'
+	// });
     /*
     if (!token) { // 如果token不存在，调用cancel 会取消本次请求，但是该函数的catch() 仍会执行
         cancel('token 不存在') // 接收一个参数，会传给catch((err) => {}) err.errMsg === 'token 不存在'
@@ -27,7 +30,7 @@ http.interceptor.request((config, cancel) => { /* 请求之前拦截器 */
 
 http.interceptor.response((response) => { /* 请求之后拦截器 */
     // console.log("--- http response " + response.config.url + " ---", response.data);
-
+	// uni.hideLoading();
     switch(response.statusCode){
         case 200:
 			if(response.data.code == '21' || response.data.code == '90' || response.data.code == '-9'){
@@ -41,7 +44,19 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 						Store.commit('setRefreshJwt',true)
 					}
 				});
-				
+				throw new Error('jwt已过期');
+			}else if(response.data.code == '-9'){
+				uni.showToast({
+				    title: '系统繁忙,刷新重试',
+				    icon: 'none',
+				})
+				throw '系统繁忙,刷新重试'
+			}else if(response.data.code == '2'){
+				uni.showToast({
+				    title: '服务请求参数非法',
+				    icon: 'none',
+				})
+				throw '服务请求参数非法'
 			}
             break;
 
@@ -89,7 +104,7 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
             })
             break;
     }
-
+	
     return response;
 })
 

@@ -22,26 +22,26 @@
 						</text>
 					</view>
 					<view class="tags margin-top-sm flex-wrap">
-						<view class="cu-tag radius bg-red" v-for="item in item_tag" :key="item">{{item}}</view>
+						<view class="cu-tag radius bg-red" v-for="item in welfareInfo" :key="item">{{item}}</view>
 					</view>
-					<!-- <view class="boss margin-top-sm">
-						<view class="cu-avatar round bg-red">王</view>
-						<text class="text-grey margin-left-sm">王老板</text>
+					<view class="boss margin-top-sm">
+						<view class="cu-avatar round bg-red">{{avatar_str}}</view>
+						<text class="text-grey margin-left-sm">{{r_item.createdBy}}</text>
 						<view class="tel margin-left-sm text-xl">
 							<text class="cuIcon-phone text-blue"></text>
-							<text class="text-df">13666666666</text>
+							<text class="text-df">{{r_item.phone}}</text>
 						</view>
-					</view> -->
+					</view>
 				</view>
 				<view class="cu-bar bg-white solid-bottom margin-top">
 					<view class="action">
 						<text class="cuIcon-titles text-orange "></text>
-						工作要求描述
+						工作要求
 					</view>
 				</view>
 				<view class="requirements bg-white">
 					<text class="requirements-main text-black text-df">
-						<text v-for="(item,index) in item_tag" :key="index">{{item}}\n</text>
+						<text v-for="(item,index) in workRequest" :key="index">{{index+1}}.{{item}}\n</text>
 					</text>
 				</view>
 				<view class="cu-bar bg-white solid-bottom margin-top">
@@ -98,13 +98,26 @@
 			</scroll-view>
 		</view>
 		<view class="footer-tool bg-white padding solid-top">
-			<form @submit="submitWork" :report-submit="true">
-				<button class="cu-btn round bg-blue"  form-type="submit">我要接工作</button>
-			</form>
-			<button class="cu-btn round bg-blue" @tap="go_back">我考虑下</button>
-			<form @submit="refusedWork" :report-submit="true">
-				<button class="cu-btn round bg-blue" form-type="submit">不想接</button>
-			</form>
+			<template v-if="r_item.rpStatus == '1'">
+				<button class="cu-btn round bg-blue"  @tap="showRsm('yes')">我要接工作</button>
+				<button class="cu-btn round bg-blue" @tap="go_back">我考虑下</button>
+				<button class="cu-btn round bg-blue" form-type="submit" @tap="showRsm('no')">不想接</button>
+			</template>
+			<template v-else-if="r_item.rpStatus == '2'">
+				<view class="text-green">已同意</view>
+			</template>
+			<template v-else-if="r_item.rpStatus == '3'">
+				<view class="text-red">已拒绝</view>
+			</template>
+			<template v-else-if="r_item.rpStatus == '4'">
+				<view class="text-blue">待审核</view>
+			</template>
+			<template v-else-if="r_item.rpStatus == '5'">
+				<view class="text-green">录用</view>
+			</template>
+			<template v-else-if="r_item.rpStatus == '6'">
+				<view class="text-red">不录用</view>
+			</template>
 		</view>
 	</view>
 </template>
@@ -123,34 +136,47 @@ export default {
 				address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
 				member: 7
 			},
-			r_item:{}
+			r_item:{},
+			tmplIds:['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps','9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'],
+			avatar_str:''
 		};
 	},
 	onLoad: function (option) {
 		
 	    this.r_item = JSON.parse(decodeURIComponent(option.item));
+		this.avatar_str = this.r_item.createdBy.substring(0,1)
+		console.log( this.r_item)
 	},
 	computed:{
 		validityPeriod(){
 			return this.$utils.format_date(this._get('validityPeriod',''))
 		},
 		workAddress(){
-			let address = JSON.parse(this._get('workAddress',''))
-			if(Array.isArray(address)){
-				return address.join()
-			}else{
-				return address
-			}
-			
-		},
-		item_tag(){
 			try{
-				let welfareInfo = JSON.parse(this._get('welfareInfo',[]))
-				let workRequest = JSON.parse(this._get('workRequest',[]))
-				return welfareInfo.concat(workRequest)
+				let address = JSON.parse(this._get('workAddress',''))
+				if(Array.isArray(address)){
+					return address.join()
+				}else{
+					return address
+				}
 			}catch(e){
 				//TODO handle the exception
 			}
+			
+			
+		},
+		item_tag(){
+			let welfareInfo = this._get('welfareInfo',[])
+			let workRequest = this._get('workRequest',[])
+			return welfareInfo.concat(workRequest)
+		},
+		welfareInfo(){
+			let welfareInfo = this._get('welfareInfo',[])
+			return welfareInfo
+		},
+		workRequest(){
+			let workRequest = this._get('workRequest',[])
+			return workRequest
 		},
 		requirementInfo(){
 			let r_info= []
@@ -178,15 +204,35 @@ export default {
 			    delta: 1
 			});
 		},
-		submitWork(e){
-			console.log(e)
+		showRsm(status){
+			wx.requestSubscribeMessage({
+				tmplIds: this.tmplIds,
+				success:(res) => {
+					console.log(res)
+					if(res['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps'] === 'accept' || res['9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'] === 'accept'){
+						this.$store.commit('setIsSubscribe',true)
+						if(status == 'yes'){
+							this.submitWork()
+						}else{
+							this.refusedWork()
+						}
+					}else{
+						this.$store.commit('setIsSubscribe',false)
+					}
+				},
+				fail(err){
+					console.log(err)
+				}
+			});
+		},
+		submitWork(){
 			this.$http.post('personwx.recpersonchangestatus/1.0/',{
 				id:this._get('rpId',''),
 				status: '2',
-				formId:e.detail.formId
 			}).then(res =>{
 				console.log(res)
 				if(res.data.code == '0'){
+					uni.$emit('refreshJwt')
 					uni.showToast({
 					    title: '接工成功',
 					    duration: 2000,
@@ -198,12 +244,10 @@ export default {
 				}
 			})
 		},
-		refusedWork(e){
-			console.log('sds',e)
+		refusedWork(){
 			this.$http.post('personwx.recpersonchangestatus/1.0/',{
 				id:this._get('rpId',''),
 				status: '3',
-				formId:e.detail.formId
 			}).then(res =>{
 				console.log(res)
 				if(res.data.code == '0'){

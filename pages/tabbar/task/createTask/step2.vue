@@ -89,6 +89,7 @@
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
 const  graceChecker = require("@/common/graceChecker.js");
 // import QSpicker from '@/components/QuShe-picker/QuShe-picker.vue';
+import { mapState,mapGetters } from 'vuex';
 export default {
 	data() {
 		const currentDate = this.getDate({
@@ -135,12 +136,19 @@ export default {
 			default(){
 				return {}
 			}
+		},
+		startTime:{
+			type: String,
+			default() {
+				return '';
+			}
 		}
 	},
 	components:{
 		// QSpicker
 	},
 	computed:{
+		...mapState(['current_task']),
 		requirementInfo(){
 			let arr =[]
 			this.member_type.forEach(item =>{
@@ -172,6 +180,12 @@ export default {
 	},
 	mounted() {
 		this.init()
+		uni.$on('refreshJwt',(data) =>{
+			this.init()
+		})
+	},
+	beforeDestroy() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		init(){
@@ -211,6 +225,11 @@ export default {
 					}
 					this.member_type.push(obj)
 				})
+				if(this.startTime !== ''){
+					this.form_data.start_time = this.startTime
+				}else{
+					this.form_data.start_time = this.$utils.format_date(this.$utils._get(this.current_task,'startTime',new Date)) 
+				}
 				if(JSON.stringify(this.recruiting_info) !== "{}"){
 					this.set_data()
 				}

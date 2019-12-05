@@ -90,6 +90,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.avatarUrl(_vm.personinfo.avatarUrl)
+
+  var l0 = _vm.__map(_vm.works, function(item, __i1__) {
+    var m1 = _vm.get_work_time(item)
+    return {
+      $orig: _vm.__get_orig(item),
+      m1: m1
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0,
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -216,14 +235,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 // import sunuiStar from '../../../../components/sunui-star/sunui-star.vue';
 var _default = {
@@ -251,7 +262,9 @@ var _default = {
         work_date: '2019-09-21 ~ 2019-10-21' }],
 
 
-      id: '' };
+      id: '',
+      pid: '',
+      detail_data: '' };
 
   },
   components: {
@@ -260,12 +273,41 @@ var _default = {
   computed: {
     c_CustomBar: function c_CustomBar() {
       return this.CustomBar;
+    },
+    personinfo: function personinfo() {
+      return this.$utils._get(this.detail_data, 'personinfo', {});
+    },
+    files: function files() {
+      return this.$utils._get(this.detail_data, 'files', []);
+    },
+    works: function works() {
+      return this.$utils._get(this.detail_data, 'works', []);
     } },
 
-  onLoad: function onLoad(option) {
+  onLoad: function onLoad(option) {var _this = this;
     this.id = option.id;
+    this.pid = option.pid;
+    uni.$on('refreshList', function () {
+      console.log('refreshList');
+      _this.init();
+    });
+    this.init();
+  },
+  onUnload: function onUnload() {
+    uni.$off('refreshJwt');
   },
   methods: {
+    init: function init() {var _this2 = this;
+      this.$http.get('personwx.persondetail/1.0/', {
+        id: this.pid }).
+      then(function (res) {
+        console.log(res);
+        if (res.data.code == 0) {
+          _this2.detail_data = res.data.data;
+        }
+
+      });
+    },
     downCallback: function downCallback(mescroll) {
       // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
       // loadSwiper();
@@ -275,18 +317,20 @@ var _default = {
     /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
     upCallback: function upCallback(mescroll) {
       //联网加载数据
-      setTimeout(function () {
-        mescroll.endErr();
-      }, 1000);
+      mescroll.endErr();
+      // setTimeout(() => {
+      // 	mescroll.endErr();
+      // }, 1000);
     },
     go_back: function go_back(status) {
       var pamars = {
-        delta: 1,
-        status: status };
+        status: status,
+        id: this.id };
 
       this.$http.post('personwx.checkrecruitperson/1.0/', pamars).then(function (res) {
         console.log(res);
         if (res.data.code == '0') {
+          uni.$emit('refreshzmList');
           uni.navigateBack({
             delta: 1 });
 
@@ -294,6 +338,12 @@ var _default = {
 
       });
 
+    },
+    get_work_time: function get_work_time(item) {
+      return this.$utils.format_date(item.sstartTime, '/') + ' - ' + this.$utils.format_date(item.sendTime, '/');
+    },
+    avatarUrl: function avatarUrl(_avatarUrl) {
+      return "url(".concat(_avatarUrl, ")");
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

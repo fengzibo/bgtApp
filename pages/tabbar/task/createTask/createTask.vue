@@ -23,10 +23,10 @@
 				<view class="content" v-if="!loading">
 					<scroll-view class="scroll-v" scroll-y :scroll-top="scrollTop" @scroll="scroll">
 						<template v-if="num === 0">
-							<step-one ref="stepOne" :route_id="route_id"></step-one>
+							<step-one ref="stepOne" :route_id="route_id" :location="location"></step-one>
 						</template>
 						<template v-if="num === 1">
-							<step-two ref="stepTwo" :task_id="task_id" :route_id="route_id" :recruiting_info="recruiting_info"></step-two>
+							<step-two ref="stepTwo" :task_id="task_id" :route_id="route_id" :recruiting_info="recruiting_info" :startTime="startTime"></step-two>
 						</template>
 						<template v-if="num === 2">
 							<step-three ref="stepThree" :task_id="task_id" :route_id="route_id" @update_recruiting_info="update_recruiting_info" @show_modal="show_modal=true"></step-three>
@@ -67,6 +67,7 @@ import stepTwo from './step2.vue';
 import stepThree from './step3.vue';
 import stepFour from './step4.vue';
 import { mapState,mapGetters } from 'vuex';
+const chooseLocation = requirePlugin('chooseLocation');
 export default {
 	data() {
 		return {
@@ -95,6 +96,8 @@ export default {
 			loading:true,
 			recruiting_info:{},
 			show_modal:false,
+			location:null,
+			startTime:''
 		};
 	},
 	components: {
@@ -122,6 +125,10 @@ export default {
 		}
 		this.loading = false
 	},
+	onShow () {
+		this.location = chooseLocation.getLocation();
+		console.log('show,loc',this.location)// 如果点击确认选点按钮，则返回选点结果对象，否则返回null
+	},
 	computed:{
 		...mapState(['current_task']),
 	},
@@ -129,10 +136,11 @@ export default {
 		next(){
 			switch (this.num){
 				case 0:
-					this.$refs.stepOne.formSubmit((id) =>{
+					this.$refs.stepOne.formSubmit((id,startTime) =>{
 						
 						this.num++
 						this.task_id = id
+						this.startTime = startTime
 						uni.$emit('refreshList')
 					})
 					break;
@@ -177,12 +185,14 @@ export default {
 					this.scrollTop = 0
 				});
 				this.num ++ 
+				uni.$emit('refreshList')
 				// this.$store.commit('setHasTask',true)
 			})
 		},
 		goto_recruiting(){
+			this.show_modal = false
 			uni.navigateTo({
-				url: `/pages/personList/personList?recId=${this.recruiting_info.id}`
+				url: `/pages/personList/personList?recId=${this.recruiting_info.id}&proId=${this.recruiting_info.proId}`
 			});
 		},
 	}

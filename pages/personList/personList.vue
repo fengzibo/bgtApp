@@ -22,55 +22,51 @@
 				--没有数据--
 			</view>
 		</view>
-		<form @submit="formSubmit"  :report-submit="true">
-			<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100" :top="c_CustomBar" v-if="!loading && !no_data">
-				<view class="person-list bg-white" >
-					<checkbox-group @change="checkboxChange">
-						<label class="flex align-center" v-for="item in p_list" :key="item.id">
-							<view class="item-left">
-								<checkbox :value="item.id" :checked="item.checked" style="transform:scale(0.7)"/>
-							</view>
-							<view class="flex-sub solid-bottom flex align-center item-right padding-tb-sm" >
-								<view class="cu-avatar lg round" :style="{backgroundImage: avatarUrl(item.avatarUrl)}"></view>
-								<view class="flex-sub align-center">
-									<view class="flex justify-between align-center">
-										<view class="name text-black text-lg">
-											<!-- 岚荨,男/22(电工学徒) -->
-											{{item.name}},{{item.sex}}
-										</view>
-										<view class="score bg-gradual-blue text-white text-df">
-											{{item.rating}}
-										</view>
+		<mescroll-uni @init="mescrollInit" :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="100" :top="c_CustomBar" v-if="!loading && !no_data">
+			<view class="person-list bg-white" >
+				<checkbox-group @change="checkboxChange">
+					<label class="flex align-center" v-for="item in p_list" :key="item.id">
+						<view class="item-left">
+							<checkbox :value="item.id" :checked="item.checked" style="transform:scale(0.7)"/>
+						</view>
+						<view class="flex-sub solid-bottom flex align-center item-right padding-tb-sm" >
+							<view class="cu-avatar lg round" :style="{backgroundImage: avatarUrl(item.avatarUrl)}"></view>
+							<view class="flex-sub align-center">
+								<view class="flex justify-between align-center">
+									<view class="name text-black text-lg">
+										<!-- 岚荨,男/22(电工学徒) -->
+										{{item.name}},{{item.sex}}（{{item.typeLevelName}}）
 									</view>
-									<view class="info flex align-center">
-										<text class="text-red text-lg margin-right-sm padding-tb-sm">￥28/时</text>
-										<view class="item-tag cu-tag line-red">
-											学习强
-										</view>
+									<view class="score bg-gradual-blue text-white text-df">
+										{{item.rating}}
 									</view>
-									<view class="flex justify-between text-gray text-sm ">
-										<view class="introduce">
-											完成任务总数231次,工时2300时
-										</view>
-										<view class="r-address">
-											2.4公里
-										</view>
+								</view>
+								<view class="info flex align-center">
+									<text class="text-red text-lg margin-right-sm padding-tb-sm">￥28/时</text>
+									<view class="item-tag cu-tag line-red">
+										学习强
+									</view>
+								</view>
+								<view class="flex justify-between text-gray text-sm ">
+									<view class="introduce">
+										完成任务总数231次,工时2300时
+									</view>
+									<view class="r-address">
+										2.4公里
 									</view>
 								</view>
 							</view>
-						</label>
-					</checkbox-group>
-				</view>
-			</mescroll-uni>
-			<view class="cu-bar bg-white tabbar border footer-tool" v-if="!loading && !no_data">
-				<view class="action text-orange text-xs">
-					已选择：<text class="text-red">{{check_length}}</text>人
-				</view>
-				
-					<button class="bg-red submit" form-type="submit">完成</button>
-				
+						</view>
+					</label>
+				</checkbox-group>
 			</view>
-		</form>
+		</mescroll-uni>
+		<view class="cu-bar bg-white tabbar border footer-tool" v-if="!loading && !no_data">
+			<view class="action text-orange text-xs">
+				已选择：<text class="text-red">{{check_length}}</text>人
+			</view>
+				<button class="bg-red submit" @tap="showRsm">完成</button>
+		</view>
 		<view class="cu-modal drawer-modal justify-end" :class="conditions_modal?'show':''" @tap="hideModal">
 			<view class="cu-dialog basis-xl" @tap.stop="" :style="[{top:CustomBar+'px',height:'calc(100vh - ' + CustomBar + 'px)'}]">
 				<view class="cu-form-group">
@@ -89,6 +85,17 @@
 							<text>休息</text>
 						</view>
 					</radio-group>
+				</view>
+				<view class="cu-form-group type-group">
+					<view class="title">
+						人员类型
+					</view>
+					<checkbox-group @change="typeChange" class="check-group">
+						<label v-for="item in type_list" :key="item.id">
+							<checkbox :value="item.id" :checked="item.checked" style="transform:scale(0.6)"/>
+							<text>{{item.typeName}}</text>
+						</label>
+					</checkbox-group>
 				</view>
 				<view class="cu-form-group margin-top">
 					<view class="title">是否包工头</view>
@@ -114,6 +121,8 @@
 				},
 				upOption:{
 					auto:false,
+					isLock:true,
+					textNoMore:'--没有更多数据了--'
 				},
 				conditions:{
 					status:'0',
@@ -124,12 +133,16 @@
 				conditions_modal:false,
 				status_radio:'0',
 				switch_is_head:false,
-				recId:''
+				recId:'',
+				proId:'',
+				tmplIds:['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps','9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'],
+				mescroll:null,
+				type_list:[]
 			};
 		},
 		computed:{
 			c_CustomBar(){
-				return this.CustomBar + 42
+				return this.CustomBar + uni.upx2px(100)
 			},
 			no_data(){
 				return this.p_list.length<=0 && !this.loading
@@ -146,10 +159,22 @@
 		},
 		onLoad(option) {
 			this.recId = option.recId || ''
+			this.proId = option.proId || ''
+			
+			
+			uni.$on('refreshList',() =>{
+				console.log('refreshList')
+				this.init()
+				this.get_type_list()
+			})
 			this.init()
+			this.get_type_list()
+		},
+		onUnload() {
+			uni.$off('refreshJwt')
 		},
 		methods:{
-			init(){
+			init(cb){
 				this.$http.get('personwx.personinfolist/1.0/',{
 					status:this.conditions.status,
 					isHead:this.conditions.isHead
@@ -160,20 +185,37 @@
 						this.$set(item,'checked',false)
 					})
 					this.loading = false
+					if(typeof cb == 'function'){
+						cb()
+					}
+					
 				})
+			},
+			get_type_list(){
+				this.$http.post('personwx.tylelist/1.0/').then(res =>{
+					this.type_list = this.$utils._get(res,'data.data.data',[])
+					console.log(res)
+				})
+			},
+			mescrollInit(mescroll) {
+				this.mescroll = mescroll;
+				mescroll.showNoMore()
 			},
 			downCallback(mescroll) {
 				// 这里加载你想下拉刷新的数据, 比如刷新轮播数据
 				// loadSwiper();
 				// 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
 				mescroll.resetUpScroll()
+				
 			},
 			/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
 			upCallback(mescroll) {
 				//联网加载数据
 				setTimeout(() =>{
-					mescroll.endErr()
-				},1000)
+					this.init(() =>{
+						mescroll.endSuccess(this.p_list.length, false)
+					})
+				},300)
 			},
 			InputFocus(e) {
 				this.InputBottom = e.detail.height
@@ -218,37 +260,64 @@
 				this.conditions_modal = false
 				this.init()
 			},
-			formSubmit(e){
-				console.log('form发生了submit事件，携带数据为：' , e)
-				let formId = e.detail.formId,
-					Ids=[],
-					openIds=[];
-				this.p_list.forEach(item =>{
-					if(item.checked){
-						Ids.push(item.id)
-						openIds.push(item.openId)
+			showRsm(){
+				
+				wx.requestSubscribeMessage({
+					tmplIds: this.tmplIds,
+					success:(res) => {
+						console.log(res)
+						if(res['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps'] === 'accept' || res['9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'] === 'accept'){
+							uni.showLoading({
+								title: '加载中'
+							})
+							let Ids=[],
+								openIds=[];
+							this.p_list.forEach(item =>{
+								if(item.checked){
+									Ids.push(item.id)
+									openIds.push(item.openId)
+								}
+							})
+							let params = {
+								Ids:Ids.join(),
+								openIds:openIds.join(),
+								recId:this.recId,
+								path:'pages/tabbar/task/task',
+								proId:this.proId
+							}
+							console.log(params)
+							this.$http.post('personwx.chooseperson/1.0/',params).then(res =>{
+								console.log(res)
+								if(this.$utils._get(res,'data.success',false)){
+									uni.$emit('refreshzmList')
+									uni.navigateBack({
+									    delta: 1
+									});
+									uni.hideLoading()
+								}
+							})
+						}
+					},
+					fail(err){
+						console.log(err)
 					}
-				})
-				let params = {
-					Ids:Ids.join(),
-					openIds:openIds.join(),
-					recId:this.recId,
-					formId:formId,
-					path:'pages/tabbar/task/task',
-				}
-				console.log(params)
-				this.$http.post('personwx.chooseperson/1.0/',params).then(res =>{
-					console.log(res)
-					if(this.$utils._get(res,'data.success',false)){
-						uni.navigateBack({
-						    delta: 1
-						});
-					}
-				})
+				});
 			},
 			avatarUrl(avatarUrl){
 				return `url(${avatarUrl})`
 			},
+			typeChange(e) {
+				var items = this.type_list,
+					values = e.detail.value;
+				for (var i = 0, lenI = items.length; i < lenI; ++i) {
+					const item = items[i]
+					if(values.includes(item.id)){
+						this.$set(item,'checked',true)
+					}else{
+						this.$set(item,'checked',false)
+					}
+				}
+			}
 		}
 	}
 </script>
@@ -295,6 +364,25 @@
 		border: none;
 		padding: 0;
 		border-radius: 0;
+	}
+}
+.check-group{
+	flex: 1 1 0;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	label{
+		display: flex;
+		align-items: center;
+		flex: 1;
+		min-width: 50%;
+	}
+}
+.type-group{
+	align-items: flex-start;
+	.title{
+		flex: 0;
+		min-width: 160rpx;
 	}
 }
 </style>

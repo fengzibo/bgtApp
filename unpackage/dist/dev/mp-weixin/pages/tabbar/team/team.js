@@ -90,6 +90,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.__map(_vm.personList, function(item, __i0__) {
+    var m0 = _vm.num_fixed(item.rating)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -122,26 +138,200 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var teamArtisan = function teamArtisan() {return Promise.all(/*! import() | pages/tabbar/team/teamArtisan */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/team/teamArtisan")]).then(__webpack_require__.bind(null, /*! ./teamArtisan.vue */ 257));};var _default =
+
 {
   data: function data() {
-    return {};
+    return {
+      team_detail: {},
+      loading: true };
+
+  },
+  components: {
+    teamArtisan: teamArtisan },
+
+  onLoad: function onLoad() {var _this = this;
+    this.init();
+    uni.$on('refteam', function () {
+      _this.init();
+    });
+    uni.$on('refreshJwt', function (data) {
+      _this.init();
+    });
+  },
+  onUnload: function onUnload() {
+    uni.$off('refteam');
+    uni.$off('refreshJwt');
+  },
+  computed: _objectSpread({},
+  (0, _vuex.mapState)(['isHead', 'user_info', 'has_team']),
+  (0, _vuex.mapGetters)(['user_role']), {
+    team: function team() {
+      return this.$utils._get(this.team_detail, 'team', {});
+    },
+    personList: function personList() {
+      return this.$utils._get(this.team_detail, 'personList', []);
+    },
+    team_addr: function team_addr() {
+      try {
+        return JSON.parse(this.$utils._get(this.team, 'location', [])).join('');
+      } catch (e) {
+        //TODO handle the exception
+        return this.$utils._get(this.team, 'location', '');
+      }
+    } }),
 
 
-  } };exports.default = _default;
+  methods: {
+    init: function init() {
+      if (this.isHead == '1') {
+        this.get_team();
+      }
+    },
+    get_team: function get_team() {var _this2 = this;
+      uni.showLoading({
+        title: '加载中' });
+
+      this.$http.get('personwx.getteam/1.0/', {
+        loginName: this.$utils._get(this.user_info, 'loginName', ''),
+        loginUserId: this.$utils._get(this.user_info, 'id', '') }).
+      then(function (res) {
+        console.log(res);
+        if (_this2.$utils._get(res, 'data.code', '') == '1') {
+          _this2.$store.commit('setHasTeam', false);
+        } else if (_this2.$utils._get(res, 'data.code', '') == '0') {
+          _this2.$store.commit('setHasTeam', true);
+          _this2.team_detail = res.data.data;
+        }
+      }).finally(function () {
+        uni.hideLoading();
+        _this2.loading = false;
+      });
+    },
+    goto_add: function goto_add() {
+      uni.navigateTo({
+        url: '/pages/tabbar/team/addTeam/addTeam' });
+
+    },
+    goto_edit: function goto_edit() {
+      uni.navigateTo({
+        url: '/pages/tabbar/team/addTeam/addTeam?team=' + encodeURIComponent(JSON.stringify(this.team)) });
+
+    },
+    goto_detail: function goto_detail(item) {
+
+      uni.navigateTo({
+        url: "/pages/auditDetail/auditDetail?id=".concat(item.id, "&pid=").concat(item.pid) });
+
+    },
+    num_fixed: function num_fixed(num) {
+      if (typeof num === 'number' && !isNaN(num)) {
+        return num.toFixed(1);
+      } else {
+        return Number(num).toFixed(1);
+      }
+
+    },
+    goto_share: function goto_share() {
+      uni.navigateTo({
+        url: '/pages/shareTeam/shareTeam?team=' + encodeURIComponent(JSON.stringify(this.team)) });
+
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

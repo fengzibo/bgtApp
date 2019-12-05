@@ -190,9 +190,14 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           uinfo.id = _this.$utils._get(res, 'data.data.id', '');
           uinfo.jwt = _this.$utils._get(res, 'data.data.jwt', '');
           uinfo.openid = _this.$utils._get(res, 'data.data.openId', '');
-          uinfo.loginName = _this.$utils._get(res, 'data.data.loginName', '');
+          uinfo.loginName = _this.$utils._get(res, 'data.data.loginName', uinfo.nickName);
+          uinfo.status = _this.$utils._get(res, 'data.data.status', '0');
           _this.$store.commit('setUserInfo', uinfo);
           _this.$store.commit('setRefreshJwt', false);
+          var ishead = _this.$utils._get(res, 'data.data.isHead', '0');
+          var isSubscribe = _this.$utils._get(res, 'data.data.isSubscribe', false);
+          _this.$store.commit('setIsHead', ishead);
+          _this.$store.commit('setIsSubscribe', isSubscribe === '1' ? true : false);
           uni.hideLoading();
           uni.showToast({
             title: '登录成功',

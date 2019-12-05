@@ -14,11 +14,11 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  margin-top: 20rpx;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 10rpx 0;
 }
 .skills-card .info-box .label.data-v-59419c3a {
   -webkit-box-flex: 0;
@@ -31,6 +31,74 @@
   -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
+}
+.skills-card .info-box picker.data-v-59419c3a {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+  padding-right: 40rpx;
+  border-bottom: 1rpx solid #fff;
+  line-height: 60rpx;
+  height: 60rpx;
+}
+.skills-card .info-box picker.data-v-59419c3a:after {
+  font-family: cuIcon;
+  display: block;
+  content: "\E6A3";
+  position: absolute;
+  font-size: 34rpx;
+  color: #fff;
+  width: 60rpx;
+  text-align: center;
+  top: 50%;
+  right: -20rpx;
+  margin: auto;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+.skills-card .info-box input.data-v-59419c3a {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  position: relative;
+  border-bottom: 1rpx solid #fff;
+  line-height: 60rpx;
+  height: 60rpx;
+}
+.skills-card .info-box textarea.data-v-59419c3a {
+  margin: 7rpx 0;
+  max-height: 4.6em;
+  width: 100%;
+  line-height: 1.2em;
+}
+.skills-card .info-box.textarea-box.data-v-59419c3a {
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+}
+.skills-card .info-box.has-arrow input.data-v-59419c3a {
+  padding-right: 40rpx;
+}
+.skills-card .info-box.has-arrow input.data-v-59419c3a:after {
+  font-family: cuIcon;
+  display: block;
+  content: "\E6A3";
+  position: absolute;
+  font-size: 34rpx;
+  color: #fff;
+  width: 60rpx;
+  text-align: center;
+  top: 50%;
+  right: -20rpx;
+  margin: auto;
+  -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+          transform: translateY(-50%);
 }
 .skills-card .unfold-more.data-v-59419c3a {
   text-align: center;
@@ -110,7 +178,7 @@
 }
 .footer-tool.data-v-59419c3a {
   width: 100%;
-  height: 100rpx;
+  height: 80rpx;
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
@@ -128,7 +196,35 @@
           align-items: center;
   position: fixed;
   left: 0;
-  bottom: 0;
+  bottom: 0px;
   z-index: 10;
+}
+.footer-tool button.data-v-59419c3a {
+  border-radius: 0;
+}
+.swiper .wx-swiper-dot.data-v-59419c3a {
+  bottom: 0;
+}
+.swiper-box.data-v-59419c3a {
+  position: relative;
+}
+.work-swiper-dot.data-v-59419c3a {
+  position: absolute;
+  bottom: 13rpx;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+      -ms-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+.work-swiper-dot .dot-item.data-v-59419c3a {
+  width: 40rpx;
+  height: 6rpx;
+  border-radius: 3rpx;
+  margin: 0 10rpx;
+  display: inline-block;
+  opacity: 0.3;
+}
+.work-swiper-dot .dot-item.active.data-v-59419c3a {
+  opacity: 1;
 }
 

@@ -1,6 +1,7 @@
 {
   "navigationBarTitleText": "任务",
   "usingComponents": {
-    "task-artisan": "/pages/tabbar/task/taskArtisan"
+    "task-artisan": "/pages/tabbar/task/taskArtisan",
+    "mescroll-uni": "/components/mescroll-uni/mescroll-uni"
   }
 }

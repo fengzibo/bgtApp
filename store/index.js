@@ -13,6 +13,9 @@ const store = new Vuex.Store({
 		current_task: uni.getStorageSync('current_task') || {},
 		refresh_jwt:false,
 		refresh_num:0,
+		is_subscribe:uni.getStorageSync('isSubscribe') || false,
+		bgt_c_task:[],
+		bgt_ct_id:'',
 	},
 	mutations: {
 		setHasTeam(state, data) {
@@ -65,6 +68,16 @@ const store = new Vuex.Store({
 		},
 		setRefreshNum(state,data){
 			state.refresh_num = data
+		},
+		setIsSubscribe(state,data){
+			state.is_subscribe = data
+			uni.setStorageSync('isSubscribe', data);
+		},
+		set_bgt_c_task(state,data){
+			state.bgt_c_task = data
+		},
+		set_bgt_ct_id(state,data){
+			state.bgt_ct_id = data
 		}
 	},
 	actions: {

@@ -132,20 +132,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
-
-
 {
   data: function data() {
     return {};
-
   },
-  onLoad: function onLoad() {
-  },
+  onLoad: function onLoad() {},
   methods: _objectSpread({},
-  (0, _vuex.mapMutations)(['setUserInfo', 'setIsHead', 'setRefreshJwt']), {
+  (0, _vuex.mapMutations)(['setUserInfo', 'setIsHead', 'setRefreshJwt', 'setIsSubscribe']), {
     getUserInfoCb: function getUserInfoCb(res) {var _this = this;
       console.log(res);
       if (res.detail.errMsg === 'getUserInfo:ok') {
@@ -158,8 +152,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           provider: 'weixin',
           success: function success(loginRes) {
             console.log(loginRes);
-            if (loginRes.errMsg === "login:ok") {
-              _this.$http.post('personwx.login/1.0/', {
+            if (loginRes.errMsg === 'login:ok') {
+              _this.$http.
+              post('personwx.login/1.0/', {
                 code: loginRes.code,
                 appid: 'wx6d2818e2adb8d93a',
                 avatarUrl: userInfo.avatarUrl,
@@ -170,6 +165,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
                 nickName: userInfo.nickName,
                 province: userInfo.province,
                 loginName: userInfo.nickName }).
+
               then(function (res) {
                 console.log('res', res);
                 userInfo.openid = _this.$utils._get(res, 'data.data.openId', '');
@@ -177,10 +173,12 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
                 userInfo.loginName = _this.$utils._get(res, 'data.data.loginName', userInfo.nickName);
                 userInfo.status = _this.$utils._get(res, 'data.data.status', 0);
                 userInfo.id = _this.$utils._get(res, 'data.data.id', '');
-                var ishead = _this.$utils._get(res, 'data.data.isHead', '');
+                var ishead = _this.$utils._get(res, 'data.data.isHead', '0');
+                var isSubscribe = _this.$utils._get(res, 'data.data.isSubscribe', false);
                 _this.setIsHead(ishead);
                 _this.setUserInfo(userInfo);
-                uni.setStorageSync('version', '1.1.2');
+                _this.setIsSubscribe(isSubscribe === '1' ? true : false);
+                uni.setStorageSync('version', '1.1.7');
                 _this.setRefreshJwt(false);
                 uni.switchTab({
                   url: '../tabbar/task/task' });
@@ -196,7 +194,6 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           duration: 2000 });
 
       }
-
     } }) };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

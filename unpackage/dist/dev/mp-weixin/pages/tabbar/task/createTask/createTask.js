@@ -199,7 +199,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var stepOne = function stepOne() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step1 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step1")]).then(__webpack_require__.bind(null, /*! ./step1.vue */ 285));};var stepTwo = function stepTwo() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step2 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step2")]).then(__webpack_require__.bind(null, /*! ./step2.vue */ 293));};var stepThree = function stepThree() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step3 */ "pages/tabbar/task/createTask/step3").then(__webpack_require__.bind(null, /*! ./step3.vue */ 300));};var stepFour = function stepFour() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step4 */ "pages/tabbar/task/createTask/step4").then(__webpack_require__.bind(null, /*! ./step4.vue */ 307));};var _default =
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var stepOne = function stepOne() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step1 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step1")]).then(__webpack_require__.bind(null, /*! ./step1.vue */ 300));};var stepTwo = function stepTwo() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step2 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step2")]).then(__webpack_require__.bind(null, /*! ./step2.vue */ 308));};var stepThree = function stepThree() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step3 */ "pages/tabbar/task/createTask/step3").then(__webpack_require__.bind(null, /*! ./step3.vue */ 315));};var stepFour = function stepFour() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step4 */ "pages/tabbar/task/createTask/step4").then(__webpack_require__.bind(null, /*! ./step4.vue */ 322));};
+var chooseLocation = requirePlugin('chooseLocation');var _default =
 {
   data: function data() {
     return {
@@ -227,7 +228,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       route_id: '',
       loading: true,
       recruiting_info: {},
-      show_modal: false };
+      show_modal: false,
+      location: null,
+      startTime: '' };
 
   },
   components: {
@@ -255,6 +258,10 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     }
     this.loading = false;
   },
+  onShow: function onShow() {
+    this.location = chooseLocation.getLocation();
+    console.log('show,loc', this.location); // 如果点击确认选点按钮，则返回选点结果对象，否则返回null
+  },
   computed: _objectSpread({},
   (0, _vuex.mapState)(['current_task'])),
 
@@ -262,10 +269,11 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     next: function next() {var _this2 = this;
       switch (this.num) {
         case 0:
-          this.$refs.stepOne.formSubmit(function (id) {
+          this.$refs.stepOne.formSubmit(function (id, startTime) {
 
             _this2.num++;
             _this2.task_id = id;
+            _this2.startTime = startTime;
             uni.$emit('refreshList');
           });
           break;
@@ -310,12 +318,14 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           this.scrollTop = 0;
         });
         _this3.num++;
+        uni.$emit('refreshList');
         // this.$store.commit('setHasTask',true)
       });
     },
     goto_recruiting: function goto_recruiting() {
+      this.show_modal = false;
       uni.navigateTo({
-        url: "/pages/personList/personList?recId=".concat(this.recruiting_info.id) });
+        url: "/pages/personList/personList?recId=".concat(this.recruiting_info.id, "&proId=").concat(this.recruiting_info.proId) });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

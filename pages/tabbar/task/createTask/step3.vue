@@ -4,14 +4,14 @@
 			<view class="title text-lg">{{recruiting_info.title}}</view>
 			<view class="text-grey margin-top-sm">
 				<text v-for="item in requirementInfo_list" :key = "item.type">
-					{{item.type}}<text class="text-red">0</text>/<text class="text-blue" style="margin-right:20rpx;">{{item.num}}</text>
+					{{item.type}}<text class="text-red">{{current_zm_num(item.type)}}</text>/<text class="text-blue" style="margin-right:20rpx;">{{item.num}}</text>
 				</text>
 			</view>
 		</view>
 		<view class="cu-bar bg-white solid-bottom margin-top title">
 			<view class="action">
 				<text class="cuIcon-title text-orange"></text>
-				应招人员列表(<text class="text-text-orange">{{recruit_list.length}}</text>)人
+				应招人员列表(<text class="text-orange">{{recruit_list.length}}</text>)人
 			</view>
 			<view class="action">
 				<button class="cu-btn round bg-blue" @tap="show_p_modal"><text class="cuIcon-add"></text>招募人员</button>
@@ -23,12 +23,12 @@
 		<view class="people-list" v-else>
 			<view class="item padding bg-white solid-bottom" v-for="item in recruit_list" :key="item.id" @tap="goto_detail(item)">
 				<view class="content">
-					<view class="cu-avatar round lg bg-blue" :style="[{'backgroundUrl':item.avatarUrl}]"></view>
+					<view class="cu-avatar round lg bg-blue" :style="{backgroundImage: avatarUrl(item.avatarUrl)}"></view>
 					<view class="content-info margin-left">
 						<view class="content-info-top">
-							<view class="text-orange"><view class="text-cut">name</view></view>
-							<view class="text-gray text-sm margin-left">18岁</view>
-							<view v-for="tag in item.tag" :key="tag">
+							<view class="text-orange"><view class="text-cut">{{item.pName}} {{item.sex}}</view></view>
+							<view class="text-gray text-sm margin-left">{{item.age?item.age:18}}岁</view>
+							<view v-for="tag in ['电工学徒']" :key="tag">
 								<view class='cu-tag  margin-left line-green'>{{tag}}</view>
 							</view>
 						</view>
@@ -119,9 +119,23 @@ export default {
 		  imageUrl:'@/static/no-team.png'
 	    }
 	},
-	computed: {},
+	computed: {
+		
+	},
 	mounted() {
+		
+		uni.$on('refreshzmList',() =>{
+			this.init()
+		})
+		uni.$on('refreshJwt',(data) =>{
+			this.init()
+		})
 		this.init()
+	},
+	beforeDestroy() {
+		console.log('beforeDestroy')
+		uni.$off('refreshzmList')
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		init(){
@@ -147,8 +161,9 @@ export default {
 			})
 		},
 		goto_detail(item){
+			
 			uni.navigateTo({
-				url: `/pages/auditDetail/auditDetail?id=${item.id}` 
+				url: `/pages/auditDetail/auditDetail?id=${item.id}&pid=${item.pid}` 
 			});
 		},
 		get_recruit_list(recid){
@@ -214,6 +229,18 @@ export default {
 		},
 		show_p_modal(){
 			this.$emit('show_modal')
+		},
+		avatarUrl(avatarUrl){
+			return `url(${avatarUrl})`
+		},
+		current_zm_num(type){
+			let num = 0
+			this.recruit_list.forEach(item =>{
+				if(item.status === '5'){
+					num++
+				}
+			})
+			return num
 		}
 	}
 };

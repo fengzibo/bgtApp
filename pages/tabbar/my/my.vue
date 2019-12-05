@@ -75,18 +75,27 @@
 						<text class="text-grey">我的激活码</text>
 					</view>
 				</navigator>
-				<navigator class="cu-item arrow">
+				
+				<!-- <navigator class="cu-item arrow">
 					<view class="content" bindtap="showQrcode">
 						<text class="cuIcon-questionfill text-red"></text>
 						<text class="text-grey">问题反馈</text>
 					</view>
-				</navigator>
+				</navigator> -->
 				<!-- <navigator class="cu-item arrow" url="/pages/login/login">
 					<view class="content">
 						<text class="cuIcon-exit text-pink"></text>
 						<text class="text-grey">退出</text>
 					</view>
 				</navigator> -->
+			</view>
+			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
+				<navigator class="cu-item arrow" url="/pages/welcome/welcome">
+					<view class="content">
+						<text class="cuIcon-exit text-black"></text>
+						<text class="text-grey">退出登录</text>
+					</view>
+				</navigator>
 			</view>
 			<!-- <view class="cu-tabbar-height"></view> -->
 		</view>

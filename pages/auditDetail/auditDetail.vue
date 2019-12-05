@@ -13,41 +13,33 @@
 					<view class="info">
 						<view class="name">
 							<text class="text-red">
-								<text class="cuIcon-female  sex-icon"></text>22岁
+								<text class="cuIcon-female  sex-icon"></text>{{personinfo.age}}岁
 							</text>
-							<text class="text-bold text-black text-xl margin-left">小王</text>
+							<text class="text-bold text-black text-xl margin-left">{{personinfo.name}}</text>
 							
-							<text class="margin-left text-df text-xxl text-red">8.0分</text>
+							<text class="margin-left text-df text-xxl text-red">{{personinfo.rating}}分</text>
 						</view>
 						<view class="limit margin-top-sm text-grey text-df">
-							3年工作年限<text class="text-xl margin-left-sm margin-right-sm">/</text>广州深圳
+							{{personinfo.workYear}}年工作年限<text class="text-xl margin-left-sm margin-right-sm">/</text>{{personinfo.homeAddress}}
 						</view>
 						<!-- <view class="price margin-top-sm text-red text-xl margin-bottom-sm">28/时</view> -->
 						<!-- <sunui-star iconName="cuIcon-favorfill" :disabledStar="true"></sunui-star> -->
 						<view class="addr text-gray margin-top-sm ">
 							<text class="cuIcon-locationfill margin-right-xs"></text>
-							<text>深圳市龙华区</text>
+							<text>{{personinfo.address}}</text>
 						</view>
 					</view>
-					<view class="avatar bg-white"><view class="cu-avatar xl round bg-red"></view></view>
+					<view class="avatar bg-white"><view class="cu-avatar xl round bg-red" :style="{backgroundImage: avatarUrl(personinfo.avatarUrl)}"></view></view>
 				</view>
 				<view class="margin-top-lg bg-white padding skills-card">
 					<view class="action">
 						<text class="cuIcon-titles text-blue"></text>
 						证件信息
 					</view>
-					<view class="flex">
-						<view class="flex-sub padding-sm margin-xs radius text-center">
-							<image src="" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
-							<text class="text-grey text-df">电工证</text>
-						</view>
-						<view class="flex-sub padding-sm margin-xs radius text-center">
-							<image src="" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
-							<text class="text-grey text-df">钳工证</text>
-						</view>
-						<view class="flex-sub padding-sm margin-xs radius text-center">
-							<image src="" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
-							<text class="text-grey text-df">高级证</text>
+					<view class="grid col-3">
+						<view class="padding-sm radius text-center" v-for="item in files" :key="item.id">
+							<image :src="'https://zzy.zwch.ltd'+item.filePath" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
+							<text class="text-grey text-df">{{item.fileName}}</text>
 						</view>
 					</view>
 				</view>
@@ -57,32 +49,32 @@
 						最近工作情况
 					</view>
 					<view class="work-list">
-						<view class="item solid-bottom" v-for="(item,index) in detail_list" :key="index">
+						<view class="item solid-bottom" v-for="item in works" :key="item.id">
 							<view class="work-info flex">
 								<view class="padding-xs work-item">
 									<text class="text-grey">行业</text>
-									<text class="text-black margin-left-sm">{{item.industry}}</text>
+									<text class="text-black margin-left-sm">{{item.scompany}}</text>
 								</view>
 								<view class="padding-xs work-item">
 									<text class="text-grey">设备</text>
-									<text class="text-black margin-left-sm">{{item.equipment}}</text>
+									<text class="text-black margin-left-sm">{{item.deviceName}}</text>
 								</view>
 								<view class="padding-xs work-item">
 									<text class="text-grey">职位</text>
-									<text class="text-black margin-left-sm">{{item.type}}</text>
+									<text class="text-black margin-left-sm">{{item.typeLevelName}}</text>
 								</view>
 								<view class="padding-xs work-item">
 									<text class="text-grey">工作周期</text>
-									<text class="text-black margin-left-sm">{{item.task_cycle}}</text>
+									<text class="text-black margin-left-sm">{{item.limit}}天</text>
 								</view>
 								<view class="padding-xs work-item work-date">
 									<text class="text-gray">工作日期</text>
-									<text class="text-gray margin-left-sm">{{item.work_date}}</text>
+									<text class="text-gray margin-left-sm">{{get_work_time(item)}}</text>
 								</view>
 							</view>
 							<view class="grade-box">
 								<view class="grade bg-gradual-blue text-xxl text-white">
-									8.0
+									{{item.tating?item.tating:'无'}}
 								</view>
 								<view class="text-df text-gray">评分</view>
 							</view>
@@ -94,7 +86,7 @@
 		<view class="bottom-btn bg-white">
 			<view class="main">
 				<button class="bg-gradual-blue cu-btn lg" @tap="go_back('5')">录用</button>
-				<button class="bg-gradual-red cu-btn lg"  @tap="go_back('4')">不录用</button>
+				<button class="bg-gradual-red cu-btn lg"  @tap="go_back('6')">不录用</button>
 			</view>
 		</view>
 	</view>
@@ -127,7 +119,9 @@ export default {
 					work_date:'2019-09-21 ~ 2019-10-21'
 				},
 			],
-			id:''
+			id:'',
+			pid:'',
+			detail_data:''
 		};
 	},
 	components: {
@@ -136,12 +130,41 @@ export default {
 	computed:{
 		c_CustomBar(){
 			return this.CustomBar
+		},
+		personinfo(){
+			return this.$utils._get(this.detail_data,'personinfo',{})
+		},
+		files(){
+			return this.$utils._get(this.detail_data,'files',[])
+		},
+		works(){
+			return this.$utils._get(this.detail_data,'works',[])
 		}
 	},
 	onLoad(option) {
 		this.id = option.id
+		this.pid = option.pid
+		uni.$on('refreshList',() =>{
+			console.log('refreshList')
+			this.init()
+		})
+		this.init()
+	},
+	onUnload() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
+		init(){
+			this.$http.get('personwx.persondetail/1.0/',{
+				id:this.pid
+			}).then(res =>{
+				console.log(res)
+				if(res.data.code == 0){
+					this.detail_data = res.data.data
+				}
+				
+			})
+		},
 		downCallback(mescroll) {
 			// 这里加载你想下拉刷新的数据, 比如刷新轮播数据
 			// loadSwiper();
@@ -151,18 +174,20 @@ export default {
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
 		upCallback(mescroll) {
 			//联网加载数据
-			setTimeout(() => {
-				mescroll.endErr();
-			}, 1000);
+			mescroll.endErr();
+			// setTimeout(() => {
+			// 	mescroll.endErr();
+			// }, 1000);
 		},
 		go_back(status){
 			let pamars = {
-				delta: 1,
-				status:status
+				status:status,
+				id:this.id
 			}
 			this.$http.post('personwx.checkrecruitperson/1.0/',pamars).then(res =>{
 				console.log(res)
 				if(res.data.code == '0'){
+					uni.$emit('refreshzmList')
 					uni.navigateBack({
 					    delta: 1
 					});
@@ -170,6 +195,12 @@ export default {
 				
 			})
 			
+		},
+		get_work_time(item){
+			return this.$utils.format_date(item.sstartTime,'/') +' - '+this.$utils.format_date(item.sendTime,'/')
+		},
+		avatarUrl(avatarUrl){
+			return `url(${avatarUrl})`
 		},
 	}
 };

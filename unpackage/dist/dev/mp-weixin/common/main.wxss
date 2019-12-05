@@ -43,6 +43,38 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*每个页面公共css */
 /*
   ColorUi for uniApp  v2.1.6 | by 文晓港 2019-05-31 10:44:24
@@ -4808,6 +4840,9 @@ scroll-view.cu-steps .cu-item {
 }
 .cuIcon-btn:before {
 	content: "\E601";
+}
+.globalHover{
+	background: #f1f1f1;
 }
 /* .scrollPage{
 	height: calc(100% - var(--window-bottom) - var(--window-top)  );

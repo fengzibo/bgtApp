@@ -6,22 +6,8 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
-		"enhance": false,
 		"postcss": true,
-		"minified": true,
-		"newFeature": true,
-		"coverView": true,
-		"nodeModules": false,
-		"autoAudits": false,
-		"checkInvalidKey": true,
-		"checkSiteMap": true,
-		"uploadWithSourceMap": true,
-		"babelSetting": {
-			"ignore": [],
-			"disablePlugins": [],
-			"outputPath": ""
-		},
-		"bundle": false
+		"minified": true
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.9.2",

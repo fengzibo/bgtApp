@@ -12,68 +12,118 @@
 			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_work">是的，我要去找活干了</button><br>
 			<!-- <button class="cu-btn round bg-gradual-orange lg margin-top" @tap="goto_rest">还没恢复</button> -->
 		</view>
-		<view class="has-task" v-if="artisan_work_state==='waitStart'">
-			<view class="flex top-manager solid-bottom bg-white">
-				<view class="manager flex-sub">
-					<view class="cu-avatar round bg-red">王</view>
-					<text class="text-grey margin-left-sm">小包头</text>
-					<view class="tel margin-left-sm text-xl flex align-center">
-						<text class="cuIcon-phone text-blue"></text>
-						<text class="text-df">13666666666</text>
+		
+		<view class="has-task" v-if="artisan_work_state==='waitStart' || artisan_work_state==='confirmInfo'">
+			<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :top="c_CustomBar">
+				<view class="swiper-box">
+					<swiper class="swiper"  :indicator-dots="false" :autoplay="false" :style="{ height: swiperHeight }" @change="swiperChange">
+						<swiper-item v-for="item in project_list" :key="item.id">
+							<view class="padding" id="sContent" >
+								<view class="bg-blue padding skills-card text-white">
+									<view class="info-main">
+										<view class="flex justify-between">
+											<view class="text-lg">工作详情</view>
+										</view>
+										<view class="info-box">
+											<view class="label ">工作内容：</view>
+											<view class="text ">{{item.deviceName}}({{item.deviceNum}})</view>
+										</view>
+										<view class="info-box">
+											<view class="label ">工期：</view>
+											<view class="text ">{{item.limit}}</view>
+										</view>
+										<view class="info-box">
+											<view class="label ">负责人：</view>
+											<view class="text ">
+												{{item.owerName}}，{{item.phone}}
+											</view>
+										</view>
+										<view class="info-box" v-if="artisan_work_state==='confirmInfo'">
+											<view class="text">
+												{{c_project.scompany}}
+											</view>
+										</view>
+									</view>
+								</view>
+							</view>
+						</swiper-item>
+					</swiper>
+					<view class="work-swiper-dot">
+						<view class="dot-item bg-blue" :class="{'active':curent_p_index == index}" v-for="(item,index) in project_list" :key="item.id"></view>
 					</view>
 				</view>
-				<view class="post-title">
-					<text class="text-blue text-xl">
-						项目\n经理
-					</text>
-				</view>
-			</view>
-			
-			<view class="wait-work text-center">
-				<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/wait-work.png" mode="aspectFit" style="width: 100%"></image>
-				<text class="text-black text-xl text-bold">预计开工日期:2019-10-30</text><br>
-				<text class="text-gray text-sm padding block">具体时间，请关注推送消息。</text><br>
-				<button class="cu-btn round bg-gradual-red lg margin-top" @tap="exit_work">我临时有事，我要退出</button>
-			</view>
-		</view>
-		<view class="confirm-info" v-if="artisan_work_state==='confirmInfo'">
-			<view class="flex top-manager solid-bottom bg-white">
-				<view class="manager flex-sub">
-					<view class="cu-avatar round bg-red">王</view>
-					<text class="text-grey margin-left-sm">小包头</text>
-					<view class="tel margin-left-sm text-xl flex align-center">
-						<text class="cuIcon-phone text-blue"></text>
-						<text class="text-df">13666666666</text>
-					</view>
-				</view>
-				<view class="post-title">
-					<text class="text-blue text-xl">
-						项目\n经理
-					</text>
-				</view>
-			</view>
-			<view class="bg-white padding skills-card">
-				<view class="info-main" :style="{ height: is_unfold ? 'auto' : '220rpx' }">
-					<view class="text-lg text-black">全自动热压机装配</view>
-					<view class="info-box">
-						<view class="label text-gray">开工日期：</view>
-						<view class="text text-black">2019-10-30</view>
-					</view>
-					<view class="info-box">
-						<view class="label text-gray">工作地点：</view>
-						<view class="text text-black">深圳市龙华区大浪街</view>
-					</view>
-					<view class="info-box">
-						<view class="label text-gray">住院事项：</view>
-						<view class="text text-black">
-							<view class="margin-bottom-sm">1.记得带上身份证</view>
-							<view class="margin-bottom-sm">2.记得带上身份证</view>
+				<template v-if="artisan_work_state==='waitStart'">
+					<view class="cu-bar bg-white solid-bottom title">
+						<view class="action">
+							<text class="cuIcon-title text-orange"></text>
+							开工信息
 						</view>
 					</view>
-				</view>
-			
-				<view class="unfold-more text-grey text-sm" @tap="is_unfold = !is_unfold">{{ is_unfold ? '收起更多' : '展开更多' }}</view>
-			</view>
+					<view class="bg-white starts-info">
+						<view class="info-box">
+							<view class="label text-gray">开工日期：</view>
+							<view class="text text-black">{{ deliveryPeriod(c_project.deliveryPeriod) }}</view>
+						</view>
+						<view class="info-box">
+							<view class="label text-gray">工作地点：</view>
+							<view class="text text-black">{{c_project.scompany}}</view>
+						</view>
+						<view class="info-box">
+							<view class="label text-gray">注意事项：</view>
+							<view class="text text-black">
+								{{c_project.description}}
+							</view>
+						</view>
+					</view>
+					<view class="cu-bar bg-white solid-bottom title margin-top-sm">
+						<view class="action">
+							<text class="cuIcon-title text-orange"></text>
+							回复信息
+						</view>
+					</view>
+					<view class="reply-info bg-white">
+						<radio-group @change="radioChange">
+							<label class="radio margin-tb-sm"><radio value="can" :checked="current_radio == 'can'" class="margin-right-sm" />我知道了，可以按时来。</label>
+							<label class="radio margin-tb-sm"><radio value="no_can" :checked="current_radio == 'no_can'" class="margin-right-sm" />很抱歉，我临时有事，本次工作不参与</label>
+						</radio-group>
+						<view class="text-center padding-tb-sm">
+							<button class="cu-btn round bg-blue lg" @tap="comfirm_can">确认</button>
+						</view>
+					</view>
+				</template>
+				<template v-else>
+					<view class="cu-bar bg-white solid-bottom title">
+						<view class="action">
+							<text class="cuIcon-title text-orange"></text>
+							我的工时
+						</view>
+						<view class="action text-gray">
+							更新：{{deliveryPeriod(c_project.deliveryPeriod)}}
+						</view>
+					</view>
+					<view class="flex text-center solid-top padding-tb bg-white">
+						<view class="flex flex-sub flex-direction solid-right text-gray">
+							<view class="text-xxl">8</view>
+							<view class="margin-top-sm">
+								昨日工时
+							</view>
+						</view>
+						<view class="flex flex-sub flex-direction solid-right text-green">
+							<view class="text-xxl text-blue">2</view>
+							<view class="margin-top-sm">
+								今日工时
+							</view>
+						</view>
+						<view class="flex flex-sub flex-direction text-orange">
+							<view class="text-xxl">100</view>
+							<view class="margin-top-sm">
+								累计工时
+							</view>
+						</view>
+					</view>
+					
+				</template>
+			</mescroll-uni>
 		</view>
 	</view>
 </template>
@@ -84,26 +134,139 @@
 		data() {
 			return {
 				is_unfold:false,
+				project_list:[],
+				downOption: {
+					auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
+				},
+				upOption: {
+					auto: false,
+					isLock:true,
+					use:false,
+				},
+				swiperHeight:'',
+				curent_p_index:0,
+				current_radio:'can',
+				
 			}
 		},
 		components:{
 		},
 		computed: {
 			...mapState(['artisan_work_state']),
-			...mapGetters(['user_role'])
+			...mapGetters(['user_role','id']),
+			c_CustomBar(){
+				return this.CustomBar
+			},
+			c_project(){
+				return this.project_list[this.curent_p_index]
+			}
+		},
+		mounted() {
+			this.init()
 		},
 		methods: {
+			init(cb){
+				this.$http.get('personwx.personproject/1.0/',{
+					pid:this.id,
+					isFinish:'0'
+				}).then(res =>{
+					console.log(res)
+					if(this.$utils._get(res,'data.code','') === '0'){
+						this.project_list = this.$utils._get(res,'data.data',[])
+						if(this.project_list.length>0){
+							if(this.c_project.resWorkStatus == '1'){
+								this.$store.commit('setArtisanWorkState','waitStart')
+							}else{
+								this.$store.commit('setArtisanWorkState','confirmInfo')
+							}
+						}else{
+							this.$store.commit('setArtisanWorkState','noTask')
+						}
+						if(typeof cb === 'function'){
+							cb()
+						}
+						this.$nextTick(() =>{
+							this.get_swiper_c_height()
+						})
+					}
+					
+				})
+			},
 			goto_work(){
 				uni.switchTab({
 				    url: '/pages/tabbar/task/task'
 				});
 			},
 			goto_rest(){
-				this.$store.commit('setArtisanWorkState','rest')
+				this.$http.post('personwx.personwx.changestatus/1.0/',{
+					id:this.id,
+					status:'2'
+				}).then(res =>{
+					console.log(res)
+					this.$store.commit('setArtisanWorkState','rest')
+				})
+				
 			},
 			exit_work(){
 				
-			}
+			},
+			downCallback(mescroll) {
+				// 这里加载你想下拉刷新的数据, 比如刷新轮播数据
+				// loadSwiper();
+				// 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
+				// mescroll.resetUpScroll();
+				setTimeout(() => {
+					this.init(() =>{
+						mescroll.endSuccess()
+					})
+				}, 300);
+			},
+			/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
+			upCallback(mescroll) {
+				//联网加载数据
+				
+				// setTimeout(() => {
+				// 	this.init(() =>{
+				// 		mescroll.endSuccess()
+				// 	})
+				// }, 300);
+			},
+			get_swiper_c_height(){
+				const query = uni.createSelectorQuery().in(this);
+				query.select('#sContent').boundingClientRect(data => {
+				  console.log("得到布局位置信息" + JSON.stringify(data));
+				  console.log("节点离页面顶部的距离为" + data.top);
+				  this.swiperHeight = data.height+'px'
+				}).exec();
+			},
+			deliveryPeriod(time){
+				return this.$utils.format_date(time)
+			},
+			radioChange(e){
+				this.current_radio = e.target.value
+			},
+			comfirm_can(){
+				this.$http.post('personwx.personchangestatus/1.0/',{
+					id:this.c_project.resWorkId,
+					status:this.current_radio === 'can'?'2':'0'
+				}).then(res =>{
+					console.log(res)
+				})
+			},
+			swiperChange(e){
+				console.log(e)
+				this.curent_p_index = e.detail.current
+				if(this.c_project.resWorkStatus == '1'){
+					this.$store.commit('setArtisanWorkState','waitStart')
+				}else{
+					this.$store.commit('setArtisanWorkState','confirmInfo')
+				}
+				this.$nextTick(() =>{
+					this.get_swiper_c_height()
+				})
+				// let id = this.$utils._get(this.bgt_c_task[this.current_swiper],'id','')
+				// this.$store.commit('set_bgt_ct_id',id)
+			},
 		}
 	}
 </script>
@@ -130,14 +293,10 @@
 .skills-card {
 	border-radius: 10upx;
 	box-shadow: 6upx 6upx 8upx rgba(0, 129, 255, 0.1);
-
-	.info-main {
-		overflow: hidden;
-		transition: all 0.3s;
-	}
-	.info-box {
+}
+.info-box {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		margin-top: 20rpx;
 		.label {
 			flex: 0 0 auto;
@@ -146,9 +305,33 @@
 			flex: 1;
 		}
 	}
-	.unfold-more {
-		text-align: center;
-		padding-top: 10rpx;
+	.starts-info{
+		padding: 10rpx 60rpx 30rpx; 
 	}
-}
+	.reply-info{
+		padding: 10rpx 60rpx;
+		label{
+			display: block;
+		}
+	}
+	.swiper-box{
+		position: relative;
+	}
+	.work-swiper-dot{
+		position: absolute;
+		bottom: 13rpx;
+		left: 50%;
+		transform: translateX(-50%);
+		.dot-item{
+			width: 40rpx;
+			height: 6rpx;
+			border-radius: 3rpx;
+			margin: 0 10rpx;
+			display: inline-block;
+			opacity: .3;
+			&.active{
+				opacity: 1;
+			}
+		}
+	}
 </style>

@@ -90,18 +90,13 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l1 = _vm.__map(_vm.tab_list, function(tab, index1) {
-    var l0 = _vm.__map(tab.data, function(item, __i0__) {
-      var m0 = _vm.deliveryPeriod(item.deliveryPeriod)
-      return {
-        $orig: _vm.__get_orig(item),
-        m0: m0
-      }
-    })
-
+  var l0 = _vm.__map(_vm.p_list, function(item, __i0__) {
+    var m0 = _vm.deliveryPeriod(item.deliveryPeriod)
+    var m1 = _vm.deliveryPeriod(item.createdTime)
     return {
-      $orig: _vm.__get_orig(tab),
-      l0: l0
+      $orig: _vm.__get_orig(item),
+      m0: m0,
+      m1: m1
     }
   })
 
@@ -109,7 +104,7 @@ var render = function() {
     {},
     {
       $root: {
-        l1: l1
+        l0: l0
       }
     }
   )
@@ -218,8 +213,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var taskArtisan = function taskArtisan() {return __webpack_require__.e(/*! import() | pages/tabbar/task/taskArtisan */ "pages/tabbar/task/taskArtisan").then(__webpack_require__.bind(null, /*! ./taskArtisan.vue */ 235));};var _default =
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var MescrollUni = function MescrollUni() {return Promise.all(/*! import() | components/mescroll-uni/mescroll-uni */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/mescroll-uni/mescroll-uni")]).then(__webpack_require__.bind(null, /*! @/components/mescroll-uni/mescroll-uni.vue */ 234));};var taskArtisan = function taskArtisan() {return __webpack_require__.e(/*! import() | pages/tabbar/task/taskArtisan */ "pages/tabbar/task/taskArtisan").then(__webpack_require__.bind(null, /*! ./taskArtisan.vue */ 243));};var _default =
 
 {
   data: function data() {
@@ -228,19 +222,32 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       {
         name: '当前任务',
         id: 'dcrw',
-        data: [] },
+        data: [],
+        y: 0 },
 
       {
         name: '已完成',
         id: 'ywc',
-        data: [] }],
+        data: [],
+        y: 0 }],
 
 
       current_tab: {
         id: 'dcrw',
         index: 0 },
 
-      loading: true };
+      loading: true,
+      show_artisan: false,
+      mescroll: null, //mescroll实例对象
+      upOption: {
+        onScroll: true, // 是否监听滚动事件, 默认false (配置为true时,可@scroll="scroll"获取到滚动条位置和方向)
+        isLock: true,
+        auto: false },
+
+      downOption: {
+        auto: false },
+
+      preIndex: 0 };
 
   },
   onLoad: function onLoad() {var _this = this;
@@ -248,8 +255,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     try {
       var version = uni.getStorageSync('version');
       console.log('version', version);
-      if (version !== '1.1.2') {
+      if (version !== '1.1.7') {
         uni.clearStorageSync();
+        this.show_artisan = false;
         uni.reLaunch({
           url: '/pages/welcome/welcome' });
 
@@ -258,12 +266,15 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       var value = uni.getStorageSync('user_info');
       console.log(value);
       if (!value) {
+        this.show_artisan = false;
         uni.reLaunch({
           url: '/pages/welcome/welcome' });
 
       } else {
         if (this.user_role === 'head') {
           this.init();
+        } else {
+          this.show_artisan = true;
         }
       }
     } catch (e) {
@@ -274,12 +285,16 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       console.log('refreshList');
       if (_this.user_role === 'head') {
         _this.init();
+      } else {
+        _this.show_artisan = true;
       }
     });
     uni.$on('refreshJwt', function (data) {
       console.log('refreshJwt', data);
       if (_this.user_role === 'head') {
         _this.init();
+      } else {
+        _this.show_artisan = true;
       }
     });
   },
@@ -294,7 +309,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     uni.$off('refreshJwt');
   },
   components: {
-    taskArtisan: taskArtisan },
+    taskArtisan: taskArtisan,
+    MescrollUni: MescrollUni },
 
   watch: {
     user_role: function user_role(val) {
@@ -311,8 +327,26 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
   (0, _vuex.mapState)(['refresh_num']),
   (0, _vuex.mapGetters)(['user_role']), {
     has_task: function has_task() {
-      console.log('has_task', this.tab_list[this.current_tab.index]);
-      return this.$utils._get(this.tab_list[this.current_tab.index], 'data', []).length > 0;
+      // console.log('has_task',this.tab_list[this.current_tab.index])
+      // return this.$utils._get(this.tab_list[this.current_tab.index],'data',[]).length>0
+      return this.tab_list.some(function (item, index) {
+        return item.data.length > 0;
+      });
+    },
+    p_list: function p_list() {
+      return this.tab_list[this.current_tab.index].data;
+    },
+    c_CustomBar: function c_CustomBar() {
+      return this.CustomBar;
+    },
+    workbench_id_list: function workbench_id_list() {
+      var list = [];
+      this.tab_list[0].data.forEach(function (item) {
+        if (item.status == '2' || item.status == '3') {
+          list.push(item);
+        }
+      });
+      return list;
     } }),
 
   methods: {
@@ -334,9 +368,21 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         isFinish: '1' });
 
     },
+    up_get_data: function up_get_data() {var _this3 = this;
+      this.$http.get('personwx.projectinfolist/1.0/', {
+        isFinish: JSON.stringify(this.current_tab.index) }).
+      then(function (res) {
+        console.log(res);
+        _this3.tab_list[_this3.current_tab.index].data = _this3.$utils._get(res, 'data.data', []);
+        _this3.mescroll.endSuccess();
+      });
+    },
     select_tab: function select_tab(id, index) {
       this.current_tab.id = id;
       this.current_tab.index = index;
+      var preTab = this.tab_list[this.preIndex];
+      preTab.y = this.mescroll.getScrollTop(); // 滚动条位置
+      this.preIndex = index;
     },
     ontabchange: function ontabchange(event) {
       console.log(event);
@@ -359,6 +405,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
           break;
         case '2':
+        case '3':
+          this.$store.commit('set_bgt_c_task', this.workbench_id_list);
+          this.$store.commit('set_bgt_ct_id', item.id);
           uni.switchTab({
             url: "/pages/tabbar/workbench/workbench" });
 
@@ -384,6 +433,33 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     },
     deliveryPeriod: function deliveryPeriod(time) {
       return this.$utils.format_date(time);
+    },
+    // mescroll组件初始化的回调,可获取到mescroll对象
+    mescrollInit: function mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+    },
+    /*下拉刷新的回调 */
+    downCallback: function downCallback(mescroll) {
+      // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
+      // loadSwiper();
+      // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
+      mescroll.resetUpScroll();
+    },
+    /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
+    upCallback: function upCallback(mescroll) {var _this4 = this;
+      setTimeout(function () {
+        _this4.up_get_data();
+      }, 300);
+    },
+    // 滚动事件 (需在up配置onScroll:true才生效)
+    scroll: function scroll(mescroll) {
+      console.log('滚动条位置 = ' + mescroll.getScrollTop() + ', navTop = ' + this.navTop);
+      // 菜单悬浮的原理: 监听滚动条的位置大于某个值时,控制顶部菜单的显示和隐藏
+      if (mescroll.getScrollTop() >= this.navTop) {
+        this.isShowSticky = true; // 显示悬浮菜单
+      } else {
+        this.isShowSticky = false; // 隐藏悬浮菜单
+      }
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

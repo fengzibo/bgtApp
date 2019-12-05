@@ -136,7 +136,19 @@
 				"navigationBarTitleText": "登录过期"
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/shareTeam/shareTeam",
+            "style" : {
+				"navigationBarTitleText": "分享团队"
+			}
+        }
+        ,{
+            "path" : "pages/tabbar/workbench/addPlan/addPlan",
+            "style" : {
+            	"navigationBarTitleText": "生产计划"
+            }
+        }
+    ],
 	"globalStyle": {
 		"navigationStyle": "custom"
 		// "navigationBarTextStyle": "black",

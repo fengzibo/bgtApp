@@ -249,6 +249,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -263,34 +276,47 @@ var _default =
         address: '深圳市龙华区大浪行政中心浪心科技园F栋301',
         member: 7 },
 
-      r_item: {} };
+      r_item: {},
+      tmplIds: ['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps', '9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'],
+      avatar_str: '' };
 
   },
   onLoad: function onLoad(option) {
 
     this.r_item = JSON.parse(decodeURIComponent(option.item));
+    this.avatar_str = this.r_item.createdBy.substring(0, 1);
+    console.log(this.r_item);
   },
   computed: {
     validityPeriod: function validityPeriod() {
       return this.$utils.format_date(this._get('validityPeriod', ''));
     },
     workAddress: function workAddress() {
-      var address = JSON.parse(this._get('workAddress', ''));
-      if (Array.isArray(address)) {
-        return address.join();
-      } else {
-        return address;
-      }
-
-    },
-    item_tag: function item_tag() {
       try {
-        var welfareInfo = JSON.parse(this._get('welfareInfo', []));
-        var workRequest = JSON.parse(this._get('workRequest', []));
-        return welfareInfo.concat(workRequest);
+        var address = JSON.parse(this._get('workAddress', ''));
+        if (Array.isArray(address)) {
+          return address.join();
+        } else {
+          return address;
+        }
       } catch (e) {
         //TODO handle the exception
       }
+
+
+    },
+    item_tag: function item_tag() {
+      var welfareInfo = this._get('welfareInfo', []);
+      var workRequest = this._get('workRequest', []);
+      return welfareInfo.concat(workRequest);
+    },
+    welfareInfo: function welfareInfo() {
+      var welfareInfo = this._get('welfareInfo', []);
+      return welfareInfo;
+    },
+    workRequest: function workRequest() {
+      var workRequest = this._get('workRequest', []);
+      return workRequest;
     },
     requirementInfo: function requirementInfo() {
       var r_info = [];
@@ -318,32 +344,50 @@ var _default =
         delta: 1 });
 
     },
-    submitWork: function submitWork(e) {var _this = this;
-      console.log(e);
+    showRsm: function showRsm(status) {var _this = this;
+      wx.requestSubscribeMessage({
+        tmplIds: this.tmplIds,
+        success: function success(res) {
+          console.log(res);
+          if (res['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps'] === 'accept' || res['9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'] === 'accept') {
+            _this.$store.commit('setIsSubscribe', true);
+            if (status == 'yes') {
+              _this.submitWork();
+            } else {
+              _this.refusedWork();
+            }
+          } else {
+            _this.$store.commit('setIsSubscribe', false);
+          }
+        },
+        fail: function fail(err) {
+          console.log(err);
+        } });
+
+    },
+    submitWork: function submitWork() {var _this2 = this;
       this.$http.post('personwx.recpersonchangestatus/1.0/', {
         id: this._get('rpId', ''),
-        status: '2',
-        formId: e.detail.formId }).
+        status: '2' }).
       then(function (res) {
         console.log(res);
         if (res.data.code == '0') {
+          uni.$emit('refreshJwt');
           uni.showToast({
             title: '接工成功',
             duration: 2000,
             success: function success() {
-              _this.go_back();
+              _this2.go_back();
             } });
 
 
         }
       });
     },
-    refusedWork: function refusedWork(e) {var _this2 = this;
-      console.log('sds', e);
+    refusedWork: function refusedWork() {var _this3 = this;
       this.$http.post('personwx.recpersonchangestatus/1.0/', {
         id: this._get('rpId', ''),
-        status: '3',
-        formId: e.detail.formId }).
+        status: '3' }).
       then(function (res) {
         console.log(res);
         if (res.data.code == '0') {
@@ -351,7 +395,7 @@ var _default =
             title: '已拒绝',
             duration: 2000,
             success: function success() {
-              _this2.go_back();
+              _this3.go_back();
             } });
 
 

@@ -120,7 +120,40 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var avatar = function avatar() {return Promise.all(/*! import() | components/yq-avatar/yq-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/yq-avatar/yq-avatar")]).then(__webpack_require__.bind(null, /*! ../../../../components/yq-avatar/yq-avatar.vue */ 261));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var avatar = function avatar() {return Promise.all(/*! import() | components/yq-avatar/yq-avatar */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/yq-avatar/yq-avatar")]).then(__webpack_require__.bind(null, /*! ../../../../components/yq-avatar/yq-avatar.vue */ 276));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -165,40 +198,179 @@ __webpack_require__.r(__webpack_exports__);
         url: '',
         name: '',
         intro: '',
-        addr: '' },
+        addr: '',
+        type: '0',
+        is_share: '1' },
 
-      save_loading: false };
+      save_loading: false,
+      team: {},
+      is_upload: false,
+      addr_region: ['浙江省', '杭州市', '西湖区'],
+      company_name: '' };
 
   },
   components: {
     avatar: avatar },
 
+  onLoad: function onLoad(option) {
+    console.log(option);
+    try {
+      this.team = JSON.parse(decodeURIComponent(option.team));
+      if (JSON.stringify(this.team) !== '{}') {
+        this.init();
+      }
+    } catch (e) {
+      //TODO handle the exception
+    }
+
+  },
   methods: {
-    myUpload: function myUpload(rsp) {
+    init: function init() {
+
+      this.form_data.url = this.team.logo;
+      this.form_data.name = this.team.tname;
+      this.form_data.intro = this.team.profile;
+      this.form_data.addr = this.team.location;
+      this.form_data.is_share = this.team.isShare;
+      this.form_data.type = this.team.type;
+      this.company_name = this.$utils._get(this.team, 'companyName', '');
+      try {
+        var addr = JSON.parse(this.form_data.addr);
+        this.addr_region = addr;
+      } catch (e) {
+        //TODO handle the exception
+        this.addr_region = ['请选择省', '市', '区'];
+      }
+      console.log('form_data');
+    },
+    avatarUpload: function avatarUpload(rsp) {
       console.log(rsp);
-      this.form_data.url = rsp.path; //更新头像方式一
-      //rsp.avatar.imgSrc = rsp.path; //更新头像方式二
+      this.form_data.url = rsp.path;
+      this.is_upload = true;
     },
     formSubmit: function formSubmit(e) {var _this = this;
       console.log(e);
       if (this.save_loading) {
         return;
       }
-      this.save_loading = true;
-      setTimeout(function () {
+      if (this.form_data.url == '') {
+        uni.showToast({
+          title: '请上传头像',
+          duration: 2000 });
 
+        return;
+      } else if (this.form_data.name == '') {
+        uni.showToast({
+          title: '请输入团队名称',
+          duration: 2000 });
+
+        return;
+      } else if (this.form_data.intro == '') {
+        uni.showToast({
+          title: '请输入团队简介',
+          duration: 2000 });
+
+        return;
+      } else if (this.form_data.addr == '') {
+        uni.showToast({
+          title: '请输入团队位置',
+          duration: 2000 });
+
+        return;
+      } else if (this.form_data.type == '1') {
+        if (this.company_name == '') {
+          uni.showToast({
+            title: '请输入公司名称',
+            duration: 2000 });
+
+          return;
+        }
+
+      }
+      this.save_loading = true;
+      if (this.is_upload) {
+        uni.uploadFile({
+          url: this.$api_url + 'personwx.uploadteamfile/1.0/',
+          filePath: this.form_data.url,
+          // fileType: 'image',
+          name: 'tlogo',
+          header: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": 'Bearer ' + this.$store.getters.jwt },
+
+          formData: {
+            loginName: this.$utils._get(this.$store, 'state.user_info.loginName', ''),
+            loginUserId: this.$utils._get(this.$store, 'state.user_info.id', '') },
+
+          success: function success(res) {
+
+            var data = JSON.parse(res.data);
+            console.log('uploadImage success, res is:', data);
+            _this.form_data.url = _this.$domain + _this.$utils._get(data, 'logo', '');
+            _this.save();
+          },
+          fail: function fail(err) {
+            console.log('uploadImage fail', err);
+            uni.showModal({
+              content: err.errMsg,
+              showCancel: false });
+
+          },
+          complete: function complete() {
+            // uni.hideLoading();
+            _this.save_loading = false;
+          } });
+
+      } else {
+        this.save();
+      }
+    },
+    save: function save() {var _this2 = this;
+      var pamars = {
+        profile: this.form_data.intro,
+        location: this.form_data.addr,
+        id: this.$utils._get(this.team, 'id', ''),
+        type: this.form_data.type,
+        logo: this.form_data.url,
+        tname: this.form_data.name };
+
+      if (this.form_data.type == '1') {
+        pamars.isShare = this.form_data.is_share,
+        pamars.companyName = this.company_name;
+      }
+      this.$http.post('personwx.saveorupdateteam/1.0/', pamars).then(function (res) {
         uni.showToast({
           title: '保存成功',
           icon: 'success',
           position: 'bottom',
           success: function success() {
-            _this.save_loading = false;
-            _this.$store.commit('setHasTeam', true);
+            _this2.$store.commit('setHasTeam', true);
             // uni.hideToast();
+            uni.$emit('refteam');
             uni.navigateBack();
           } });
 
-      }, 500);
+      }).finally(function () {
+        _this2.save_loading = false;
+      });
+    },
+    selectAvatar: function selectAvatar() {
+      this.$refs.avatar.fChooseImg(0, {
+        selWidth: "300upx", selHeight: "300upx",
+        expWidth: '260upx', expHeight: '260upx' });
+
+
+    },
+    addrChange: function addrChange(e) {
+      this.addr_region = e.detail.value;
+      this.form_data.addr = JSON.stringify(e.detail.value);
+    },
+    radioChange: function radioChange(e) {
+      this.form_data.type = e.target.value;
+    },
+    shareChange: function shareChange(e) {
+      console.log(e);
+      this.form_data.is_share = e.target.value ? '1' : '0';
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

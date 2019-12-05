@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "团队",
-  "usingComponents": {}
+  "usingComponents": {
+    "team-artisan": "/pages/tabbar/team/teamArtisan"
+  }
 }

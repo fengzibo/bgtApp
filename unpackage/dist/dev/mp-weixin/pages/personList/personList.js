@@ -249,6 +249,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -259,7 +266,9 @@ var _default =
         auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
       },
       upOption: {
-        auto: false },
+        auto: false,
+        isLock: true,
+        textNoMore: '--没有更多数据了--' },
 
       conditions: {
         status: '0',
@@ -270,12 +279,16 @@ var _default =
       conditions_modal: false,
       status_radio: '0',
       switch_is_head: false,
-      recId: '' };
+      recId: '',
+      proId: '',
+      tmplIds: ['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps', '9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'],
+      mescroll: null,
+      type_list: [] };
 
   },
   computed: {
     c_CustomBar: function c_CustomBar() {
-      return this.CustomBar + 42;
+      return this.CustomBar + uni.upx2px(100);
     },
     no_data: function no_data() {
       return this.p_list.length <= 0 && !this.loading;
@@ -290,36 +303,65 @@ var _default =
       return num;
     } },
 
-  onLoad: function onLoad(option) {
+  onLoad: function onLoad(option) {var _this = this;
     this.recId = option.recId || '';
+    this.proId = option.proId || '';
+
+
+    uni.$on('refreshList', function () {
+      console.log('refreshList');
+      _this.init();
+      _this.get_type_list();
+    });
     this.init();
+    this.get_type_list();
+  },
+  onUnload: function onUnload() {
+    uni.$off('refreshJwt');
   },
   methods: {
-    init: function init() {var _this = this;
+    init: function init(cb) {var _this2 = this;
       this.$http.get('personwx.personinfolist/1.0/', {
         status: this.conditions.status,
         isHead: this.conditions.isHead }).
       then(function (res) {
         console.log(res);
-        _this.p_list = res.data.data;
-        _this.p_list.forEach(function (item) {
-          _this.$set(item, 'checked', false);
+        _this2.p_list = res.data.data;
+        _this2.p_list.forEach(function (item) {
+          _this2.$set(item, 'checked', false);
         });
-        _this.loading = false;
+        _this2.loading = false;
+        if (typeof cb == 'function') {
+          cb();
+        }
+
       });
+    },
+    get_type_list: function get_type_list() {var _this3 = this;
+      this.$http.post('personwx.tylelist/1.0/').then(function (res) {
+        _this3.type_list = _this3.$utils._get(res, 'data.data.data', []);
+        console.log(res);
+      });
+    },
+    mescrollInit: function mescrollInit(mescroll) {
+      this.mescroll = mescroll;
+      mescroll.showNoMore();
     },
     downCallback: function downCallback(mescroll) {
       // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
       // loadSwiper();
       // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
       mescroll.resetUpScroll();
+
     },
     /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-    upCallback: function upCallback(mescroll) {
+    upCallback: function upCallback(mescroll) {var _this4 = this;
       //联网加载数据
       setTimeout(function () {
-        mescroll.endErr();
-      }, 1000);
+        _this4.init(function () {
+          mescroll.endSuccess(_this4.p_list.length, false);
+        });
+      }, 300);
     },
     InputFocus: function InputFocus(e) {
       this.InputBottom = e.detail.height;
@@ -364,36 +406,63 @@ var _default =
       this.conditions_modal = false;
       this.init();
     },
-    formSubmit: function formSubmit(e) {var _this2 = this;
-      console.log('form发生了submit事件，携带数据为：', e);
-      var formId = e.detail.formId,
-      Ids = [],
-      openIds = [];
-      this.p_list.forEach(function (item) {
-        if (item.checked) {
-          Ids.push(item.id);
-          openIds.push(item.openId);
-        }
-      });
-      var params = {
-        Ids: Ids.join(),
-        openIds: openIds.join(),
-        recId: this.recId,
-        formId: formId,
-        path: 'pages/tabbar/task/task' };
+    showRsm: function showRsm() {var _this5 = this;
 
-      console.log(params);
-      this.$http.post('personwx.chooseperson/1.0/', params).then(function (res) {
-        console.log(res);
-        if (_this2.$utils._get(res, 'data.success', false)) {
-          uni.navigateBack({
-            delta: 1 });
+      wx.requestSubscribeMessage({
+        tmplIds: this.tmplIds,
+        success: function success(res) {
+          console.log(res);
+          if (res['Srd7KdqNHEUsgzsGJLUNUHgB4RBc_IQIlspLT2V5Gps'] === 'accept' || res['9ISRNbi4HPawlkd-vZHt-7xX_CxQ91XPo8KTCsuTZCw'] === 'accept') {
+            uni.showLoading({
+              title: '加载中' });
 
-        }
-      });
+            var Ids = [],
+            openIds = [];
+            _this5.p_list.forEach(function (item) {
+              if (item.checked) {
+                Ids.push(item.id);
+                openIds.push(item.openId);
+              }
+            });
+            var params = {
+              Ids: Ids.join(),
+              openIds: openIds.join(),
+              recId: _this5.recId,
+              path: 'pages/tabbar/task/task',
+              proId: _this5.proId };
+
+            console.log(params);
+            _this5.$http.post('personwx.chooseperson/1.0/', params).then(function (res) {
+              console.log(res);
+              if (_this5.$utils._get(res, 'data.success', false)) {
+                uni.$emit('refreshzmList');
+                uni.navigateBack({
+                  delta: 1 });
+
+                uni.hideLoading();
+              }
+            });
+          }
+        },
+        fail: function fail(err) {
+          console.log(err);
+        } });
+
     },
     avatarUrl: function avatarUrl(_avatarUrl) {
       return "url(".concat(_avatarUrl, ")");
+    },
+    typeChange: function typeChange(e) {
+      var items = this.type_list,
+      values = e.detail.value;
+      for (var i = 0, lenI = items.length; i < lenI; ++i) {
+        var item = items[i];
+        if (values.includes(item.id)) {
+          this.$set(item, 'checked', true);
+        } else {
+          this.$set(item, 'checked', false);
+        }
+      }
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

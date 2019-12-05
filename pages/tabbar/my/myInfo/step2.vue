@@ -25,6 +25,9 @@
 				<view class="cu-form-group">
 					<view class="title">工作年限</view>
 					<input placeholder="请输入工作年限" class="text-right" name="limit" v-model="form_data.limit"></input>
+					<view class="action">
+						年
+					</view>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">技工类型</view>
@@ -50,11 +53,25 @@
 				</view>
 				<view class="cu-form-group">
 					<view class="title">期望工作地</view>
-					<input placeholder="请输入期望工作地" class="text-right" name="addr" v-model="form_data.addr"></input>
+					<!-- <input placeholder="请输入期望工作地" class="text-right" name="addr" v-model="form_data.addr"></input> -->
+					<picker mode="region" @change="addrChange" :value="addr_region">
+						<view class="picker">
+							{{addr_region[0]}}，{{addr_region[1]}}，{{addr_region[2]}}
+						</view>
+					</picker>
 				</view>
 				<view class="cu-form-group">
 					<view class="title">现居地址</view>
-					<input placeholder="请输入现居地址" class="text-right" name="homeAddress" v-model="form_data.homeAddress"></input>
+					<!-- <input placeholder="请输入现居地址" class="text-right" name="homeAddress" v-model="form_data.homeAddress"></input> -->
+					<picker mode="region" @change="homeAddressChange" :value="homeAddress_region">
+						<view class="picker">
+							{{homeAddress_region[0]}}，{{homeAddress_region[1]}}，{{homeAddress_region[2]}}
+						</view>
+					</picker>
+				</view>
+				<view class="cu-form-group">
+					<view class="title">详细地址</view>
+					<input placeholder="请输入详细地址" class="text-right" name="particularAddr" v-model="form_data.particularAddr"></input>
 				</view>
 			</view>
 			<view class="block-title text-lg">
@@ -179,6 +196,9 @@
 					<view class="cu-form-group">
 						<view class="title">工价</view>
 						<input placeholder="请输入工价" class="text-right" name="equipment" v-model="exper_data.price"></input>
+						<view class="action">
+							元/时
+						</view>
 					</view>
 					<view class="cu-form-group picker-no-icon">
 						<view class="title">服务时间</view>
@@ -228,10 +248,11 @@ export default {
 	data() {
 		return {
 			form_data:{
-				education:'',
+				education:'请选择学历',
 				limit:'',
 				addr:'',
-				homeAddress:''
+				homeAddress:'',
+				particularAddr:''
 			},
 			type_index:[0,0],
 			type_picker: [],
@@ -266,7 +287,9 @@ export default {
 			exper_edit:false,
 			current_exper_id:'',
 			education_index:0,
-			education_pick:['初中','高中','高职','大专','本科','研究生','博士']
+			education_pick:['初中','高中','高职','大专','本科','研究生','博士'],
+			addr_region:['浙江省','杭州市','西湖区'],
+			homeAddress_region:['浙江省','杭州市','西湖区']
 		};
 	},
 	computed: {
@@ -278,6 +301,12 @@ export default {
 	},
 	mounted() {
 		this.init()
+		uni.$on('refreshJwt',(data) =>{
+			this.init()
+		})
+	},
+	beforeDestroy() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		init(){
@@ -353,10 +382,16 @@ export default {
 		},
 		init_info(){
 			console.log(this.res)
-			this.form_data.education = this.res.education
-			this.education_index = this.education_pick.indexOf(this.res.education)
+			this.form_data.education = this.$utils._get(this.res,'education','请选择学历')
+			this.education_index = this.education_pick.indexOf(this.form_data.education)
 			this.form_data.limit = this.res.workYear
-			this.form_data.addr = this.res.expectedPlace
+			try{
+				this.form_data.addr = JSON.parse(this.res.expectedPlace)
+				this.addr_region = JSON.parse(this.res.expectedPlace)
+			}catch(e){
+				this.form_data.addr = this.res.expectedPlace
+				this.addr_region = ['浙江省','杭州市','西湖区']
+			}
 			this.form_data.homeAddress = this.res.homeAddress
 			this.type_index = this.$utils._get(this.get_typeLevel_obj(this.res),'type_index',[0,0])
 			console.log(this.$utils._get(this.get_typeLevel_obj(this.res),'type_index',[0,0]))
@@ -463,10 +498,13 @@ export default {
 			uni.showLoading({
 			    title: '加载中'
 			});
+			this.form_data.addr = JSON.stringify(this.addr_region)
+			this.homeAddress = JSON.stringify(this.homeAddress_region) + this.form_data.particularAddr
+			console.log('save',this.form_data,this.id)
 			this.$http.post('personwx.basicwork/1.0/',{
 				education:this.form_data.education,
 				workYear:this.form_data.limit,
-				expectedPlace:this.form_data.addr,
+				expectedPlace:this.form_data.addr ,
 				homeAddress:this.form_data.homeAddress,
 				typeLevel:this.type_picker[1][this.type_index[1]].id,
 				id:this.id
@@ -617,6 +655,12 @@ export default {
 		educationChange(e){
 			this.education_index = e.detail.value
 			this.form_data.education = this.education_pick[e.detail.value]
+		},
+		addrChange(e){
+			this.addr_region = e.detail.value
+		},
+		homeAddressChange(e){
+			this.homeAddress_region = e.detail.value
 		}
 	}
 };
