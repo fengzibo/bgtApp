@@ -8833,7 +8833,7 @@ http.interceptor.response(function (response) {/* 请求之后拦截器 */
   // uni.hideLoading();
   switch (response.statusCode) {
     case 200:
-      if (response.data.code == '21' || response.data.code == '90' || response.data.code == '-9') {
+      if (response.data.code == '21' || response.data.code == '90') {
         console.log(_store.default.state.refresh_jwt);
         if (_store.default.state.refresh_jwt) {
           return;
@@ -8913,7 +8913,142 @@ http;exports.default = _default;
 
 /***/ }),
 
-/***/ 239:
+/***/ 24:
+/*!***********************************************************************************!*\
+  !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/utils/luch-request/request.js ***!
+  \***********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+var _store = _interopRequireDefault(__webpack_require__(/*! ../../store */ 17));
+var _utils = _interopRequireDefault(__webpack_require__(/*! ../../utils/utils.js */ 19));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var
+Request = /*#__PURE__*/function () {function Request() {_classCallCheck(this, Request);_defineProperty(this, "config",
+    {
+      baseUrl: '',
+      header: {
+        'Content-Type': 'application/json;charset=UTF-8' },
+
+      method: 'GET',
+      dataType: 'json',
+      responseType: 'text',
+      success: function success() {},
+      fail: function fail() {},
+      complete: function complete() {} });_defineProperty(this, "interceptor",
+
+
+
+
+
+
+    {
+      request: function request(f) {
+        if (f) {
+          Request.requestBeforeFun = f;
+        }
+      },
+      response: function response(f) {
+        if (f) {
+          Request.requestComFun = f;
+        }
+      } });}_createClass(Request, [{ key: "setConfig", value: function setConfig(
+
+
+
+
+
+
+
+
+
+
+    f) {
+      this.config = f(this.config);
+    } }, { key: "request", value: function request()
+
+    {var _this = this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      options.baseUrl = options.baseUrl || this.config.baseUrl;
+      options.dataType = options.dataType || this.config.dataType;
+      options.url = Request.posUrl(options.url) ? options.url : options.baseUrl + options.url;
+      options.data = options.data || {};
+      options.header = options.header || this.config.header;
+      options.method = options.method || this.config.method;
+
+      Promise.prototype.finally = function (callback) {
+        'use strict';
+        var P = this.constructor;
+        return this.then(
+        function (value) {return P.resolve(callback(value));},
+        function (err) {return P.resolve(callback(err));});
+
+      };
+
+      return new Promise(function (resolve, reject) {
+        var next = true;
+        var _config = null;
+        options.complete = function (response) {
+          var statusCode = response.statusCode;
+          response.config = _config;
+          response = Request.requestComFun(response);
+          if (statusCode === 200) {// 成功
+            resolve(response);
+          } else {
+            reject(response);
+          }
+        };
+        var cancel = function cancel() {var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'handle cancel';
+          var err = {
+            errMsg: t,
+            config: afC };
+
+          reject(err);
+          next = false;
+        };
+        var afC = _objectSpread({}, _this.config,
+        options);
+
+        _config = _objectSpread({}, afC,
+        Request.requestBeforeFun(afC, cancel));
+
+        if (!next) return;
+        uni.request(_config);
+      });
+    } }, { key: "get", value: function get(
+
+    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      options.url = url;
+      var default_data = {
+        loginName: _utils.default._get(_store.default, 'state.user_info.loginName', ''),
+        loginUserId: _utils.default._get(_store.default, 'state.user_info.id', '') };
+
+
+      options.data = Object.assign(default_data, data);
+      options.method = 'GET';
+      return this.request(options);
+    } }, { key: "post", value: function post(
+
+    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+      options.url = url;
+      var default_data = {
+        loginName: _utils.default._get(_store.default, 'state.user_info.loginName', ''),
+        loginUserId: _utils.default._get(_store.default, 'state.user_info.id', '') };
+
+      options.data = Object.assign(default_data, data);
+      options.method = 'POST';
+      return this.request(options);
+    } }], [{ key: "posUrl", value: function posUrl(url) {/* 判断url是否为绝对路径 */return /(http|https):\/\/([\w.]+\/?)\S*/.test(url);} }, { key: "requestBeforeFun", value: function requestBeforeFun(config) {return config;} }, { key: "requestComFun", value: function requestComFun(response) {return response;} }]);return Request;}();exports.default = Request;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 255:
 /*!*********************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/mescroll-uni/mescroll-uni.js ***!
   \*********************************************************************************************/
@@ -9671,142 +9806,7 @@ MeScroll.prototype.setBounce = function (isBounce) {
 
 /***/ }),
 
-/***/ 24:
-/*!***********************************************************************************!*\
-  !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/utils/luch-request/request.js ***!
-  \***********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
-
-
-
-
-
-
-var _store = _interopRequireDefault(__webpack_require__(/*! ../../store */ 17));
-var _utils = _interopRequireDefault(__webpack_require__(/*! ../../utils/utils.js */ 19));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var
-Request = /*#__PURE__*/function () {function Request() {_classCallCheck(this, Request);_defineProperty(this, "config",
-    {
-      baseUrl: '',
-      header: {
-        'Content-Type': 'application/json;charset=UTF-8' },
-
-      method: 'GET',
-      dataType: 'json',
-      responseType: 'text',
-      success: function success() {},
-      fail: function fail() {},
-      complete: function complete() {} });_defineProperty(this, "interceptor",
-
-
-
-
-
-
-    {
-      request: function request(f) {
-        if (f) {
-          Request.requestBeforeFun = f;
-        }
-      },
-      response: function response(f) {
-        if (f) {
-          Request.requestComFun = f;
-        }
-      } });}_createClass(Request, [{ key: "setConfig", value: function setConfig(
-
-
-
-
-
-
-
-
-
-
-    f) {
-      this.config = f(this.config);
-    } }, { key: "request", value: function request()
-
-    {var _this = this;var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      options.baseUrl = options.baseUrl || this.config.baseUrl;
-      options.dataType = options.dataType || this.config.dataType;
-      options.url = Request.posUrl(options.url) ? options.url : options.baseUrl + options.url;
-      options.data = options.data || {};
-      options.header = options.header || this.config.header;
-      options.method = options.method || this.config.method;
-
-      Promise.prototype.finally = function (callback) {
-        'use strict';
-        var P = this.constructor;
-        return this.then(
-        function (value) {return P.resolve(callback(value));},
-        function (err) {return P.resolve(callback(err));});
-
-      };
-
-      return new Promise(function (resolve, reject) {
-        var next = true;
-        var _config = null;
-        options.complete = function (response) {
-          var statusCode = response.statusCode;
-          response.config = _config;
-          response = Request.requestComFun(response);
-          if (statusCode === 200) {// 成功
-            resolve(response);
-          } else {
-            reject(response);
-          }
-        };
-        var cancel = function cancel() {var t = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'handle cancel';
-          var err = {
-            errMsg: t,
-            config: afC };
-
-          reject(err);
-          next = false;
-        };
-        var afC = _objectSpread({}, _this.config,
-        options);
-
-        _config = _objectSpread({}, afC,
-        Request.requestBeforeFun(afC, cancel));
-
-        if (!next) return;
-        uni.request(_config);
-      });
-    } }, { key: "get", value: function get(
-
-    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      options.url = url;
-      var default_data = {
-        loginName: _utils.default._get(_store.default, 'state.user_info.loginName', ''),
-        loginUserId: _utils.default._get(_store.default, 'state.user_info.id', '') };
-
-
-      options.data = Object.assign(default_data, data);
-      options.method = 'GET';
-      return this.request(options);
-    } }, { key: "post", value: function post(
-
-    url, data) {var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-      options.url = url;
-      var default_data = {
-        loginName: _utils.default._get(_store.default, 'state.user_info.loginName', ''),
-        loginUserId: _utils.default._get(_store.default, 'state.user_info.id', '') };
-
-      options.data = Object.assign(default_data, data);
-      options.method = 'POST';
-      return this.request(options);
-    } }], [{ key: "posUrl", value: function posUrl(url) {/* 判断url是否为绝对路径 */return /(http|https):\/\/([\w.]+\/?)\S*/.test(url);} }, { key: "requestBeforeFun", value: function requestBeforeFun(config) {return config;} }, { key: "requestComFun", value: function requestComFun(response) {return response;} }]);return Request;}();exports.default = Request;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-
-/***/ 240:
+/***/ 256:
 /*!****************************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/mescroll-uni/mescroll-uni-option.js ***!
   \****************************************************************************************************/
@@ -9847,19 +9847,19 @@ GlobalOption;exports.default = _default;
 
 /***/ }),
 
-/***/ 281:
+/***/ 297:
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
   \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 282);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 298);
 
 
 /***/ }),
 
-/***/ 282:
+/***/ 298:
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -9890,7 +9890,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 283);
+module.exports = __webpack_require__(/*! ./runtime */ 299);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -9907,7 +9907,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 283:
+/***/ 299:
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -10670,7 +10670,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 305:
+/***/ 321:
 /*!****************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/common/graceChecker.js ***!
   \****************************************************************************/
@@ -10777,7 +10777,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 362:
+/***/ 378:
 /*!*************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/tki-qrcode/qrcode.js ***!
   \*************************************************************************************/
@@ -12908,7 +12908,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/tabbar/task/task": { "navigationBarTitleText": "任务", "usingComponents": { "task-artisan": "/pages/tabbar/task/taskArtisan", "mescroll-uni": "/components/mescroll-uni/mescroll-uni" } }, "pages/welcome/welcome": { "navigationBarTitleText": "欢迎登录", "usingComponents": {} }, "pages/tabbar/my/my": { "navigationBarTitleText": "我的", "usingComponents": { "sunui-star": "/components/sunui-star/sunui-star" } }, "pages/tabbar/community/community": { "navigationBarTitleText": "社区", "usingComponents": {} }, "pages/tabbar/team/team": { "navigationBarTitleText": "团队", "usingComponents": { "team-artisan": "/pages/tabbar/team/teamArtisan" } }, "pages/tabbar/my/myInfo/myInfo": { "navigationBarTitleText": "个人信息", "usingComponents": { "step-one": "/pages/tabbar/my/myInfo/step1" } }, "pages/tabbar/my/myMsg/myMsg": { "navigationBarTitleText": "我的消息", "usingComponents": { "msg-list": "/pages/tabbar/my/myMsg/msgList" } }, "pages/tabbar/my/bindPhone/bindPhone": { "navigationBarTitleText": "绑定手机", "usingComponents": {} }, "pages/tabbar/team/addTeam/addTeam": { "navigationBarTitleText": "添加团队", "usingComponents": { "avatar": "/components/yq-avatar/yq-avatar" } }, "pages/tabbar/team/auditList/auditList": { "navigationBarTitleText": "审核列表", "usingComponents": {} }, "pages/tabbar/team/auditList/auditDetail": { "navigationBarTitleText": "审核详情", "usingComponents": { "sunui-star": "/components/sunui-star/sunui-star" } }, "pages/tabbar/team/teamMember/teamMember": { "navigationBarTitleText": "团队成员", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/login/register": { "navigationBarTitleText": "注册", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/login/forget": { "navigationBarTitleText": "重置密码", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/tabbar/task/taskMain/taskMain": { "navigationBarTitleText": "任务详情", "usingComponents": {} }, "pages/tabbar/task/createTask/createTask": { "navigationBarTitleText": "创建任务", "usingComponents": { "step-one": "/pages/tabbar/task/createTask/step1", "step-two": "/pages/tabbar/task/createTask/step2", "step-three": "/pages/tabbar/task/createTask/step3", "step-four": "/pages/tabbar/task/createTask/step4" } }, "pages/auditDetail/auditDetail": { "navigationBarTitleText": "申请个人详情", "usingComponents": {} }, "pages/tabbar/workbench/workbench": { "navigationBarTitleText": "工作台", "usingComponents": { "w-head": "/pages/tabbar/workbench/workbenchHead", "w-artisan": "/pages/tabbar/workbench/workbenchArtisan" } }, "pages/tabbar/task/taskMain/taskMainArtisan": { "navigationBarTitleText": "任务详情", "usingComponents": {} }, "pages/tabbar/my/myInfo/createInfo": { "navigationBarTitleText": "个人信息完善", "usingComponents": { "step-one": "/pages/tabbar/my/myInfo/step1", "step-two": "/pages/tabbar/my/myInfo/step2", "step-three": "/pages/tabbar/my/myInfo/step3" } }, "pages/tabbar/my/resume/resume": { "navigationBarTitleText": "个人履历", "usingComponents": { "step-two": "/pages/tabbar/my/myInfo/step2" } }, "pages/tabbar/my/aCode/aCode": { "navigationBarTitleText": "我的激活码", "usingComponents": {} }, "pages/tabbar/workHours/workHours": { "navigationBarTitleText": "工时管理", "usingComponents": {} }, "pages/personList/personList": { "navigationBarTitleText": "招募列表", "usingComponents": {} }, "pages/logBack/logBack": { "navigationBarTitleText": "登录过期", "usingComponents": {} }, "pages/shareTeam/shareTeam": { "navigationBarTitleText": "分享团队", "usingComponents": { "tki-qrcode": "/components/tki-qrcode/tki-qrcode" } }, "pages/tabbar/workbench/addPlan/addPlan": { "navigationBarTitleText": "生产计划", "usingComponents": {} } }, "globalStyle": { "navigationStyle": "custom" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/tabbar/task/task": { "navigationBarTitleText": "任务", "usingComponents": { "task-artisan": "/pages/tabbar/task/taskArtisan", "mescroll-uni": "/components/mescroll-uni/mescroll-uni" } }, "pages/welcome/welcome": { "navigationBarTitleText": "欢迎登录", "usingComponents": {} }, "pages/tabbar/my/my": { "navigationBarTitleText": "我的", "usingComponents": { "sunui-star": "/components/sunui-star/sunui-star" } }, "pages/tabbar/community/community": { "navigationBarTitleText": "社区", "usingComponents": {} }, "pages/tabbar/team/team": { "navigationBarTitleText": "团队", "usingComponents": { "team-artisan": "/pages/tabbar/team/teamArtisan" } }, "pages/tabbar/my/myInfo/myInfo": { "navigationBarTitleText": "个人信息", "usingComponents": { "step-one": "/pages/tabbar/my/myInfo/step1" } }, "pages/tabbar/my/myMsg/myMsg": { "navigationBarTitleText": "我的消息", "usingComponents": { "msg-list": "/pages/tabbar/my/myMsg/msgList" } }, "pages/tabbar/my/bindPhone/bindPhone": { "navigationBarTitleText": "绑定手机", "usingComponents": {} }, "pages/tabbar/team/addTeam/addTeam": { "navigationBarTitleText": "添加团队", "usingComponents": { "avatar": "/components/yq-avatar/yq-avatar" } }, "pages/tabbar/team/auditList/auditList": { "navigationBarTitleText": "审核列表", "usingComponents": {} }, "pages/tabbar/team/auditList/auditDetail": { "navigationBarTitleText": "审核详情", "usingComponents": { "sunui-star": "/components/sunui-star/sunui-star" } }, "pages/tabbar/team/teamMember/teamMember": { "navigationBarTitleText": "团队成员", "usingComponents": {} }, "pages/login/login": { "navigationBarTitleText": "登录", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/login/register": { "navigationBarTitleText": "注册", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/login/forget": { "navigationBarTitleText": "重置密码", "usingComponents": { "l-input": "/components/login-comp/login-input", "l-button": "/components/login-comp/login-button" } }, "pages/tabbar/task/taskMain/taskMain": { "navigationBarTitleText": "任务详情", "usingComponents": {} }, "pages/tabbar/task/createTask/createTask": { "navigationBarTitleText": "创建任务", "usingComponents": { "step-one": "/pages/tabbar/task/createTask/step1", "step-two": "/pages/tabbar/task/createTask/step2", "step-three": "/pages/tabbar/task/createTask/step3", "step-four": "/pages/tabbar/task/createTask/step4" } }, "pages/auditDetail/auditDetail": { "navigationBarTitleText": "申请个人详情", "usingComponents": {} }, "pages/tabbar/workbench/workbench": { "navigationBarTitleText": "工作台", "usingComponents": { "w-head": "/pages/tabbar/workbench/workbenchHead", "w-artisan": "/pages/tabbar/workbench/workbenchArtisan" } }, "pages/tabbar/task/taskMain/taskMainArtisan": { "navigationBarTitleText": "任务详情", "usingComponents": {} }, "pages/tabbar/my/myInfo/createInfo": { "navigationBarTitleText": "个人信息完善", "usingComponents": { "step-one": "/pages/tabbar/my/myInfo/step1", "step-two": "/pages/tabbar/my/myInfo/step2", "step-three": "/pages/tabbar/my/myInfo/step3" } }, "pages/tabbar/my/resume/resume": { "navigationBarTitleText": "个人履历", "usingComponents": { "step-two": "/pages/tabbar/my/myInfo/step2" } }, "pages/tabbar/my/aCode/aCode": { "navigationBarTitleText": "我的激活码", "usingComponents": {} }, "pages/tabbar/workHours/workHours": { "navigationBarTitleText": "工时管理", "usingComponents": {} }, "pages/personList/personList": { "navigationBarTitleText": "招募列表", "usingComponents": {} }, "pages/logBack/logBack": { "navigationBarTitleText": "登录过期", "usingComponents": {} }, "pages/shareTeam/shareTeam": { "navigationBarTitleText": "分享团队", "usingComponents": { "tki-qrcode": "/components/tki-qrcode/tki-qrcode" } }, "pages/tabbar/workbench/addPlan/addPlan": { "navigationBarTitleText": "生产计划", "usingComponents": {} }, "pages/tabbar/workbench/peopleDetail/peopleDetail": { "navigationBarTitleText": "人员详情", "usingComponents": {} }, "pages/tabbar/workbench/logReport/logReport": { "navigationBarTitleText": "日志提报", "usingComponents": { "dark-calendar": "/components/dark-calendar/dark-calendar" } }, "pages/tabbar/my/subscribe/subscribe": { "navigationBarTitleText": "订阅", "usingComponents": {} } }, "globalStyle": { "navigationStyle": "custom" } };exports.default = _default;
 
 /***/ }),
 

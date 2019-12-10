@@ -1,6 +1,6 @@
 <template>
 	<view class="people-list">
-		<view class="item padding bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id">
+		<view class="item padding bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
 			<view class="action solid-right text-center" style="padding: 0 30rpx;">
 				<view class="text-xl text-blue">
 					{{item.hours}}
@@ -94,6 +94,11 @@
 					default:
 						break;
 				}
+			},
+			goto_detail(item){
+				uni.navigateTo({
+					url: `/pages/tabbar/workbench/peopleDetail/peopleDetail?item=` + encodeURIComponent(JSON.stringify(item))
+				});
 			}
 		}
 	}

@@ -90,6 +90,12 @@
 				</navigator> -->
 			</view>
 			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
+				<navigator class="cu-item arrow" url="/pages/tabbar/my/subscribe/subscribe">
+					<view class="content">
+						<text class="cuIcon-subscription text-black"></text>
+						<text class="text-grey">订阅</text>
+					</view>
+				</navigator>
 				<navigator class="cu-item arrow" url="/pages/welcome/welcome">
 					<view class="content">
 						<text class="cuIcon-exit text-black"></text>

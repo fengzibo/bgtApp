@@ -80,6 +80,10 @@
 		computed: {
 			...mapState(['bgt_c_task','bgt_ct_id']),
 			...mapGetters(['user_role','id']),
+			is_detail(){
+				return this.r_item !== null
+			},
+			
 		},
 		onLoad(option) {
 			if(option.item){
@@ -88,9 +92,10 @@
 				this.set_data()
 				this.get_plan_detail()
 			}
+			this.get_people_list()
 		},
 		mounted() {
-			this.get_people_list()
+			
 		},
 		methods:{
 			set_data(){

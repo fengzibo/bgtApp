@@ -148,6 +148,24 @@
             	"navigationBarTitleText": "生产计划"
             }
         }
+        ,{
+            "path" : "pages/tabbar/workbench/peopleDetail/peopleDetail",
+			"style" : {
+				"navigationBarTitleText": "人员详情"
+			}
+        }
+        ,{
+            "path" : "pages/tabbar/workbench/logReport/logReport",
+            "style" : {
+            	"navigationBarTitleText": "日志提报"
+            }
+        }
+        ,{
+            "path" : "pages/tabbar/my/subscribe/subscribe",
+            "style" : {
+				"navigationBarTitleText": "订阅"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationStyle": "custom"

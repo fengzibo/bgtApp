@@ -136,7 +136,7 @@
 					</view>
 					<text>扫码</text>
 				</view>
-				<view class="cu-item">
+				<view class="cu-item" @tap="goto_log">
 					<view class="cuIcon-calendar text-gren">
 					</view>
 					<text>日志提报</text>
@@ -502,7 +502,11 @@ export default {
 			this.TabCur = e.currentTarget.dataset.id;
 			this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
 		},
-		
+		goto_log(){
+			uni.navigateTo({
+				url:'/pages/tabbar/workbench/logReport/logReport'
+			})
+		}
 	}
 };
 </script>

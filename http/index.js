@@ -33,7 +33,7 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 	// uni.hideLoading();
     switch(response.statusCode){
         case 200:
-			if(response.data.code == '21' || response.data.code == '90' || response.data.code == '-9'){
+			if(response.data.code == '21' || response.data.code == '90'){
 				console.log(Store.state.refresh_jwt)
 				if(Store.state.refresh_jwt){
 					return

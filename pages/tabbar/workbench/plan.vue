@@ -10,11 +10,18 @@
 						{{f_time(item.createdTime)}}
 					</view>
 				</view>
-				<view class="text-lg margin-tb-sm">
-					{{item.description}}
+				<view class="flex align-center margin-top-sm">
+					<view class="process flex-sub">
+						<view class="cu-progress round sm striped active" >
+							<view class="bg-green" style="width: 60%;"></view>
+						</view>
+					</view>
+					<view class="margin-left-sm">
+						进度8%
+					</view>
 				</view>
-				<view class="text-grey">
-					{{item.deviceNo}}
+				<view class="flex margin-top-sm">
+					<view class="cu-avatar sm round bg-red margin-right-sm" v-for="(avr,i) in item.people" :key="i" :style="{backgroundImage: `url(${avr.avaurl})`}"></view>
 				</view>
 			</view>
 		</view>
@@ -57,6 +64,20 @@
 				}).then(res =>{
 					console.log(res)
 					this.plan_list = this.$utils._get(res,'data.data',[])
+					this.plan_list.forEach(item =>{
+						let list = item.userList.split(',')
+						let plan_people = []
+						list.forEach(val =>{
+							let arr = val.split(':')
+							let obj = {
+								name:arr[2],
+								avaurl:arr[0]+':'+arr[1]
+							}
+							plan_people.push(obj)
+						})
+						this.$set(item,'people',plan_people)
+					})
+					console.log(this.plan_list)
 				})
 			},
 			go_add_plan(){
