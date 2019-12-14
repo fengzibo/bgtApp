@@ -7,4 +7,4 @@
         })
     },
     [['pages/tabbar/team/teamArtisan-create-component']]
-]);                
+]);

@@ -7,4 +7,4 @@
         })
     },
     [['components/sunui-star/sunui-star-create-component']]
-]);                
+]);

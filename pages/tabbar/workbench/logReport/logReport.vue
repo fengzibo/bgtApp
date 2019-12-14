@@ -89,7 +89,14 @@ export default {
 		...mapState(['bgt_c_task', 'bgt_ct_id'])
 	},
 	onLoad() {
+		uni.$on('refreshList', () => {
+			console.log('refreshList');
+			this.get_day_log();
+		});
 		this.get_day_log();
+	},
+	onUnload() {
+		uni.$off('refreshJwt');
 	},
 	methods: {
 		get_day_log() {
@@ -143,6 +150,7 @@ export default {
 				workLogData:JSON.stringify(data)
 			}).then(res =>{
 				console.log(res)
+				this.back()
 			})
 		}
 	}

@@ -7,4 +7,4 @@
         })
     },
     [['components/mescroll-uni/mescroll-uni-create-component']]
-]);                
+]);

@@ -3,4 +3,29 @@
   padding: 30rpx;
   text-align: center;
 }
+.fitler-head.data-v-b08cb5be {
+  width: 70%;
+  margin: 0 auto;
+}
+.fitler-head.data-v-b08cb5be::after {
+  border-color: #e54d42;
+}
+.fitler-head .flex-sub.data-v-b08cb5be {
+  padding: 15rpx 0;
+}
+.fitler-head .flex-sub.solid-left.data-v-b08cb5be::after {
+  border-color: #e54d42;
+}
+.fitler-head .flex-sub.active.data-v-b08cb5be {
+  background-color: #e54d42;
+}
+.case-all.data-v-b08cb5be {
+  position: relative;
+  text-align: right;
+}
+.case-all .cu-btn.data-v-b08cb5be {
+  position: relative;
+  right: 15rpx;
+  top: 20rpx;
+}
 

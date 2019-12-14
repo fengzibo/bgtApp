@@ -50,7 +50,7 @@
 					</view>
 				</view>
 				<view class="paln-check">
-					 <checkbox :value="item.id" :checked="item.checked" />
+					 <checkbox class='round' :value="item.id" :checked="item.checked" />
 				</view>
 			</label>
 		</checkbox-group>

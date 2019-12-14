@@ -1,32 +1,26 @@
 .audit-list .item.data-v-68798bad {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
 }
 .audit-list .item .content.data-v-68798bad {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 auto;
-      -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   width: 100%;
 }
 .audit-list .item .action.data-v-68798bad {
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
-      -ms-flex: 0 0 auto;
           flex: 0 0 auto;
 }
 .audit-list .item.data-v-68798bad:after {

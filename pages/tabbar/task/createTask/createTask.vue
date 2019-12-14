@@ -38,7 +38,7 @@
 				<button class="cu-btn round bg-blue" @tap="prev" v-if="num>0">上一步</button>
 				<button class="cu-btn round bg-blue" @tap="next" v-if="num<2">下一步</button>
 				<form @submit="endCreate" v-if="num == 2" :report-submit="true">
-					<button class="cu-btn round bg-blue" form-type="submit">结束人员招募并完成创建</button>
+					<button class="cu-btn round bg-blue" form-type="submit">结束招募</button>
 				</form>
 			</view>
 		</template>

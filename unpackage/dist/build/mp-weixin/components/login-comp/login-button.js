@@ -7,4 +7,4 @@
         })
     },
     [['components/login-comp/login-button-create-component']]
-]);                
+]);

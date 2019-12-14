@@ -30,7 +30,9 @@
     "pages/tabbar/workbench/addPlan/addPlan",
     "pages/tabbar/workbench/peopleDetail/peopleDetail",
     "pages/tabbar/workbench/logReport/logReport",
-    "pages/tabbar/my/subscribe/subscribe"
+    "pages/tabbar/my/subscribe/subscribe",
+    "pages/tabbar/workHours/hoursSettle/hoursSettle",
+    "pages/tabbar/workbench/errorReport/errorReport"
   ],
   "subPackages": [],
   "window": {
@@ -91,5 +93,6 @@
   "usingComponents": {
     "mescroll-uni": "/components/mescroll-uni/mescroll-uni",
     "cu-custom": "/colorui/components/cu-custom"
-  }
+  },
+  "sitemapLocation": "sitemap22.json"
 }

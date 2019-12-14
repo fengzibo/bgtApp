@@ -166,6 +166,18 @@
 				"navigationBarTitleText": "订阅"
 			}
         }
+        ,{
+            "path" : "pages/tabbar/workHours/hoursSettle/hoursSettle",
+            "style" : {
+				"navigationBarTitleText": "工时结算"
+			}
+        }
+        ,{
+            "path" : "pages/tabbar/workbench/errorReport/errorReport",
+            "style" : {
+				"navigationBarTitleText": "异常提报"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationStyle": "custom"

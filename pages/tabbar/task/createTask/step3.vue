@@ -236,7 +236,7 @@ export default {
 		current_zm_num(type){
 			let num = 0
 			this.recruit_list.forEach(item =>{
-				if(item.status === '5'){
+				if(item.status === '2'){
 					num++
 				}
 			})

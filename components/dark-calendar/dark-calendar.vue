@@ -11,7 +11,7 @@
     </view>
 
     <view :class="{ hide: !monthOpen }" class="content" :style="{ height: height }">
-      <view :style="{ top: positionTop + 'upx' }" class="days">
+      <view :style="{ top: positionTop + 'rpx' }" class="days">
         <view class="item" v-for="(item, index) in dates" :key="index">
           <view class="day" @click="selectOne(item, $event)" :class="{ choose: choose == `${item.year}-${item.month + 1}-${item.date}`, nolm: !item.lm }">{{ item.date }}</view>
           <view class="sign" v-if="isSigned(item.year, item.month + 1, item.date)"></view>
@@ -81,7 +81,7 @@ export default {
       return this.text.week.slice(this.weekstart - 1).concat(this.text.week.slice(0, this.weekstart - 1))
     },
     height() {
-      return (this.dates.length / 7) * 80 + 'upx'
+      return (this.dates.length / 7) * 80 + 'rpx'
     }
   },
   methods: {
@@ -198,16 +198,16 @@ export default {
 <style lang="scss" scoped>
 .sign-calendar {
   color: #fff;
-  font-size: 28upx;
+  font-size: 28rpx;
   text-align: center;
   // background-color: #3d9bf6;
-  padding-bottom: 10upx;
+  padding-bottom: 10rpx;
 
   .top-bar {
-    font-size: 28upx;
-    height: 80upx;
-    line-height: 80upx;
-    border-bottom: 1upx solid rgba(255, 255, 255, 0.3);
+    font-size: 28rpx;
+    height: 80rpx;
+    line-height: 80rpx;
+    border-bottom: 1rpx solid rgba(255, 255, 255, 0.3);
 
     display: flex;
 
@@ -219,9 +219,9 @@ export default {
   .week {
     display: flex;
     align-items: center;
-    height: 80upx;
-    line-height: 80upx;
-    border-bottom: 1upx solid rgba(255, 255, 255, 0.2);
+    height: 80rpx;
+    line-height: 80rpx;
+    border-bottom: 1rpx solid rgba(255, 255, 255, 0.2);
 
     view {
       flex: 1;
@@ -243,19 +243,19 @@ export default {
       .item {
         position: relative;
         display: block;
-        height: 80upx;
-        line-height: 80upx;
+        height: 80rpx;
+        line-height: 80rpx;
         width: calc(100% / 7);
 
         .day {
           font-style: normal;
           display: inline-block;
           vertical-align: middle;
-          width: 60upx;
-          height: 60upx;
-          line-height: 60upx;
+          width: 60rpx;
+          height: 60rpx;
+          line-height: 60rpx;
           overflow: hidden;
-          border-radius: 60upx;
+          border-radius: 60rpx;
 
           &.choose {
             background-color: #9fcdff;
@@ -270,26 +270,26 @@ export default {
 
         .sign {
           font-style: normal;
-          width: 20upx;
-          height: 20upx;
+          width: 20rpx;
+          height: 20rpx;
           background: #fff;
-          border-radius: 10upx;
+          border-radius: 10rpx;
           position: absolute;
           left: 50%;
-          margin-left: -10upx;
+          margin-left: -10rpx;
           bottom: 0;
           pointer-events: none;
         }
 
         .today-text {
           position: absolute;
-          font-size: 20upx;
+          font-size: 20rpx;
           font-weight: normal;
-          width: 20upx;
-          height: 20upx;
-          line-height: 20upx;
+          width: 20rpx;
+          height: 20rpx;
+          line-height: 20rpx;
           right: 0;
-          top: 10upx;
+          top: 10rpx;
           color: #fff;
         }
       }
@@ -297,13 +297,13 @@ export default {
   }
 
   .hide {
-    height: 80upx !important;
+    height: 80rpx !important;
   }
 
   .weektoggel {
-    width: 80upx;
-    height: 40upx;
-    margin: 10upx auto 0;
+    width: 80rpx;
+    height: 40rpx;
+    margin: 10rpx auto 0;
 
     &.down {
       transform: rotate(180deg);

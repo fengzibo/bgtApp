@@ -7,4 +7,4 @@
         })
     },
     [['components/yq-avatar/yq-avatar-create-component']]
-]);                
+]);

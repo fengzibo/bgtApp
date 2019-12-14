@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "工时管理",
-  "usingComponents": {}
+  "usingComponents": {
+    "hours-head": "/pages/tabbar/workHours/workHoursHead"
+  }
 }

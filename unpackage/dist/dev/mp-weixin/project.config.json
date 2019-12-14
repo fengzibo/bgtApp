@@ -24,28 +24,13 @@
 			"current": -1,
 			"list": []
 		},
-		"plugin": {
-			"current": -1,
-			"list": []
-		},
 		"game": {
-			"current": -1,
-			"list": []
-		},
-		"gamePlugin": {
 			"current": -1,
 			"list": []
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": [
-				{
-					"id": -1,
-					"name": "pages/tabbar/workbench/logReport/logReport",
-					"pathName": "pages/tabbar/workbench/logReport/logReport",
-					"scene": null
-				}
-			]
+			"list": []
 		}
 	}
 }

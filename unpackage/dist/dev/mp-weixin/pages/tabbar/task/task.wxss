@@ -1,12 +1,10 @@
 .task-index.data-v-5f7d827a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-      -ms-flex-direction: column;
           flex-direction: column;
   height: 100%;
   position: relative;
@@ -15,19 +13,15 @@
   padding: 0 30rpx;
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-justify-content: space-around;
-      -ms-flex-pack: distribute;
           justify-content: space-around;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   height: 90rpx;
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
-      -ms-flex: 0 0 auto;
           flex: 0 0 auto;
 }
 .tab-list .item.data-v-5f7d827a {
@@ -36,7 +30,6 @@
   border-bottom: 1px solid #7e8095;
   color: #7e8095;
   -webkit-transition: all 0.3s;
-  -o-transition: all 0.3s;
   transition: all 0.3s;
 }
 .tab-list .item.active.data-v-5f7d827a {
@@ -53,26 +46,21 @@
 .list-item .top-main.data-v-5f7d827a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
           justify-content: space-between;
   font-size: 12px;
 }
 .list-item .center-main.data-v-5f7d827a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
           justify-content: space-between;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   padding: 20rpx 0;
 }
@@ -81,17 +69,14 @@
   color: #f37b1d;
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-      -ms-flex-direction: column;
           flex-direction: column;
   font-size: 16px;
   -webkit-box-flex: 0;
   -webkit-flex: 0 0 auto;
-      -ms-flex: 0 0 auto;
           flex: 0 0 auto;
 }
 .list-item .center-main .schedule .schedule-num.data-v-5f7d827a {
@@ -111,27 +96,22 @@
   border-radius: 5rpx;
   width: 160rpx;
   height: 10rpx;
-  background-image: -webkit-gradient(linear, left top, right top, from(#ff9700), to(#ed1c24));
-  background-image: -o-linear-gradient(left, #ff9700, #ed1c24);
+  background-image: -webkit-linear-gradient(left, #ff9700, #ed1c24);
   background-image: linear-gradient(90deg, #ff9700, #ed1c24);
 }
 .list-item .center-main .com-view.data-v-5f7d827a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
-      -ms-flex-direction: column;
           flex-direction: column;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
-      -ms-flex-pack: center;
           justify-content: center;
 }
 .list-item .center-main .com-view .num.data-v-5f7d827a {
@@ -148,15 +128,12 @@
 .list-item .bottom-main.data-v-5f7d827a {
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
-      -ms-flex-pack: justify;
           justify-content: space-between;
   font-size: 10px;
 }
@@ -166,15 +143,12 @@
   right: 30rpx;
   display: -webkit-box;
   display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
-      -ms-flex-pack: center;
           justify-content: center;
   -webkit-box-align: center;
   -webkit-align-items: center;
-      -ms-flex-align: center;
           align-items: center;
   width: 60rpx;
   height: 60rpx;
@@ -189,7 +163,6 @@
 .task-artisan.data-v-5f7d827a {
   -webkit-box-flex: 1;
   -webkit-flex: 1 1 0;
-      -ms-flex: 1 1 0px;
           flex: 1 1 0;
 }
 

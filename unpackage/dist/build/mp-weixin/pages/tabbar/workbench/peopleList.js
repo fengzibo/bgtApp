@@ -7,4 +7,4 @@
         })
     },
     [['pages/tabbar/workbench/peopleList-create-component']]
-]);                
+]);

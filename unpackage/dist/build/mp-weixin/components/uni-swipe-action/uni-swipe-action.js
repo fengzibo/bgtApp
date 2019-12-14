@@ -7,4 +7,4 @@
         })
     },
     [['components/uni-swipe-action/uni-swipe-action-create-component']]
-]);                
+]);

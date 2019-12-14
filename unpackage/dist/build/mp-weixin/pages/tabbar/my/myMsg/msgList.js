@@ -7,4 +7,4 @@
         })
     },
     [['pages/tabbar/my/myMsg/msgList-create-component']]
-]);                
+]);

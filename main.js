@@ -14,7 +14,8 @@ Vue.prototype.$http = Http
 Vue.prototype.$api_url = Config.api_url
 Vue.prototype.$utils = utils
 Vue.prototype.$domain = 'https://zzy.zwch.ltd'
-
+import _ from 'lodash';  
+Vue.prototype.$_ = _
 App.mpType = 'app'
 
 const app = new Vue({

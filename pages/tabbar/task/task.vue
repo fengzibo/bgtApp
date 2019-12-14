@@ -13,13 +13,14 @@
 				
 			</view>
 		</view>
+		<view class="tab-list bg-white">
+			<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
+				<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
+			</view>
+		</view>
 		<template v-if="user_role=== 'head' && has_task && !loading">
 			<mescroll-uni @down="downCallback" @up="upCallback" :up="upOption"  @scroll="scroll" :down="downOption" @init="mescrollInit" :top="c_CustomBar">
-				<view class="tab-list bg-white">
-					<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
-						<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
-					</view>
-				</view>
+				
 				<view class="list">
 					<view class="list-item bg-white " v-for="item in p_list" :key="item.id" @tap="go_detail(item)">
 						<view class="top-main text-grey">
@@ -37,15 +38,15 @@
 								</view>
 							</view>
 							<view class="com-view">
-								<text class="num">{{ item.limit }}</text>
+								<text class="num">{{ item.allHours || 0 }}</text>
 								<text class="tip text-grey">累计工时</text>
 							</view>
 							<view class="com-view">
-								<text class="num err-color">{{ item.err || 0 }}</text>
+								<text class="num err-color">{{ item.abnormalityNum || 0 }}</text>
 								<text class="tip text-grey">累计异常</text>
 							</view>
 							<view class="com-view">
-								<text class="num"><text class="text-blue">{{item.ss || 0}}</text>/ <text >{{ item.budget }}</text> </text>
+								<text class="num"><text class="text-blue">{{item.allcost || 0}}</text>/ <text >{{ item.budget }}</text> </text>
 								<text class="tip text-grey">实时/预算</text>
 							</view>
 						</view>
@@ -195,7 +196,7 @@ export default {
 			return this.tab_list[this.current_tab.index].data
 		},
 		c_CustomBar() {
-			return this.CustomBar;
+			return this.CustomBar + uni.upx2px(90);
 		},
 		workbench_id_list(){
 			let list = []

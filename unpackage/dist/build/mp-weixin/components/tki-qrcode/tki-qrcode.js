@@ -7,4 +7,4 @@
         })
     },
     [['components/tki-qrcode/tki-qrcode-create-component']]
-]);                
+]);

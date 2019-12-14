@@ -7,4 +7,4 @@
         })
     },
     [['pages/tabbar/my/myInfo/step3-create-component']]
-]);                
+]);

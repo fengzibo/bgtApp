@@ -7,4 +7,4 @@
         })
     },
     [['pages/tabbar/task/taskArtisan-create-component']]
-]);                
+]);

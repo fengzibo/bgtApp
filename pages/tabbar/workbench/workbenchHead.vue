@@ -130,19 +130,24 @@
 			</view>
 		</template>
 		<template v-if="current_bgt_c_task.status == '3'">
-			<view class="cu-list grid col-3 no-border">
-				<view class="cu-item">
-					<view class="cuIcon-scan text-gren">
+			<view class="cu-list grid col-4 no-border">
+				<view class="cu-item text-black" @tap="scan">
+					<view class="cuIcon-scan">
 					</view>
 					<text>扫码</text>
 				</view>
-				<view class="cu-item" @tap="goto_log">
-					<view class="cuIcon-calendar text-gren">
+				<view class="cu-item text-yellow" @tap="goto_error">
+					<view class="cuIcon-warn ">
+					</view>
+					<text>异常提报</text>
+				</view>
+				<view class="cu-item text-orange" @tap="goto_log">
+					<view class="cuIcon-calendar ">
 					</view>
 					<text>日志提报</text>
 				</view>
-				<view class="cu-item">
-					<view class="cuIcon-roundclose text-gren">
+				<view class="cu-item text-grey" @tap="finish_task">
+					<view class="cuIcon-roundclose">
 					</view>
 					<text>任务结案</text>
 				</view>
@@ -174,6 +179,7 @@ import headTodo from './headTodo.vue'
 import peopleList from './peopleList.vue'
 import plan from './plan.vue'
 import errManage from './errManage.vue'
+import permision from "@/utils/permission.js"
 export default {
 	data() {
 		return {
@@ -435,9 +441,9 @@ export default {
 			this.current_swiper = e.detail.current
 			let id = this.$utils._get(this.bgt_c_task[this.current_swiper],'id','')
 			this.$store.commit('set_bgt_ct_id',id)
-			this.$nextTick(() =>{
-				this.get_project_detail()
-			})
+			// this.$nextTick(() =>{
+			// 	this.get_project_detail()
+			// })
 		},
 		send_start(){
 			uni.showModal({
@@ -506,6 +512,71 @@ export default {
 			uni.navigateTo({
 				url:'/pages/tabbar/workbench/logReport/logReport'
 			})
+		},
+		goto_error(){
+			
+			uni.navigateTo({
+				url:'/pages/tabbar/workbench/errorReport/errorReport'
+			})
+		},
+		async scan(){
+			let status = await this.checkPermission();
+			if (status !== 1) {
+				return;
+			}
+			uni.scanCode({
+				success: res => {
+					console.log('条码类型：' + res.scanType);
+					console.log('条码内容：' + res.result);
+				},
+				fail: err => {
+					console.log(err);
+				}
+			});
+		},
+		async checkPermission(code) {
+			let status = permision.isIOS ? await permision.requestIOS('camera') : await permision.requestAndroid(
+				'android.permission.CAMERA');
+		
+			if (status === null || status === 1) {
+				status = 1;
+			} else {
+				uni.showModal({
+					content: '需要相机权限',
+					confirmText: '设置',
+					success: function(res) {
+						if (res.confirm) {
+							permision.gotoAppSetting();
+						}
+					}
+				});
+			}
+			return status;
+		},
+		finish_task(){
+			uni.showModal({
+			    title: '提示',
+			    content: '辛苦了，确认任务结案？',
+				'confirmText':'确认结案',
+			    success:(res) => {
+			        if (res.confirm) {
+			            console.log('用户点击确定');
+						this.$http.post('personwx.projectfinish/1.0/',{
+							id:this.bgt_ct_id
+						}).then(res =>{
+							if(this.$_.get(res,'data.success',false)){
+								uni.switchTab({
+									url:"/pages/tabbar/task/task"
+								})
+								uni.$emit('refreshList')
+							}
+						})
+			        } else if (res.cancel) {
+			            console.log('用户点击取消');
+			        }
+			    }
+			});
+			
 		}
 	}
 };
@@ -651,7 +722,7 @@ export default {
 }
 .work-swiper-dot{
 	position: absolute;
-	bottom: 13rpx;
+	bottom: 10rpx;
 	left: 50%;
 	transform: translateX(-50%);
 	.dot-item{
