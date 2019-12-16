@@ -2,7 +2,7 @@
 	<view>
 		<view class="welcom">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-team.png" mode="aspectFit"></image>
-			<button class="cu-btn block bg-blue lg margin-top-lg" open-type="getUserInfo" @getuserinfo="getUserInfoCb">微信授权登录</button>
+			<button class="cu-btn block bg-blue lg margin-top-lg" open-type="getUserInfo" @getuserinfo="getUserInfoCb">一键开工</button>
 		</view>
 	</view>
 </template>
@@ -65,10 +65,10 @@ export default {
 					}
 				});
 			} else {
-				uni.showToast({
-					title: '请先授权登录',
-					duration: 2000
-				});
+				// uni.showToast({
+				// 	title: '请先授权登录',
+				// 	duration: 2000
+				// });
 			}
 		}
 	}

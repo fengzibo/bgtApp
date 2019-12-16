@@ -4,19 +4,19 @@
 			<view class="flex align-center">
 				<view class="text-center flex-sub">
 					<view class="text-sm">任务总数</view>
-					<view class="text-xxl" style="margin-top: 10rpx;">{{ headHoursInfo.allProjectNum }}</view>
+					<view class="text-xxl" style="margin-top: 10rpx;">{{ round(headHoursInfo.allProjectNum) }}</view>
 				</view>
 				<view class="text-center flex-sub">
 					<view class="text-sm">累计工时</view>
-					<view class="text-xxl" style="margin-top: 10rpx;">{{ headHoursInfo.allHours || 0 }}</view>
+					<view class="text-xxl" style="margin-top: 10rpx;">{{ round(headHoursInfo.allHours) }}</view>
 				</view>
 				<view class="text-center flex-sub">
 					<view class="text-sm">已结算工时</view>
-					<view class="text-xxl" style="margin-top: 10rpx;">{{ settlementHours.allHours || 0 }}</view>
+					<view class="text-xxl" style="margin-top: 10rpx;">{{ round(headHoursInfo.settlementHours) }}</view>
 				</view>
 				<view class="text-center flex-sub">
-					<view class="text-sm">结算金额)</view>
-					<view class="text-xxl" style="margin-top: 10rpx;">{{ settlementHours.settlementIncome || 0 }}</view>
+					<view class="text-sm">结算金额(元)</view>
+					<view class="text-xxl" style="margin-top: 10rpx;">{{ round(headHoursInfo.settlementIncome) }}</view>
 				</view>
 			</view>
 		</view>
@@ -28,12 +28,10 @@
 		</view>
 		<view class="no-data" v-if="no_data">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image>
-			<!-- <view class="text-gray text-center" style="margin-top:-140rpx;">
-				--没有数据--
-			</view> -->
+		
 		</view>
-		<view class="bg-white solid-bottom padding" v-for="item in headHoursDetailList" :key="item.id" @tap="goto_detail(item)">
-			<view class="item-title flex justify-between padding-tb solid-bottom has-link">
+		<view class="bg-white solid-bottom padding" v-for="item in headHoursDetailList" :key="item.proId" >
+			<view class="item-title flex justify-between padding-tb solid-bottom has-link" @tap="goto_detail(item)">
 				<view class="text-black text-bold">
 					{{ item.scompany }}
 				</view>
@@ -71,7 +69,8 @@ export default {
 				auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
 			},
 			upOption: {
-				auto: false
+				auto: false,
+				textNoMore:'-- 已经到底了 --'
 			},
 			hours_detail: {},
 			loading: true
@@ -94,7 +93,14 @@ export default {
 		}
 	},
 	mounted() {
+		uni.$on('refreshJwt',() =>{
+			console.log('refreshJwt')
+			this.init()
+		})
 		this.init();
+	},
+	beforeDestroy() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		init() {
@@ -123,12 +129,16 @@ export default {
 		async upCallback(mescroll) {
 			//联网加载数据
 			await this.get_hours_detail();
-			mescroll.endErr();
+			mescroll.endSuccess(false);
 		},
 		goto_detail(item){
 			uni.navigateTo({
 				url: `/pages/tabbar/workHours/hoursSettle/hoursSettle?item=` + encodeURIComponent(JSON.stringify(item))
 			});
+		},
+		round(num){
+			let res = this.$_.round(this.$_.toNumber(num),2)
+			return this.$_.isNaN(res)?0:res
 		}
 	}
 };

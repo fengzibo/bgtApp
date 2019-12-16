@@ -160,8 +160,21 @@
 				this.$http.post('personwx.projectabnormalitysu/1.0/',params).then(res =>{
 					console.log(res)
 					if(this.$_.get(res,'data.success',false)){
-						uni.$emit('refErrList')
-						this.back()
+						uni.showToast({
+						    title: '异常提报成功',
+						    duration: 2000,
+							success: () => {
+								setTimeout(() => {
+									uni.$emit('refErrList')
+									this.back()
+								}, 300);
+							}
+						});
+					}else{
+						uni.showToast({
+						    title: '异常提报失败',
+						    duration: 2000,
+						});
 					}
 					
 				})

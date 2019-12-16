@@ -182,7 +182,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;} //
+//
+//
+//
 //
 //
 //
@@ -258,10 +264,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 //
 //来自 graceUI 的表单验证， 使用说明见手册 http://grace.hcoder.net/doc/info/73-3.html
 var graceChecker = __webpack_require__(/*! @/common/graceChecker.js */ 353);var _default = { data: function data() {return { form_data: { // task_name: '',
-        industry: '请选择任务行业', equipment_name: '', task_no: '', company: '', budget: '', delivery: '请选择交期', remark: '', deviceNum: '', estimateHours: '', estimatePerson: '', startTime: '请选择开工时间', address: '', points: '' }, industry_list: [], industry_index: 0, loading: true };}, props: { route_id: { type: String, default: '' }, location: { default: null } }, computed: _objectSpread({}, (0, _vuex.mapState)(['current_task']), { currentDate: function currentDate() {return this.$utils.format_date(new Date());} }), onReady: function onReady() {console.log('ready');}, watch: { location: { handler: function handler(val) {console.log('wlocation', val);if (val) {this.form_data.address = val.address;this.form_data.points = "[".concat(val.latitude, ",").concat(val.longitude, "]");console.log(this.form_data);}}, deep: true } }, mounted: function mounted() {var _this = this;console.log('mounted');this.init();console.log(this.route_id);uni.$on('refreshJwt', function (data) {_this.init();});}, beforeDestroy: function beforeDestroy() {uni.$off('refreshJwt');}, methods: { init: function init() {var _this2 = this;uni.showLoading({ title: '加载中' });this.loading = true;this.$http.post('personwx.hyxx/1.0/', { dictId: 'e7f70f44ebf3d55e2fac4af73e29ba36' }).then(function (res) {console.log(res);
-        if (res.data.code == '0') {
-          _this2.industry_list = _this2.$utils._get(res, 'data.data.data', []);
-          _this2.form_data.industry = _this2.$utils._get(_this2.industry_list[0], 'description', '请选择任务行业');
+        industry: '请选择任务行业', equipment_name: '', task_no: '', company: '', budget: '', delivery: '请选择交期', remark: '', deviceNum: '', estimateHours: '', estimatePerson: '', startTime: '请选择开工时间', address: '', points: '' }, industry_list: [], industry_index: 0, loading: true };}, props: { route_id: { type: String, default: '' }, location: { default: null } }, computed: _objectSpread({}, (0, _vuex.mapState)(['current_task']), { currentDate: function currentDate() {return this.$utils.format_date(new Date());} }), onReady: function onReady() {console.log('ready');}, watch: { location: { handler: function handler(val) {console.log('wlocation', val);if (val) {this.form_data.address = val.address;this.form_data.points = "[".concat(val.latitude, ",").concat(val.longitude, "]");console.log(this.form_data);}}, deep: true } }, mounted: function mounted() {var _this = this;console.log('mounted');this.init();console.log(this.route_id);uni.$on('refreshJwt', function (data) {_this.init();});}, beforeDestroy: function beforeDestroy() {uni.$off('refreshJwt');}, methods: { init: function init() {var _this2 = this;uni.showLoading({ title: '加载中' });this.loading = true;this.$http.post('personwx.hyxx/1.0/', { dictId: 'e7f70f44ebf3d55e2fac4af73e29ba36' }).then(function (res) {console.log(res);if (res.data.code == '0') {_this2.industry_list = _this2.$utils._get(res, 'data.data.data', []);_this2.form_data.industry = _this2.$utils._get(_this2.industry_list[0], 'description', '请选择任务行业');
           if (_this2.route_id) {
             // this.form_data.task_name = this.current_task.deviceName
             var index = _this2.industry_list.findIndex(function (o) {

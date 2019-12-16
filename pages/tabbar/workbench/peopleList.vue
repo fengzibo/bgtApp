@@ -3,10 +3,11 @@
 		<view class="item padding bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
 			<view class="action solid-right text-center" style="padding: 0 30rpx;">
 				<view class="text-xl text-blue">
-					{{item.hours}}
+					{{item.totalHours || 0}}
 				</view>
 				<view class="text-gray">
 					累计工时
+					
 				</view>
 			</view>
 			<view class="content flex flex-sub align-center padding-left" >

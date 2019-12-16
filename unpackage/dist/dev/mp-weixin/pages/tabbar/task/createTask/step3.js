@@ -73,23 +73,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 = _vm.__map(_vm.requirementInfo_list, function(item, __i0__) {
-    var m0 = _vm.current_zm_num(item.type)
+  var l0 = _vm.__map(_vm.recruit_list, function(item, __i1__) {
+    var m0 = _vm.avatarUrl(item.avatarUrl)
+    var m1 = _vm.status_class(item.status)
+    var m2 = _vm.status_text(item.status)
     return {
       $orig: _vm.__get_orig(item),
-      m0: m0
-    }
-  })
-
-  var l1 = _vm.__map(_vm.recruit_list, function(item, __i1__) {
-    var m1 = _vm.avatarUrl(item.avatarUrl)
-    var m2 = _vm.status_class(item.status)
-    var m3 = _vm.status_text(item.status)
-    return {
-      $orig: _vm.__get_orig(item),
+      m0: m0,
       m1: m1,
-      m2: m2,
-      m3: m3
+      m2: m2
     }
   })
 
@@ -97,8 +89,7 @@ var render = function() {
     {},
     {
       $root: {
-        l0: l0,
-        l1: l1
+        l0: l0
       }
     }
   )
@@ -135,6 +126,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+//
+//
+//
 //
 //
 //
@@ -286,7 +280,7 @@ var _default2 =
         _this2.recruiting_info = res.data.data[res.data.data.length - 1];
         // console.log(JSON.parse(this.recruiting_info.requirementInfo))
         _this2.get_recruit_list(_this2.recruiting_info.id);
-        _this2.$emit('update_recruiting_info', _this2.recruiting_info);
+
         try {
           _this2.requirementInfo_list = JSON.parse(_this2.$utils._get(_this2.recruiting_info, 'requirementInfo', '[]'));
           console.log(_this2.requirementInfo_list);
@@ -308,6 +302,10 @@ var _default2 =
       then(function (res) {
         console.log('get_recruit_list', res);
         _this3.recruit_list = res.data.data;
+        _this3.$emit('update_recruiting_info', {
+          info: _this3.recruiting_info,
+          list: _this3.recruit_list });
+
       });
     },
     status_class: function status_class(status_no) {
@@ -339,7 +337,7 @@ var _default2 =
           return '待回复';
           break;
         case '2':
-          return '已同意';
+          return '待审核';
           break;
         case '3':
           return '已拒绝';

@@ -148,6 +148,9 @@ var chooseLocation = requirePlugin('chooseLocation');var _default =
     this.location = chooseLocation.getLocation();
     console.log('show,loc', this.location); // 如果点击确认选点按钮，则返回选点结果对象，否则返回null
   },
+  onLoad: function onLoad() {
+    console.log('onLoad');
+  },
   components: {
     wHead: wHead,
     wArtisan: wArtisan },

@@ -264,7 +264,8 @@ var _default = {
 
       id: '',
       pid: '',
-      detail_data: '' };
+      detail_data: '',
+      isWork: false };
 
   },
   components: {
@@ -287,6 +288,7 @@ var _default = {
   onLoad: function onLoad(option) {var _this = this;
     this.id = option.id;
     this.pid = option.pid;
+    this.isWork = this.$_.get(option, 'isWork', false);
     uni.$on('refreshList', function () {
       console.log('refreshList');
       _this.init();

@@ -104,7 +104,7 @@
 				<button class="cu-btn round bg-blue" form-type="submit" @tap="showRsm('no')">不想接</button>
 			</template>
 			<template v-else-if="r_item.rpStatus == '2'">
-				<view class="text-green">已同意</view>
+				<view class="text-green text-lg">待审核</view>
 			</template>
 			<template v-else-if="r_item.rpStatus == '3'">
 				<view class="text-red">已拒绝</view>

@@ -26,4 +26,9 @@
 .footer-tool button.data-v-80dbecf6 {
   border-radius: 0;
 }
+.no-data .no-data-img.data-v-80dbecf6 {
+  width: 60%;
+  margin: 0 auto;
+  display: block;
+}
 

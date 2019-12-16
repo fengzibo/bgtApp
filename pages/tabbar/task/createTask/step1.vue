@@ -33,6 +33,9 @@
 			<view class="cu-form-group">
 				<view class="title">预算</view>
 				<input class="text-right" placeholder="请输入预算" name="budget" v-model="form_data.budget" />
+				<view class="action">
+					万
+				</view>
 			</view>
 			<view class="cu-form-group">
 				<view class="title">开工时间</view>

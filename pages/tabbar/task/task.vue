@@ -4,7 +4,7 @@
 			<block slot="backText">返回</block>
 			<block slot="content">任务中心</block>
 		</cu-custom>
-		<view class="no-task" v-if="!has_task && !loading">
+		<view class="no-task" v-if="user_role=== 'head' && !has_task && !loading">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
 			<text class="text-grey text-xl">没有任务</text><br>
 			<view class="flex margin-top justify-around">
@@ -13,15 +13,17 @@
 				
 			</view>
 		</view>
-		<view class="tab-list bg-white">
+		<view class="tab-list bg-white" v-if="user_role=== 'head' && has_task && !loading">
 			<view class="item" v-for="(tab, index) in tab_list" :key="tab.id" v-bind:class="{ active: current_tab.id == tab.id }" @tap="select_tab(tab.id, index)">
 				<text class="item-text">{{ tab.name }}({{ tab.data.length }})</text>
 			</view>
 		</view>
 		<template v-if="user_role=== 'head' && has_task && !loading">
 			<mescroll-uni @down="downCallback" @up="upCallback" :up="upOption"  @scroll="scroll" :down="downOption" @init="mescrollInit" :top="c_CustomBar">
-				
-				<view class="list">
+				<view class="no-data" v-if="p_list.length === 0">
+					<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image>
+				</view>
+				<view class="list" v-else>
 					<view class="list-item bg-white " v-for="item in p_list" :key="item.id" @tap="go_detail(item)">
 						<view class="top-main text-grey">
 							<text class="title">{{ item.deviceName }}({{item.deviceNum}})</text>
@@ -31,14 +33,18 @@
 							<view class="schedule">
 								<template v-if="item.status == '3'">
 									<text class="schedule-num">进度 {{ item.proProgress || 0 }}%</text>
-									<view class="schedule-bar" :style="{width: item.proProgress || 0}"></view>
+									<view class="schedule-bar" :style="{'width':(item.proProgress || 0)+'%'}"></view>
+									
 								</template>
+								<view class="schedule-num text-green" v-else-if="item.status == '4'">
+									已结案
+								</view>
 								<view class="schedule-num text-green" v-else>
 									{{item.status == '2'?'待启动':'招募中'}}
 								</view>
 							</view>
 							<view class="com-view">
-								<text class="num">{{ item.allHours || 0 }}</text>
+								<text class="num">{{ item.allHours || 0}}</text>
 								<text class="tip text-grey">累计工时</text>
 							</view>
 							<view class="com-view">
@@ -47,7 +53,7 @@
 							</view>
 							<view class="com-view">
 								<text class="num"><text class="text-blue">{{item.allcost || 0}}</text>/ <text >{{ item.budget }}</text> </text>
-								<text class="tip text-grey">实时/预算</text>
+								<text class="tip text-grey">实时/预算(万)</text>
 							</view>
 						</view>
 						<view class="bottom-main text-gray">
@@ -61,6 +67,7 @@
 						</view>
 					</view>
 				</view>
+				
 			</mescroll-uni>
 			<view class="fixed-add shadow bg-blue" @tap="goto_add">
 				<view class="cuIcon-add text-white text-df"></view>
@@ -69,7 +76,6 @@
 		<task-artisan v-if="user_role=== 'artisan' && show_artisan" class="task-artisan"></task-artisan>
 	</view>
 </template>
-
 <script>
 import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import { mapState,mapGetters } from 'vuex';
@@ -267,6 +273,7 @@ export default {
 				case '3':
 					this.$store.commit('set_bgt_c_task',this.workbench_id_list)
 					this.$store.commit('set_bgt_ct_id',item.id)
+					uni.$emit('taskToWork')
 					uni.switchTab({
 						url:"/pages/tabbar/workbench/workbench"
 					})
@@ -390,7 +397,8 @@ export default {
 						top: 0;
 						left: 0;
 						border-radius: 5rpx;
-						width: 160rpx;
+						min-width: 170rpx;
+						width: 100%;
 						height: 10rpx;
 						background-image: linear-gradient(90deg, #ff9700, #ed1c24);
 					}
@@ -441,5 +449,12 @@ export default {
 }
 .task-artisan{
 	flex: 1 1 0;
+}
+.no-data {
+	.no-data-img {
+		width: 60%;
+		margin: 0 auto;
+		display: block;
+	}
 }
 </style>

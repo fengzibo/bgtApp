@@ -209,9 +209,7 @@ export default {
 				let type_picker_arr = []
 				let res_default = this.$utils._get(values[2],'data.data.data',[])
 				res_default.forEach((item,index) =>{
-					if(item.pid == '0'){
-						type_picker_arr.push(item)
-					}
+					type_picker_arr.push(item)
 				})
 				type_picker_arr.forEach(item =>{
 					let obj = {
@@ -415,10 +413,11 @@ export default {
 		flex: 1 1 0;
 		width: 100%;
 		display: flex;
-		justify-content: space-around;
+		flex-wrap: wrap;
 		label{
 			display: flex;
 			align-items: center;
+			flex:0 0 auto;
 		}
 	}
 	.group-right-layout{

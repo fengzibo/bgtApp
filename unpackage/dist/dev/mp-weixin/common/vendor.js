@@ -25824,19 +25824,71 @@ internalMixin(Vue);
 
 /***/ }),
 
-/***/ 205:
+/***/ 21:
+/*!***********************************!*\
+  !*** (webpack)/buildin/module.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+
+/***/ 22:
+/*!********************************************************************!*\
+  !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/http/config.js ***!
+  \********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; /**
+                                                                                                      * Created by lawyi on 2019/7/10 0010.
+                                                                                                      */var _default =
+
+{
+  api_url: 'https://zzy.zwch.ltd/platform-app-server/api/'
+  // api_url: 'http://ganzhehui-local.frp.lawyi.com:7080/api/client/',
+};exports.default = _default;
+
+/***/ }),
+
+/***/ 237:
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
   \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 206);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 238);
 
 
 /***/ }),
 
-/***/ 206:
+/***/ 238:
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -25867,7 +25919,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 207);
+module.exports = __webpack_require__(/*! ./runtime */ 239);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -25884,7 +25936,7 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 207:
+/***/ 239:
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -26616,58 +26668,6 @@ if (hadRuntime) {
 
 /***/ }),
 
-/***/ 21:
-/*!***********************************!*\
-  !*** (webpack)/buildin/module.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function(module) {
-	if (!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-
-/***/ 22:
-/*!********************************************************************!*\
-  !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/http/config.js ***!
-  \********************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; /**
-                                                                                                      * Created by lawyi on 2019/7/10 0010.
-                                                                                                      */var _default =
-
-{
-  api_url: 'https://zzy.zwch.ltd/platform-app-server/api/'
-  // api_url: 'http://ganzhehui-local.frp.lawyi.com:7080/api/client/',
-};exports.default = _default;
-
-/***/ }),
-
 /***/ 25:
 /*!*******************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/http/index.js ***!
@@ -26728,13 +26728,18 @@ http.interceptor.response(function (response) {/* 请求之后拦截器 */
           title: '系统繁忙,刷新重试',
           icon: 'none' });
 
-        throw '系统繁忙,刷新重试';
+        // throw '系统繁忙,刷新重试'
       } else if (response.data.code == '2') {
         uni.showToast({
           title: '服务请求参数非法',
           icon: 'none' });
 
-        throw '服务请求参数非法';
+        // throw '服务请求参数非法'
+      } else if (response.data.code == '1') {
+        uni.showToast({
+          title: response.data.msg,
+          icon: 'none' });
+
       }
       break;
 
@@ -26742,7 +26747,6 @@ http.interceptor.response(function (response) {/* 请求之后拦截器 */
       uni.showToast({
         title: '请先登录~',
         icon: 'none' });
-
 
       // Store.commit('loginSuccess', {})
       setTimeout(function () {

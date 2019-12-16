@@ -341,9 +341,7 @@ var _default2 = { data: function data() {var currentDate = this.getDate({ format
         var type_picker_arr = [];
         var res_default = _this2.$utils._get(values[2], 'data.data.data', []);
         res_default.forEach(function (item, index) {
-          if (item.pid == '0') {
-            type_picker_arr.push(item);
-          }
+          type_picker_arr.push(item);
         });
         type_picker_arr.forEach(function (item) {
           var obj = {

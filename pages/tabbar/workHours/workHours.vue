@@ -25,25 +25,25 @@
 				<view class="flex justify-around text-white padding-tb">
 					<view class="text-center">
 						<view class="text-sm">累计工时(小时)</view>
-						<view class="text-xxl" style="margin-top: 6rpx;">{{ personHoursInfo.allHours || 0 }}</view>
+						<view class="text-sl" style="margin-top: 6rpx;">{{ personHoursInfo.allHours || 0 }}</view>
 					</view>
 					<view class="text-center">
 						<view class="text-sm">累计收入(元)</view>
-						<view class="text-xxl" style="margin-top: 6rpx;">{{ personHoursInfo.allIncome || 0 }}</view>
+						<view class="text-sl" style="margin-top: 6rpx;">{{ personHoursInfo.allIncome || 0 }}</view>
 					</view>
 				</view>
 				
-				<view class="flex padding-tb text-white">
+				<view class="flex padding-bottom text-white">
 					<view class="flex-sub text-center">
-						<view class="text-sm">{{ personHoursInfo.settlementHours || 0 }}</view>
+						<view class="text-xxl">{{ personHoursInfo.settlementHours || 0 }}</view>
 						<view class="text-sm" style="margin-top: 6rpx;">已结算</view>
 					</view>
 					<view class="flex-sub text-center">
-						<view class="text-sm">{{ personHoursInfo.settlementIncome || 0 }}</view>
-						<view class="text-sm" style="margin-top: 6rpx;">结算金额</view>
+						<view class="text-xxl">{{ personHoursInfo.settlementIncome || 0 }}</view>
+						<view class="text-sm" style="margin-top: 6rpx;">结算金额(元)</view>
 					</view>
 					<view class="flex-sub text-center">
-						<view class="text-sm">{{ personHoursInfo.unSettlementHours || 0 }}</view>
+						<view class="text-xxl">{{ personHoursInfo.unSettlementHours || 0 }}</view>
 						<view class="text-sm" style="margin-top: 6rpx;">待结算</view>
 					</view>
 				</view>
@@ -72,8 +72,8 @@
 					</view>
 				</view>
 				<view class="text-cyan">
-					<view class="text-lg">
-						{{item.isSettlement === '0'?'+':'-'}}{{item.invalidTotalNum}}
+					<view class="text-xxl">
+						{{item.isSettlement === '0'?'+':'-'}}{{item.validTotalNum}}
 					</view>
 					<view class="text-df margin-top-sm">
 						{{item.isSettlement === '0'?'上班':'结算'}}
@@ -96,8 +96,8 @@ export default {
 				auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
 			},
 			upOption: {
-				auto: false,
-				textNoMore:'--已经到底了--'
+				auto: true,
+				textNoMore:'-- 已经到底了 --'
 			},
 			zgs: '',
 			yjs: '',
@@ -123,7 +123,16 @@ export default {
 		}
 	},
 	onLoad() {
-		this.init()
+		// this.init()
+		uni.$on('refreshJwt',() =>{
+			console.log('refreshJwt')
+			if(this.user_role !== 'head'){
+				this.init()
+			}
+		})
+	},
+	onUnload() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		downCallback(mescroll) {
@@ -133,13 +142,13 @@ export default {
 			mescroll.resetUpScroll();
 		},
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-		async upCallback(mescroll) {
+		upCallback(mescroll) {
 			//联网加载数据
-			await this.get_hours_detail()
-			mescroll.endSuccess(this.personHoursDetailList.length, false)
-			// setTimeout(() => {
-			// 	mescroll.endErr();
-			// }, 1000);
+			this.get_hours_detail(() =>{
+				this.$nextTick(() =>{
+					mescroll.endSuccess(this.personHoursDetailList.length, false)
+				})
+			})
 		},
 		numDH() {
 			if (i < 20) {
@@ -175,12 +184,16 @@ export default {
 				this.get_hours_detail()
 			}
 		},
-		get_hours_detail(){
+		get_hours_detail(cb){
 			this.$http.get('personwx.personhoursdetail/1.0/',{
 				pid:this.id
 			}).then(res =>{
 				console.log(res)
 				this.hours_detail = res.data.data
+			}).finally(() =>{
+				if (typeof cb === 'function') {
+					cb();
+				}
 			})
 		},
 		deliveryPeriod(time) {

@@ -189,10 +189,10 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           } });
 
       } else {
-        uni.showToast({
-          title: '请先授权登录',
-          duration: 2000 });
-
+        // uni.showToast({
+        // 	title: '请先授权登录',
+        // 	duration: 2000
+        // });
       }
     } }) };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

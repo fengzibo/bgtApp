@@ -206,57 +206,74 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var darkCalendar = function darkCalendar() {return __webpack_require__.e(/*! import() | components/dark-calendar/dark-calendar */ "components/dark-calendar/dark-calendar").then(__webpack_require__.bind(null, /*! ../../../../components/dark-calendar/dark-calendar.vue */ 421));};var _default =
 {
   data: function data() {
     return {
       proPersonList: [],
       proTaskList: [],
-      projectInfo: [],
+      projectInfo: {},
       work_log_data: [],
       person_log_data: [],
       all_progress: {
         id: '',
         type: '',
-        value: '' } };
+        value: '' },
 
+      workDate: '' };
 
   },
   components: {
     darkCalendar: darkCalendar },
 
   computed: _objectSpread({},
-  (0, _vuex.mapState)(['bgt_c_task', 'bgt_ct_id'])),
+  (0, _vuex.mapState)(['bgt_c_task', 'bgt_ct_id']), {
+    no_data: function no_data() {
+      var projectInfo_b = JSON.stringify(this.projectInfo) == "{}",
+      proTaskList_b = this.proTaskList.length == 0,
+      proPersonList_b = this.proPersonList.length == 0;
+      return projectInfo_b && proTaskList_b && proPersonList_b;
+    } }),
 
   onLoad: function onLoad() {var _this = this;
     uni.$on('refreshList', function () {
       console.log('refreshList');
-      _this.get_day_log();
+      _this.init();
     });
-    this.get_day_log();
+    this.init();
   },
   onUnload: function onUnload() {
     uni.$off('refreshJwt');
   },
   methods: {
+    init: function init() {
+      this.workDate = this.$utils.format_date(new Date());
+      this.get_day_log();
+    },
     get_day_log: function get_day_log() {var _this2 = this;
       this.$http.
       get('/personwx.getdaylog/1.0/', {
         proId: this.bgt_ct_id,
-        workDate: this.$utils.format_date(new Date()) }).
+        workDate: this.workDate }).
 
       then(function (res) {
         console.log(res);
         var task_data = [],
         person_data = [];
-        _this2.proPersonList = res.data.proPersonList;
-        _this2.proTaskList = res.data.proTaskList;
-        _this2.projectInfo = res.data.projectInfo;
+        _this2.proPersonList = _this2.$_.get(res, 'data.proPersonList', []);
+        _this2.proTaskList = _this2.$_.get(res, 'data.proTaskList', []);
+        _this2.projectInfo = _this2.$_.get(res, 'data.projectInfo', {});
         _this2.proTaskList.forEach(function (item) {
           var obj = {
             id: item.id,
             type: item.type,
-            value: '' };
+            value: _this2.$_.get(item, 'taskProcess', '') };
 
           task_data.push(obj);
         });
@@ -264,7 +281,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           var obj = {
             id: item.id,
             type: item.type,
-            value: '' };
+            value: _this2.$_.get(item, 'dayHours', '') };
 
           person_data.push(obj);
         });
@@ -272,6 +289,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         _this2.person_log_data = person_data;
         _this2.all_progress.id = _this2.projectInfo.id;
         _this2.all_progress.type = _this2.projectInfo.type;
+        _this2.all_progress.value = _this2.$_.get(_this2.projectInfo, 'schedule', '');
       });
     },
     deliveryPeriod: function deliveryPeriod(time) {
@@ -290,8 +308,29 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         workLogData: JSON.stringify(data) }).
       then(function (res) {
         console.log(res);
-        _this3.back();
+        if (_this3.$_.get(res, 'data.code', '') == 0) {
+          uni.$emit('taskToWork');
+          uni.showToast({
+            title: '日志提报成功',
+            duration: 2000,
+            success: function success() {
+              setTimeout(function () {
+                _this3.back();
+              }, 300);
+            } });
+
+        } else {
+          uni.showToast({
+            title: '日志提报失败',
+            duration: 2000 });
+
+        }
       });
+    },
+    change_date: function change_date(date) {
+      console.log(date);
+      this.workDate = date;
+      this.get_day_log();
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

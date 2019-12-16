@@ -73,14 +73,33 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = _vm.deliveryPeriod(_vm.c_project.deliveryPeriod)
+  var l0 = _vm.__map(_vm.project_list, function(item, __i0__) {
+    var m0 = _vm.deliveryPeriod(item.deliveryPeriod)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
   var m1 = _vm.deliveryPeriod(_vm.c_project.deliveryPeriod)
+  var m2 = _vm.deliveryPeriod(new Date())
+
+  var l1 = _vm.__map(_vm.plan_list, function(item, __i1__) {
+    var m3 = _vm.deliveryPeriod(item.createdTime)
+    return {
+      $orig: _vm.__get_orig(item),
+      m3: m3
+    }
+  })
+
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
-        m0: m0,
-        m1: m1
+        l0: l0,
+        m1: m1,
+        m2: m2,
+        l1: l1
       }
     }
   )
@@ -117,6 +136,34 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -298,18 +345,61 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     c_project: function c_project() {
       return this.project_list[this.curent_p_index];
     },
-    finshTask: function finshTask() {
-      return this.$utils._get(this.detail_data, 'finshTask', []);
+    finshTask: function finshTask() {var _this = this;
+      var ft_list = this.$utils._get(this.person_consol, 'finshTask', []);
+      ft_list.forEach(function (item) {
+        var list = item.userList.split(',');
+        var plan_people = [];
+        list.forEach(function (val) {
+          var arr = val.split(':');
+          var obj = {
+            name: arr[2],
+            avaurl: arr[0] + ':' + arr[1] };
+
+          plan_people.push(obj);
+        });
+        _this.$set(item, 'people', plan_people);
+      });
+      return ft_list;
     },
-    activeTask: function activeTask() {
-      return this.$utils._get(this.detail_data, 'activeTask', []);
+    activeTask: function activeTask() {var _this2 = this;
+      var at_list = this.$utils._get(this.person_consol, 'activeTask', []);
+      at_list.forEach(function (item) {
+        var list = item.userList.split(',');
+        var plan_people = [];
+        list.forEach(function (val) {
+          var arr = val.split(':');
+          var obj = {
+            name: arr[2],
+            avaurl: arr[0] + ':' + arr[1] };
+
+          plan_people.push(obj);
+        });
+        _this2.$set(item, 'people', plan_people);
+      });
+      return at_list;
+    },
+    personHours: function personHours() {
+      return this.$utils._get(this.person_consol, 'personHours', {});
+    },
+    plan_list: function plan_list() {
+      return this.TabCur === 0 ? this.activeTask : this.finshTask;
+    },
+    no_task: function no_task() {
+      return this.plan_list.length === 0;
     } }),
 
-  mounted: function mounted() {
+  mounted: function mounted() {var _this3 = this;
+    uni.$on('refreshJwt', function (data) {
+      _this3.init();
+    });
     this.init();
   },
+  beforeDestroy: function beforeDestroy() {
+    uni.$off('refreshJwt');
+  },
   methods: {
-    init: function init(cb) {var _this = this;
+    init: function init(cb) {var _this4 = this;
       this.$http.
       get('personwx.personproject/1.0/', {
         pid: this.id,
@@ -317,54 +407,63 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
       then(function (res) {
         console.log(res);
-        if (_this.$utils._get(res, 'data.code', '') === '0') {
-          _this.project_list = _this.$utils._get(res, 'data.data', []);
-          if (_this.project_list.length > 0) {
-            if (_this.c_project.resWorkStatus == '1') {
-              _this.$store.commit('setArtisanWorkState', 'waitStart');
+        if (_this4.$utils._get(res, 'data.code', '') === '0') {
+          _this4.project_list = _this4.$utils._get(res, 'data.data', []);
+          if (_this4.project_list.length > 0) {
+            if (_this4.c_project.resWorkStatus == '1') {
+              _this4.$store.commit('setArtisanWorkState', 'waitStart');
             } else {
-              _this.$store.commit('setArtisanWorkState', 'confirmInfo');
+              _this4.$store.commit('setArtisanWorkState', 'confirmInfo');
             }
           } else {
-            _this.$store.commit('setArtisanWorkState', 'noTask');
+            _this4.$store.commit('setArtisanWorkState', 'noTask');
           }
-          if (_this.artisan_work_state === 'confirmInfo') {
-            _this.get_person_consol();
+          if (_this4.artisan_work_state === 'confirmInfo') {
+            _this4.get_person_consol();
           }
-          if (typeof cb === 'function') {
-
-            cb();
-          }
-          _this.$nextTick(function () {
-            _this.get_swiper_c_height();
-          });
         }
+      }).finally(function () {
+        if (typeof cb === 'function') {
+          cb();
+        }
+        _this4.$nextTick(function () {
+          _this4.get_swiper_c_height();
+        });
       });
     },
-    goto_work: function goto_work() {
-      uni.switchTab({
-        url: '/pages/tabbar/task/task' });
-
-    },
-    goto_rest: function goto_rest() {var _this2 = this;
+    goto_work: function goto_work() {var _this5 = this;
       this.$http.
-      post('personwx.personwx.changestatus/1.0/', {
+      post('personwx.changestatus/1.0/', {
+        id: this.id,
+        status: '0' }).
+
+      then(function (res) {
+        console.log(res);
+        _this5.$store.commit('setArtisanWorkState', 'rest');
+        uni.switchTab({
+          url: '/pages/tabbar/task/task' });
+
+      });
+    },
+    goto_rest: function goto_rest() {var _this6 = this;
+      this.$http.
+      post('personwx.changestatus/1.0/', {
         id: this.id,
         status: '2' }).
 
       then(function (res) {
         console.log(res);
-        _this2.$store.commit('setArtisanWorkState', 'rest');
+        _this6.$store.commit('setArtisanWorkState', 'noTask');
       });
     },
     exit_work: function exit_work() {},
-    downCallback: function downCallback(mescroll) {var _this3 = this;
+    downCallback: function downCallback(mescroll) {var _this7 = this;
       // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
       // loadSwiper();
       // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
       // mescroll.resetUpScroll();
       setTimeout(function () {
-        _this3.init(function () {
+        _this7.init(function () {
           mescroll.endSuccess();
         });
       }, 300);
@@ -378,14 +477,14 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       // 	})
       // }, 300);
     },
-    get_swiper_c_height: function get_swiper_c_height() {var _this4 = this;
+    get_swiper_c_height: function get_swiper_c_height() {var _this8 = this;
       var query = uni.createSelectorQuery().in(this);
       query.
       select('#sContent').
       boundingClientRect(function (data) {
         console.log('得到布局位置信息' + JSON.stringify(data));
         console.log('节点离页面顶部的距离为' + data.top);
-        _this4.swiperHeight = data.height + 'px';
+        _this8.swiperHeight = data.height + 'px';
       }).
       exec();
     },
@@ -395,7 +494,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     radioChange: function radioChange(e) {
       this.current_radio = e.target.value;
     },
-    comfirm_can: function comfirm_can() {var _this5 = this;
+    comfirm_can: function comfirm_can() {var _this9 = this;
       this.$http.
       post('personwx.personchangestatus/1.0/', {
         id: this.c_project.resWorkId,
@@ -403,11 +502,11 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
       then(function (res) {
         console.log(res);
-        _this5.has_reply = true;
-        _this5.init();
+        _this9.has_reply = true;
+        _this9.init();
       });
     },
-    swiperChange: function swiperChange(e) {var _this6 = this;
+    swiperChange: function swiperChange(e) {var _this10 = this;
       console.log(e);
       this.curent_p_index = e.detail.current;
       if (this.c_project.resWorkStatus == '1') {
@@ -416,26 +515,27 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         this.$store.commit('setArtisanWorkState', 'confirmInfo');
       }
       this.$nextTick(function () {
-        _this6.get_swiper_c_height();
-        if (_this6.artisan_work_state === 'confirmInfo') {
-          _this6.get_person_consol();
+        _this10.get_swiper_c_height();
+        if (_this10.artisan_work_state === 'confirmInfo') {
+          _this10.get_person_consol();
         }
       });
       // let id = this.$utils._get(this.bgt_c_task[this.current_swiper],'id','')
       // this.$store.commit('set_bgt_ct_id',id)
     },
-    get_person_consol: function get_person_consol() {var _this7 = this;
+    get_person_consol: function get_person_consol() {var _this11 = this;
       this.$http.
       get('personwx.personconsol/1.0/', {
         id: this.c_project.id,
-        pid: this.c_project.pid }).
+        pid: this.id }).
 
       then(function (res) {
         console.log(res);
         if (res.data.code == 0) {
-          _this7.person_consol = res.data.data;
+          _this11.person_consol = res.data.data;
         }
       });
+
     },
     tabSelect: function tabSelect(e) {
       this.TabCur = e.currentTarget.dataset.id;

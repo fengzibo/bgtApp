@@ -689,7 +689,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         sstartTime: this.exper_data.start_time,
         sendTime: this.exper_data.end_time,
         scontext: this.exper_data.remark,
-        isPlatform: '1' };
+        isPlatform: '1',
+        address: this.exper_data.addr };
 
       if (this.exper_edit) {
         url = 'personwx.updatework/1.0/';
@@ -772,6 +773,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       this.exper_data.start_time = this.$utils.format_date(item.sstartTime);
       this.exper_data.end_time = this.$utils.format_date(item.sendTime);
       this.exper_data.remark = item.scontext;
+      this.exper_data.addr = item.address;
       this.exper_model = true;
       this.exper_edit = true;
     },

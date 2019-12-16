@@ -91,11 +91,23 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   var m0 = _vm.avatarUrl(_vm.personinfo.headImg)
+  var m1 = _vm.deliveryPeriod(new Date())
+
+  var l0 = _vm.__map(_vm.plan_list, function(item, __i0__) {
+    var m2 = _vm.deliveryPeriod(item.createdTime)
+    return {
+      $orig: _vm.__get_orig(item),
+      m2: m2
+    }
+  })
+
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
-        m0: m0
+        m0: m0,
+        m1: m1,
+        l0: l0
       }
     }
   )
@@ -131,7 +143,34 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 237));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};} //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -254,18 +293,52 @@ var _default =
     hasph: function hasph() {
       return JSON.stringify(this.personHours) !== '{}';
     },
-    finshTask: function finshTask() {
-      return this.$utils._get(this.detail_data, 'finshTask', []);
+    finshTask: function finshTask() {var _this = this;
+      var ft_list = this.$utils._get(this.detail_data, 'finshTask', []);
+      ft_list.forEach(function (item) {
+        var list = item.userList.split(',');
+        var plan_people = [];
+        list.forEach(function (val) {
+          var arr = val.split(':');
+          var obj = {
+            name: arr[2],
+            avaurl: arr[0] + ':' + arr[1] };
+
+          plan_people.push(obj);
+        });
+        _this.$set(item, 'people', plan_people);
+      });
+      return ft_list;
     },
-    activeTask: function activeTask() {
-      return this.$utils._get(this.detail_data, 'activeTask', []);
+    activeTask: function activeTask() {var _this2 = this;
+      var at_list = this.$utils._get(this.detail_data, 'activeTask', []);
+      at_list.forEach(function (item) {
+        var list = item.userList.split(',');
+        var plan_people = [];
+        list.forEach(function (val) {
+          var arr = val.split(':');
+          var obj = {
+            name: arr[2],
+            avaurl: arr[0] + ':' + arr[1] };
+
+          plan_people.push(obj);
+        });
+        _this2.$set(item, 'people', plan_people);
+      });
+      return at_list;
+    },
+    plan_list: function plan_list() {
+      return this.TabCur === 0 ? this.activeTask : this.finshTask;
+    },
+    no_task: function no_task() {
+      return this.plan_list.length === 0;
     } },
 
-  onLoad: function onLoad(option) {var _this = this;
+  onLoad: function onLoad(option) {var _this3 = this;
     this.personinfo = JSON.parse(decodeURIComponent(option.item));
     uni.$on('refreshList', function () {
       console.log('refreshList');
-      _this.init();
+      _this3.init();
     });
     this.init();
   },
@@ -273,7 +346,7 @@ var _default =
     uni.$off('refreshJwt');
   },
   methods: {
-    init: function init() {var _this2 = this;
+    init: function init() {var _this4 = this;
       this.$http.
       get('personwx.personconsol/1.0/', {
         id: this.personinfo.proId,
@@ -282,7 +355,7 @@ var _default =
       then(function (res) {
         console.log(res);
         if (res.data.code == 0) {
-          _this2.detail_data = res.data.data;
+          _this4.detail_data = res.data.data;
         }
       });
     },
@@ -293,14 +366,17 @@ var _default =
       mescroll.resetUpScroll();
     },
     /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-    upCallback: function upCallback(mescroll) {
-      //联网加载数据
-      mescroll.endErr();
-      // setTimeout(() => {
-      // 	mescroll.endErr();
-      // }, 1000);
-    },
+    upCallback: function () {var _upCallback = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(mescroll) {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 
+                  this.init());case 2:
+                mescroll.endErr();
+                // setTimeout(() => {
+                // 	mescroll.endErr();
+                // }, 1000);
+              case 3:case "end":return _context.stop();}}}, _callee, this);}));function upCallback(_x) {return _upCallback.apply(this, arguments);}return upCallback;}(),
+    deliveryPeriod: function deliveryPeriod(time) {
+      return this.$utils.format_date(time);
+    },
     avatarUrl: function avatarUrl(_avatarUrl) {
       return "url(".concat(_avatarUrl, ")");
     },
@@ -311,6 +387,9 @@ var _default =
     },
     tabSelect: function tabSelect(e) {
       this.TabCur = e.currentTarget.dataset.id;
+    },
+    down_work: function down_work() {
+
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

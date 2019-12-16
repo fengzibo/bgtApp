@@ -111,40 +111,42 @@ export default {
 		}
 	},
 	mounted() {
-		// this.$nextTick(() =>{
-		// 	this.init()
-		// })
 		uni.$on('refreshJwt', data => {
 			console.log('refreshJwt', data);
 			// this.mescroll.triggerDownScroll()
 			this.mescroll.resetUpScroll();
 		});
+		if (!this.id) {
+			uni.navigateTo({
+				url: '/pages/tabbar/my/myInfo/createInfo'
+			});
+			// uni.showModal({
+			// 	titel: '提示',
+			// 	content: '您的资料不完整，请先完善',
+			// 	cancelText: '去完善',
+			// 	cancelColor: '#007AFF',
+			// 	confirmText: '先看看',
+			// 	confirmColor: '#007AFF',
+			// 	success: res => {
+			// 		if (res.confirm) {
+			// 			console.log('用户点击先看看');
+			// 		} else if (res.cancel) {
+			// 			console.log('用户点击去完善');
+			// 			uni.navigateTo({
+			// 				url: '/pages/tabbar/my/myInfo/createInfo'
+			// 			});
+			// 		}
+			// 	}
+			// });
+			
+		}
 	},
 	beforeDestroy() {
 		uni.$off('refreshJwt');
 	},
 	methods: {
 		init(mescroll) {
-			if (!this.id) {
-				uni.showModal({
-					titel: '提示',
-					content: '您的资料不完整，请先完善',
-					cancelText: '去完善',
-					cancelColor: '#007AFF',
-					confirmText: '先看看',
-					confirmColor: '#007AFF',
-					success: res => {
-						if (res.confirm) {
-							console.log('用户点击先看看');
-						} else if (res.cancel) {
-							console.log('用户点击去完善');
-							uni.navigateTo({
-								url: '/pages/tabbar/my/myInfo/createInfo'
-							});
-						}
-					}
-				});
-			}
+			
 			let c_index = this.current_tab.index
 			let rpStatus =  c_index === 0?'1,2,4':'5'
 			let params = {

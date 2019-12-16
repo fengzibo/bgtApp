@@ -4,7 +4,9 @@
 			<view class="title text-lg">{{recruiting_info.title}}</view>
 			<view class="text-grey margin-top-sm">
 				<text v-for="item in requirementInfo_list" :key = "item.type">
-					{{item.type}}<text class="text-red">{{current_zm_num(item.type)}}</text>/<text class="text-blue" style="margin-right:20rpx;">{{item.num}}</text>
+					<!-- <text class="text-red">{{current_zm_num(item.type)}}</text>/ -->
+					{{item.type}}<text class="text-blue" style="margin-right:20rpx;">{{item.num}}人</text>
+					
 				</text>
 			</view>
 		</view>
@@ -28,14 +30,15 @@
 						<view class="content-info-top">
 							<view class="text-orange"><view class="text-cut">{{item.pName}} {{item.sex}}</view></view>
 							<view class="text-gray text-sm margin-left">{{item.age?item.age:18}}岁</view>
-							<view v-for="tag in ['电工学徒']" :key="tag">
-								<view class='cu-tag  margin-left line-green'>{{tag}}</view>
-							</view>
+							<!-- <view v-for="tag in ['电工学徒']" :key="tag">
+								
+							</view> -->
+							<view class='cu-tag  margin-left line-green'>{{item.typeName}}</view>
 						</view>
-						<view class="content-info-addr text-grey text-sm">
+						<!-- <view class="content-info-addr text-grey text-sm">
 							<text class="cuIcon-locationfill margin-right-xs"></text>
 							<text>{{ item.homeAddress }}</text>
-						</view>
+						</view> -->
 					</view>
 				</view>
 				<view class="action">
@@ -150,7 +153,7 @@ export default {
 				this.recruiting_info = res.data.data[res.data.data.length-1]
 				// console.log(JSON.parse(this.recruiting_info.requirementInfo))
 				this.get_recruit_list(this.recruiting_info.id)
-				this.$emit('update_recruiting_info',this.recruiting_info)
+				
 				try{
 					this.requirementInfo_list = JSON.parse(this.$utils._get(this.recruiting_info,'requirementInfo','[]'))
 					console.log(this.requirementInfo_list )
@@ -172,6 +175,10 @@ export default {
 			}).then(res =>{
 				console.log('get_recruit_list',res)
 				this.recruit_list = res.data.data
+				this.$emit('update_recruiting_info',{
+					info:this.recruiting_info,
+					list:this.recruit_list
+				})
 			})
 		},
 		status_class(status_no){
@@ -203,7 +210,7 @@ export default {
 					return '待回复'
 					break;
 				case '2':
-					return '已同意'
+					return '待审核'
 					break;
 				case '3':
 					return '已拒绝'

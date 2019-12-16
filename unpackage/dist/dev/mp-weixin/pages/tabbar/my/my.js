@@ -122,7 +122,15 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+
+
+
+
+
+
+
+
 
 
 
@@ -241,11 +249,13 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     return {
       taskCount: '',
       tiemCount: '',
-      starCount: '' };
+      starCount: '',
+      my_info: {} };
 
   },
   onLoad: function onLoad() {
-    this.numDH();
+    this.init();
+    // this.numDH();
     console.log(this.user_info);
   },
   onShow: function onShow() {
@@ -274,6 +284,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     } }),
 
   methods: {
+    init: function init() {
+      this.get_user_info();
+    },
     numDH: function numDH() {var _this = this;
       if (i < 20) {
         setTimeout(function () {
@@ -297,7 +310,24 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         e = (e / 10000).toFixed(1) + 'W';
       }
       return e;
+    },
+    login_out: function login_out() {
+      uni.clearStorage();
+      uni.navigateTo({
+        url: '/pages/welcome/welcome' });
+
+    },
+    get_user_info: function get_user_info() {var _this2 = this;
+      this.$http.
+      get('personwx.myinfodetail/1.0/', {
+        id: this.id }).
+
+      then(function (res) {
+        console.log(res);
+        _this2.my_info = _this2.$_.get(res, 'data.data.personinfo', {});
+      });
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

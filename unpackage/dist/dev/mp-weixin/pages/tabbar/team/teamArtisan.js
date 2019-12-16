@@ -558,8 +558,9 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(
       mescroll: null, //mescroll实例对象
       upOption: {
         onScroll: true, // 是否监听滚动事件, 默认false (配置为true时,可@scroll="scroll"获取到滚动条位置和方向)
-        isLock: true } };
+        isLock: true },
 
+      team_data: [] };
 
   },
   computed: _objectSpread({},
@@ -591,16 +592,18 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(
       }, 300);
     },
     init: function init() {
-
+      this.get_team();
     },
     get_team: function get_team(mescroll) {var _this3 = this;
       this.$http.get('personwx.personteam/1.0/', {
         isHead: this.isHead }).
       then(function (res) {
         console.log(res);
-        var data = _this3.$utils._get(res, 'data.data', []);
+        _this3.team_data = _this3.$utils._get(res, 'data.data', []);
+
+      }).finally(function () {
         _this3.$nextTick(function () {
-          mescroll.endSuccess(data.length);
+          mescroll.endSuccess(_this3.team_data.length, false);
         });
       });
     } } };exports.default = _default;

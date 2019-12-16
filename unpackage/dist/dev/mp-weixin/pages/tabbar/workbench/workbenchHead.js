@@ -82,14 +82,10 @@ var render = function() {
   })
 
   var l1 = _vm.__map(_vm.person_list, function(item, __i0__) {
-    var m1 = _vm.status_class(item.status)
-    var m2 = _vm.status_text(item.status)
-    var m3 = _vm.expectedPlace(item.expectedPlace)
+    var m1 = _vm.expectedPlace(item.expectedPlace)
     return {
       $orig: _vm.__get_orig(item),
-      m1: m1,
-      m2: m2,
-      m3: m3
+      m1: m1
     }
   })
 
@@ -134,7 +130,16 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 205));
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 237));
+
+
+
+
+
+
+
+
+
 
 
 
@@ -393,7 +398,8 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
 
 
       TabCur: 0,
-      scrollLeft: 0 };
+      scrollLeft: 0,
+      no_work: false };
 
   },
   props: {
@@ -407,8 +413,18 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
     plan: plan,
     errManage: errManage },
 
-  mounted: function mounted() {
+  mounted: function mounted() {var _this = this;
+    uni.$on('refreshJwt', function (data) {
+      _this.init();
+    });
+    uni.$on('taskToWork', function (data) {
+      _this.init();
+    });
     this.init();
+  },
+  beforeDestroy: function beforeDestroy() {
+    uni.$off('refreshJwt');
+    uni.$off('taskToWork');
   },
   computed: _objectSpread({},
   (0, _vuex.mapState)(['bgt_c_task', 'bgt_ct_id']),
@@ -422,9 +438,9 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
     c_CustomBar: function c_CustomBar() {
       return this.CustomBar;
     },
-    current_bgt_c_task: function current_bgt_c_task() {var _this = this;
+    current_bgt_c_task: function current_bgt_c_task() {var _this2 = this;
       return this.bgt_c_task.find(function (item) {
-        return item.id == _this.bgt_ct_id;
+        return item.id == _this2.bgt_ct_id;
       });
     } }),
 
@@ -451,63 +467,68 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
   methods: {
     init: function init() {
       console.log(this.bgt_c_task, this.bgt_ct_id);
+      this.get_head_project();
+      // if(this.bgt_ct_id == ''){
 
-      if (this.bgt_ct_id == '') {
-        this.get_head_project();
-      } else {
-        this.get_project_detail();
-      }
+      // }else{
+      // 	this.get_project_detail()
+      // }
     },
-    set_form_data: function set_form_data() {var _this2 = this;
+    set_form_data: function set_form_data() {var _this3 = this;
       var index = this.bgt_c_task.findIndex(function (item) {
-        return item.id == _this2.bgt_ct_id;
+        return item.id == _this3.bgt_ct_id;
       });
       this.current_swiper = index;
-      this.form_data.startTime = this.$utils.format_date(this.bgt_c_task[index].startTime);
+      this.form_data.startTime = this.$utils.format_date(this.$_.get(this.bgt_c_task[index], 'startTime', ''));
       this.form_data.address = this.$utils._get(this.bgt_c_task[index], 'address', '');
       this.form_data.points = this.$utils._get(this.bgt_c_task[index], 'points', '');
       this.form_data.description = this.bgt_c_task[index].description;
     },
-    get_head_project: function get_head_project() {var _this3 = this;
+    get_head_project: function get_head_project(cb) {var _this4 = this;
       this.$http.get('personwx.headproject/1.0/', {
         pid: this.id,
         isFinish: '0' }).
       then(function (res) {
         console.log(res);
-        if (_this3.$utils._get(res, 'data.code') === '0') {
-          _this3.$store.commit('set_bgt_c_task', _this3.$utils._get(res, 'data.data', []));
-          if (_this3.bgt_ct_id == '') {
-            _this3.$store.commit('set_bgt_ct_id', _this3.$utils._get(res, 'data.data[0].id', ''));
+        if (_this4.$utils._get(res, 'data.code') === '0') {
+          if (res.data.data.length == 0) {
+            _this4.no_work = true;
+            return;
+          } else {
+            _this4.no_work = false;
           }
-          _this3.get_project_detail();
+          _this4.$store.commit('set_bgt_c_task', _this4.$utils._get(res, 'data.data', []));
+          if (_this4.bgt_ct_id == '') {
+            _this4.$store.commit('set_bgt_ct_id', _this4.$utils._get(res, 'data.data[0].id', ''));
+          }
+          _this4.get_project_detail(cb);
         }
       });
     },
-    get_project_detail: function get_project_detail(cb) {var _this4 = this;
+    get_project_detail: function get_project_detail(cb) {var _this5 = this;
       this.set_form_data();
       this.$http.get('personwx.projectDetail/1.0/', {
         id: this.bgt_ct_id }).
       then(function (res) {
-        if (_this4.$utils._get(res, 'data.code') === '0') {
+        if (_this5.$utils._get(res, 'data.code') === '0') {
           console.log(res);
-          _this4.project_detail = _this4.$utils._get(res, 'data.data', {});
+          _this5.project_detail = _this5.$utils._get(res, 'data.data', {});
           if (typeof cb === 'function') {
             cb();
           }
-          _this4.$nextTick(function () {
-            _this4.get_swiper_c_height();
+          _this5.$nextTick(function () {
+            _this5.get_swiper_c_height();
           });
         }
 
       });
     },
-    get_swiper_c_height: function get_swiper_c_height() {var _this5 = this;
+    get_swiper_c_height: function get_swiper_c_height() {var _this6 = this;
       var query = uni.createSelectorQuery().in(this);
-      console.log(query.select('#content' + this.current_swiper));
       query.select('#content' + this.current_swiper).boundingClientRect(function (data) {
         console.log("得到布局位置信息" + JSON.stringify(data));
         console.log("节点离页面顶部的距离为" + data.top);
-        _this5.swiperHeight = data.height + 'px';
+        _this6.swiperHeight = data.height + 'px';
       }).exec();
     },
     status_class: function status_class(status_no) {
@@ -533,20 +554,26 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
       }
     },
     expectedPlace: function expectedPlace(addr) {
-      return JSON.parse(addr).join('');
+      var address = '';
+      try {
+        address = JSON.parse(addr).join('');
+      } catch (e) {
+        //TODO handle the exception
+      }
+      return address;
     },
     goto_detail: function goto_detail(item) {
       uni.navigateTo({
-        url: "/pages/auditDetail/auditDetail?id=".concat(this.project.id, "&pid=").concat(item.id) });
+        url: "/pages/auditDetail/auditDetail?id=".concat(this.project.id, "&pid=").concat(item.id, "&isWork=true") });
 
     },
     deliveryPeriod: function deliveryPeriod(time) {
       return this.$utils.format_date(time);
     },
-    case_more: function case_more() {var _this6 = this;
+    case_more: function case_more() {var _this7 = this;
       this.is_unfold = !this.is_unfold;
       this.$nextTick(function () {
-        _this6.get_swiper_c_height();
+        _this7.get_swiper_c_height();
       });
 
     },
@@ -557,12 +584,11 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
       mescroll.resetUpScroll();
     },
     /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-    upCallback: function upCallback(mescroll) {var _this7 = this;
+    upCallback: function upCallback(mescroll) {var _this8 = this;
       //联网加载数据
-
       setTimeout(function () {
-        _this7.get_project_detail(function () {
-          mescroll.endSuccess(_this7.person_list.length, false);
+        _this8.get_head_project(function () {
+          mescroll.endSuccess(_this8.person_list.length, false);
         });
       }, 300);
     },
@@ -581,32 +607,32 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
       // 	this.get_project_detail()
       // })
     },
-    send_start: function send_start() {var _this8 = this;
+    send_start: function send_start() {var _this9 = this;
       uni.showModal({
         title: '提示',
         content: '确认输入的开工信息是否有误',
         success: function success(res) {
           if (res.confirm) {
             console.log('用户点击确定');
-            _this8.$http.post('personwx.updateprojectinfo/1.0/', {
-              startTime: _this8.form_data.startTime,
-              address: _this8.form_data.address,
-              points: _this8.form_data.points,
-              description: _this8.form_data.description,
-              id: _this8.bgt_ct_id }).
+            _this9.$http.post('personwx.updateprojectinfo/1.0/', {
+              startTime: _this9.form_data.startTime,
+              address: _this9.form_data.address,
+              points: _this9.form_data.points,
+              description: _this9.form_data.description,
+              id: _this9.bgt_ct_id }).
             then(function (res) {
               console.log(res);
               var params = {
-                id: _this8.bgt_ct_id,
-                address: _this8.form_data.address,
-                points: _this8.form_data.points,
-                startTime: _this8.form_data.startTime };
+                id: _this9.bgt_ct_id,
+                address: _this9.form_data.address,
+                points: _this9.form_data.points,
+                startTime: _this9.form_data.startTime };
 
               console.log(params);
-              _this8.$http.post('personwx.startproject/1.0/', params).then(function (res) {
+              _this9.$http.post('personwx.startproject/1.0/', params).then(function (res) {
                 console.log(res);
                 if (res.data.code == '0') {
-                  _this8.get_head_project();
+                  _this9.get_head_project();
                 }
               });
 
@@ -689,7 +715,7 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
                 }return _context2.abrupt("return",
                 status);case 12:case "end":return _context2.stop();}}}, _callee2, this);}));function checkPermission(_x) {return _checkPermission.apply(this, arguments);}return checkPermission;}(),
 
-    finish_task: function finish_task() {var _this9 = this;
+    finish_task: function finish_task() {var _this10 = this;
       uni.showModal({
         title: '提示',
         content: '辛苦了，确认任务结案？',
@@ -697,14 +723,31 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
         success: function success(res) {
           if (res.confirm) {
             console.log('用户点击确定');
-            _this9.$http.post('personwx.projectfinish/1.0/', {
-              id: _this9.bgt_ct_id }).
+            _this10.$http.post('personwx.projectfinish/1.0/', {
+              id: _this10.bgt_ct_id }).
             then(function (res) {
-              if (_this9.$_.get(res, 'data.success', false)) {
-                uni.switchTab({
-                  url: "/pages/tabbar/task/task" });
+              console.log(res);
+              if (_this10.$_.get(res, 'data.code', '') == '0') {
+                uni.showToast({
+                  title: '任务结案成功',
+                  duration: 2000,
+                  icon: 'success',
+                  success: function success() {
+                    uni.$emit('refreshList');
+                    _this10.init();
+                    setTimeout(function () {
+                      uni.switchTab({
+                        url: "/pages/tabbar/task/task" });
 
-                uni.$emit('refreshList');
+                    }, 300);
+
+                  } });
+
+              } else {
+                uni.showToast({
+                  title: '任务结案失败',
+                  duration: 2000 });
+
               }
             });
           } else if (res.cancel) {
@@ -712,6 +755,11 @@ var _permission = _interopRequireDefault(__webpack_require__(/*! @/utils/permiss
           }
         } });
 
+
+    },
+    goto_work: function goto_work() {
+      uni.switchTab({
+        url: "/pages/tabbar/task/task" });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

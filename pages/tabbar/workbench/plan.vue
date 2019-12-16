@@ -13,11 +13,11 @@
 				<view class="flex align-center margin-top-sm">
 					<view class="process flex-sub">
 						<view class="cu-progress round sm striped active" >
-							<view class="bg-green" style="width: 60%;"></view>
+							<view class="bg-green" :style="{'width':item.taskProcess+'%'}"></view>
 						</view>
 					</view>
 					<view class="margin-left-sm">
-						进度8%
+						进度{{item.taskProcess}}%
 					</view>
 				</view>
 				<view class="flex margin-top-sm">
@@ -27,7 +27,7 @@
 		</view>
 		<view class="padding">
 			<button class="cu-btn block bg-blue lg" @tap="go_add_plan">
-				<text class="cuIcon-settings"></text> 管理更多生产计划</button>
+				<text class="cuIcon-settings"></text> 创建生产计划</button>
 		</view>
 	</view>
 </template>

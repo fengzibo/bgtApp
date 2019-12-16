@@ -55,6 +55,7 @@
 					}else if(this.$utils._get(res,'data.data.code','') == '0'){
 						let ishead = this.$utils._get(res,'data.data.data.head','')
 						this.$store.commit('setIsHead',ishead)
+						uni.$emit('refreshJwt')
 						uni.showToast({
 						    title: '激活成功',
 						    duration: 2000,

@@ -7,7 +7,7 @@
 			</cu-custom>
 			<view class="plh-height"></view>
 		</view>
-		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="128" :top="c_CustomBar">
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="isWork?0:128" :top="c_CustomBar">
 			<view class="padding detail-main">
 				<view class="people-main bg-white">
 					<view class="info">
@@ -83,7 +83,7 @@
 				</view>
 			</view>
 		</mescroll-uni>
-		<view class="bottom-btn bg-white">
+		<view class="bottom-btn bg-white" v-if="!isWork">
 			<view class="main">
 				<button class="bg-gradual-blue cu-btn lg" @tap="go_back('5')">录用</button>
 				<button class="bg-gradual-red cu-btn lg"  @tap="go_back('6')">不录用</button>
@@ -121,7 +121,8 @@ export default {
 			],
 			id:'',
 			pid:'',
-			detail_data:''
+			detail_data:'',
+			isWork:false,
 		};
 	},
 	components: {
@@ -144,6 +145,7 @@ export default {
 	onLoad(option) {
 		this.id = option.id
 		this.pid = option.pid
+		this.isWork = this.$_.get(option,'isWork',false)
 		uni.$on('refreshList',() =>{
 			console.log('refreshList')
 			this.init()

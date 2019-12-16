@@ -214,6 +214,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var MescrollUni = function MescrollUni() {return Promise.all(/*! import() | components/mescroll-uni/mescroll-uni */[__webpack_require__.e("common/vendor"), __webpack_require__.e("components/mescroll-uni/mescroll-uni")]).then(__webpack_require__.bind(null, /*! @/components/mescroll-uni/mescroll-uni.vue */ 285));};var taskArtisan = function taskArtisan() {return __webpack_require__.e(/*! import() | pages/tabbar/task/taskArtisan */ "pages/tabbar/task/taskArtisan").then(__webpack_require__.bind(null, /*! ./taskArtisan.vue */ 294));};var _default =
 
 {
@@ -409,6 +415,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         case '3':
           this.$store.commit('set_bgt_c_task', this.workbench_id_list);
           this.$store.commit('set_bgt_ct_id', item.id);
+          uni.$emit('taskToWork');
           uni.switchTab({
             url: "/pages/tabbar/workbench/workbench" });
 

@@ -90,6 +90,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var l0 = _vm.__map(_vm.work_detail, function(item, __i0__) {
+    var m0 = _vm.deliveryPeriod(item.createdTime)
+    return {
+      $orig: _vm.__get_orig(item),
+      m0: m0
+    }
+  })
+
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        l0: l0
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -122,7 +138,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 237));
 
 
 
@@ -178,7 +194,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
+
 {
   data: function data() {
     return {
@@ -187,7 +213,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
       },
       upOption: {
-        auto: false },
+        auto: false,
+        textNoMore: '-- 已经到底了 --' },
 
       work_detail: [],
       loading: true,
@@ -196,6 +223,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
   },
   onLoad: function onLoad(option) {var _this = this;
     this.personinfo = JSON.parse(decodeURIComponent(option.item));
+    this.wages = this.$_.get(this.personinfo, 'wages', '');
     uni.$on('refreshList', function () {
       console.log('refreshList');
       _this.init();
@@ -221,7 +249,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       return time;
     },
     sum_price: function sum_price() {
-      return this.sum_work_tiem * this.$_.toNumber(this.wages);
+      return this.$_.get(this.personinfo, 'cumulativeHours', 0) * this.$_.toNumber(this.wages);
     } }),
 
   methods: {
@@ -229,23 +257,24 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       this.get_work_time();
     },
     downCallback: function downCallback(mescroll) {
-      // 这里加载你想下拉刷新的数据, 比如刷新轮播数据
       // loadSwiper();
       // 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
       mescroll.resetUpScroll();
     },
     /*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-    upCallback: function upCallback(mescroll) {
-      //联网加载数据
-      mescroll.endErr();
-      // setTimeout(() => {
-      // 	mescroll.endErr();
-      // }, 1000);
-    },
+    upCallback: function () {var _upCallback = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(mescroll) {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
+
+                  this.get_work_time());case 2:
+                mescroll.endSuccess(false);
+                // setTimeout(() => {
+                // 	mescroll.endErr();
+                // }, 1000);
+              case 3:case "end":return _context.stop();}}}, _callee, this);}));function upCallback(_x) {return _upCallback.apply(this, arguments);}return upCallback;}(),
     get_work_time: function get_work_time() {var _this3 = this;
       this.$http.
       get('personwx.personproworktimedetail/1.0/', {
-        pid: this.id }).
+        pid: this.personinfo.id,
+        proId: this.personinfo.proId }).
 
       then(function (res) {
         console.log(res);
@@ -261,26 +290,49 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
 
     },
     sub_settle: function sub_settle() {var _this4 = this;
+      if (this.wages === '') {
+        uni.showToast({
+          title: '请输入工价',
+          duration: 2000,
+          icon: "none" });
+
+        return;
+      }
       uni.showModal({
         title: '提示',
-        content: '当前结算金额为1280元，确认是否结算',
-        'confirmText': '确认结算',
+        content: "\u5F53\u524D\u7ED3\u7B97\u91D1\u989D\u4E3A".concat(this.sum_price, "\u5143\uFF0C\u786E\u8BA4\u662F\u5426\u7ED3\u7B97"),
+        confirmText: '确认结算',
         success: function success(res) {
           if (res.confirm) {
             console.log('用户点击确定');
-            _this4.$http.post('personwx.personproworktimeseet/1.0/', {
-              pid: _this4.id,
-              proId: _this4.personinfo.id,
+            _this4.$http.
+            post('personwx.personproworktimeseet/1.0/', {
+              pid: _this4.personinfo.id,
+              proId: _this4.personinfo.proId,
               wages: _this4.wages }).
+
             then(function (res) {
               console.log(res);
-              _this4.back();
+              uni.showToast({
+                title: '结算成功',
+                duration: 2000,
+                icon: 'success',
+                success: function success() {
+                  setTimeout(function () {
+                    _this4.back();
+                  }, 300);
+
+                } });
+
             });
           } else if (res.cancel) {
             console.log('用户点击取消');
           }
         } });
 
+    },
+    deliveryPeriod: function deliveryPeriod(time) {
+      return this.$utils.format_date(time);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

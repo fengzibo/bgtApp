@@ -108,7 +108,7 @@
 						<text class="text-black">{{get_typeLevel_text(item)}}<text class="text-red margin-left">{{item.wages}}</text></text>
 					</view>
 					<view class="flex justify-between align-center text-sm text-gray">
-						<text class="text-black"><text class="text-grey cuIcon-locationfill margin-right-xs"></text>深圳市龙华区大浪</text>
+						<text class="text-black"><text class="text-grey cuIcon-locationfill margin-right-xs"></text>{{item.address}}</text>
 						<text class="text-black">{{get_work_time(item)}}</text>
 					</view>
 				</view>
@@ -222,7 +222,7 @@
 					</view>
 					<view class="cu-form-group">
 						<view class="title">公司地址</view>
-						<input placeholder="请输入公司地址" name="addr" v-model="exper_data.addr"></input>
+						<input placeholder="请输入公司地址" class="text-right" name="addr" v-model="exper_data.addr"></input>
 					</view>
 				</view>
 				<view class="cu-bar bg-white">
@@ -559,6 +559,7 @@ export default {
 					sendTime:this.exper_data.end_time,
 					scontext:this.exper_data.remark,
 					isPlatform:'1',
+					address:this.exper_data.addr
 				}
 			if(this.exper_edit){
 				url = 'personwx.updatework/1.0/'
@@ -641,6 +642,7 @@ export default {
 			this.exper_data.start_time = this.$utils.format_date(item.sstartTime)
 			this.exper_data.end_time = this.$utils.format_date(item.sendTime)
 			this.exper_data.remark = item.scontext
+			this.exper_data.addr = item.address
 			this.exper_model = true
 			this.exper_edit = true
 		},

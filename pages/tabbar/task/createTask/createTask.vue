@@ -37,9 +37,11 @@
 			<view class="footer-tool bg-white padding">
 				<button class="cu-btn round bg-blue" @tap="prev" v-if="num>0">上一步</button>
 				<button class="cu-btn round bg-blue" @tap="next" v-if="num<2">下一步</button>
-				<form @submit="endCreate" v-if="num == 2" :report-submit="true">
+				
+				<form @submit="endCreate" v-if="num == 2 && can_create" :report-submit="true">
 					<button class="cu-btn round bg-blue" form-type="submit">结束招募</button>
 				</form>
+				<button class="cu-btn round bg-blue" v-if="num == 2 && !can_create" @tap="go_list">返回任务列表</button>
 			</view>
 		</template>
 		<template v-if="num === 3">
@@ -95,6 +97,7 @@ export default {
 			route_id:'',
 			loading:true,
 			recruiting_info:{},
+			recruit_list:[],
 			show_modal:false,
 			location:null,
 			startTime:''
@@ -131,6 +134,9 @@ export default {
 	},
 	computed:{
 		...mapState(['current_task']),
+		can_create(){
+			return this.$_.some(this.recruit_list, ['status', '5']);
+		}
 	},
 	methods: {
 		next(){
@@ -167,27 +173,46 @@ export default {
 			this.old.scrollTop = e.detail.scrollTop
 		},
 		update_recruiting_info(data){
-			this.recruiting_info = data
+			this.recruiting_info = data.info
+			this.recruit_list = data.list
 		},
 		endCreate(e){
-			let pamars = {
-				proId:this.recruiting_info.proId,
-				recId:this.recruiting_info.id,
-				formId:e.detail.formId,
-				path:'pages/tabbar/task/task',
-			}
-			console.log(pamars)
-			// return 
-			this.$http.post('personwx.finishrecruit/1.0/',pamars).then(res =>{
-				console.log(res)
-				this.scrollTop = this.old.scrollTop
-				this.$nextTick(function() {
-					this.scrollTop = 0
-				});
-				this.num ++ 
-				uni.$emit('refreshList')
-				// this.$store.commit('setHasTask',true)
+			let people_num = 0 
+			this.recruit_list.forEach(item =>{
+				if(item.status == '5'){
+					people_num++
+				}
 			})
+			uni.showModal({
+			    title: '提示',
+			    content: `当前您选择了${people_num}人，其他人将自动不录用，是否确定？`,
+			    success: res => {
+			        if (res.confirm) {
+			            console.log('用户点击确定');
+						let pamars = {
+							proId:this.recruiting_info.proId,
+							recId:this.recruiting_info.id,
+							formId:e.detail.formId,
+							path:'pages/tabbar/task/task',
+						}
+						console.log(pamars)
+						// return 
+						this.$http.post('personwx.finishrecruit/1.0/',pamars).then(res =>{
+							console.log(res)
+							this.scrollTop = this.old.scrollTop
+							this.$nextTick(function() {
+								this.scrollTop = 0
+							});
+							this.num ++ 
+							uni.$emit('refreshList')
+							// this.$store.commit('setHasTask',true)
+						})
+			        } else if (res.cancel) {
+			            console.log('用户点击取消');
+			        }
+			    }
+			});
+			
 		},
 		goto_recruiting(){
 			this.show_modal = false
@@ -195,6 +220,11 @@ export default {
 				url: `/pages/personList/personList?recId=${this.recruiting_info.id}&proId=${this.recruiting_info.proId}`
 			});
 		},
+		go_list(){
+			uni.switchTab({
+				url:"/pages/tabbar/task/task"
+			})
+		}
 	}
 };
 </script>

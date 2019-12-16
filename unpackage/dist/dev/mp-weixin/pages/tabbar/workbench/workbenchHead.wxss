@@ -199,4 +199,9 @@
 .work-swiper-dot .dot-item.active.data-v-59419c3a {
   opacity: 1;
 }
+.no-task.data-v-59419c3a {
+  text-align: center;
+  padding: 30rpx;
+  width: 100%;
+}
 

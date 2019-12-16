@@ -73,6 +73,21 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 = _vm.round(_vm.headHoursInfo.allProjectNum)
+  var m1 = _vm.round(_vm.headHoursInfo.allHours)
+  var m2 = _vm.round(_vm.headHoursInfo.settlementHours)
+  var m3 = _vm.round(_vm.headHoursInfo.settlementIncome)
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0,
+        m1: m1,
+        m2: m2,
+        m3: m3
+      }
+    }
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -105,9 +120,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 205));
-
-
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 237));
 
 
 
@@ -178,7 +191,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(
         auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
       },
       upOption: {
-        auto: false },
+        auto: false,
+        textNoMore: '-- 已经到底了 --' },
 
       hours_detail: {},
       loading: true };
@@ -200,24 +214,31 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(
       return !this.loading && this.headHoursDetailList.length == 0;
     } }),
 
-  mounted: function mounted() {
+  mounted: function mounted() {var _this = this;
+    uni.$on('refreshJwt', function () {
+      console.log('refreshJwt');
+      _this.init();
+    });
     this.init();
+  },
+  beforeDestroy: function beforeDestroy() {
+    uni.$off('refreshJwt');
   },
   methods: {
     init: function init() {
       this.get_hours_detail();
     },
-    get_hours_detail: function get_hours_detail() {var _this = this;
+    get_hours_detail: function get_hours_detail() {var _this2 = this;
       this.$http.
       get('personwx.headhoursdetail/1.0/', {
         pid: this.id }).
 
       then(function (res) {
         console.log(res);
-        _this.hours_detail = res.data.data;
+        _this2.hours_detail = res.data.data;
       }).
       finally(function () {
-        _this.loading = false;
+        _this2.loading = false;
       });
     },
     downCallback: function downCallback(mescroll) {
@@ -230,12 +251,16 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _interopRequireDefault(
     upCallback: function () {var _upCallback = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(mescroll) {return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:_context.next = 2;return (
 
                   this.get_hours_detail());case 2:
-                mescroll.endErr();case 3:case "end":return _context.stop();}}}, _callee, this);}));function upCallback(_x) {return _upCallback.apply(this, arguments);}return upCallback;}(),
+                mescroll.endSuccess(false);case 3:case "end":return _context.stop();}}}, _callee, this);}));function upCallback(_x) {return _upCallback.apply(this, arguments);}return upCallback;}(),
 
     goto_detail: function goto_detail(item) {
       uni.navigateTo({
         url: "/pages/tabbar/workHours/hoursSettle/hoursSettle?item=" + encodeURIComponent(JSON.stringify(item)) });
 
+    },
+    round: function round(num) {
+      var res = this.$_.round(this.$_.toNumber(num), 2);
+      return this.$_.isNaN(res) ? 0 : res;
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

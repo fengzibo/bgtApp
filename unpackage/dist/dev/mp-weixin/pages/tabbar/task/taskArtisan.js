@@ -238,40 +238,42 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     } }),
 
   mounted: function mounted() {var _this = this;
-    // this.$nextTick(() =>{
-    // 	this.init()
-    // })
     uni.$on('refreshJwt', function (data) {
       console.log('refreshJwt', data);
       // this.mescroll.triggerDownScroll()
       _this.mescroll.resetUpScroll();
     });
+    if (!this.id) {
+      uni.navigateTo({
+        url: '/pages/tabbar/my/myInfo/createInfo' });
+
+      // uni.showModal({
+      // 	titel: '提示',
+      // 	content: '您的资料不完整，请先完善',
+      // 	cancelText: '去完善',
+      // 	cancelColor: '#007AFF',
+      // 	confirmText: '先看看',
+      // 	confirmColor: '#007AFF',
+      // 	success: res => {
+      // 		if (res.confirm) {
+      // 			console.log('用户点击先看看');
+      // 		} else if (res.cancel) {
+      // 			console.log('用户点击去完善');
+      // 			uni.navigateTo({
+      // 				url: '/pages/tabbar/my/myInfo/createInfo'
+      // 			});
+      // 		}
+      // 	}
+      // });
+
+    }
   },
   beforeDestroy: function beforeDestroy() {
     uni.$off('refreshJwt');
   },
   methods: {
     init: function init(mescroll) {var _this2 = this;
-      if (!this.id) {
-        uni.showModal({
-          titel: '提示',
-          content: '您的资料不完整，请先完善',
-          cancelText: '去完善',
-          cancelColor: '#007AFF',
-          confirmText: '先看看',
-          confirmColor: '#007AFF',
-          success: function success(res) {
-            if (res.confirm) {
-              console.log('用户点击先看看');
-            } else if (res.cancel) {
-              console.log('用户点击去完善');
-              uni.navigateTo({
-                url: '/pages/tabbar/my/myInfo/createInfo' });
 
-            }
-          } });
-
-      }
       var c_index = this.current_tab.index;
       var rpStatus = c_index === 0 ? '1,2,4' : '5';
       var params = {

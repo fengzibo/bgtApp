@@ -25,14 +25,14 @@
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-titles text-orange "></text>
-				人员信息
+				勾选人员
 			</view>
 		</view>
 		<checkbox-group @change="checkboxChange">
 			<label class="item padding bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id">
 				<view class="action solid-right text-center" style="padding: 0 30rpx;">
 					<view class="text-xl text-blue">
-						{{item.hours}}
+						{{item.totalHours || 0}}
 					</view>
 					<view class="text-gray">
 						累计工时
@@ -50,7 +50,7 @@
 					</view>
 				</view>
 				<view class="paln-check">
-					 <checkbox class='round' :value="item.id" :checked="item.checked" />
+					 <checkbox class='round' :value="item.pid" :checked="item.checked" />
 				</view>
 			</label>
 		</checkbox-group>
@@ -74,7 +74,8 @@
 				},
 				person_list:[],
 				check_arr:[],
-				r_item:null
+				r_item:null,
+				taskPersons:[]
 			};
 		},
 		computed: {
@@ -86,18 +87,21 @@
 			
 		},
 		onLoad(option) {
-			if(option.item){
-				this.r_item = JSON.parse(decodeURIComponent(option.item));
-				console.log(this.r_item)
-				this.set_data()
-				this.get_plan_detail()
-			}
-			this.get_people_list()
+			this.init(option)
 		},
 		mounted() {
 			
 		},
 		methods:{
+			async init(option){
+				if(option.item){
+					this.r_item = JSON.parse(decodeURIComponent(option.item));
+					console.log(this.r_item)
+					this.set_data()
+					await this.get_plan_detail()
+				}
+				this.get_people_list()
+			},
 			set_data(){
 				this.form_data.deviceNo = this.r_item.deviceNo
 				this.form_data.title = this.r_item.title
@@ -110,6 +114,13 @@
 				}).then(res =>{
 					console.log(res)
 					this.person_list = this.$utils._get(res,'data.data',[])
+					this.person_list.forEach(item =>{
+						if(this.check_arr.includes(item.pid)){
+							this.$set(item,'checked',true)
+						}else{
+							this.$set(item,'checked',false)
+						}
+					})
 				})
 			},
 			get_plan_detail(){
@@ -117,6 +128,11 @@
 					id:this.r_item.id
 				}).then(res =>{
 					console.log('detail',res)
+					this.taskPersons = this.$_.get(res,'data.data.taskPersons',[])
+					this.check_arr = []
+					this.taskPersons.forEach(item =>{
+						this.check_arr.push(item.pid)
+					})
 				})
 			},
 			checkboxChange(e) {
@@ -126,7 +142,7 @@
 					this.check_arr = values
 				for (var i = 0, lenI = items.length; i < lenI; ++i) {
 					const item = items[i]
-					if(values.includes(item.id)){
+					if(values.includes(item.pid)){
 						this.$set(item,'checked',true)
 					}else{
 						this.$set(item,'checked',false)

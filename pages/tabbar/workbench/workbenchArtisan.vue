@@ -7,6 +7,8 @@
 			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_work">去找点活干干</button>
 			<br />
 			<button class="cu-btn round bg-gradual-orange lg margin-top" @tap="goto_rest">最近有点累，要休息一段时间</button>
+			<br />
+			<button class="cu-btn round bg-gradual-red lg margin-top" @tap="init">刷新工作台</button>
 		</view>
 		<view class="rest" v-if="artisan_work_state === 'rest'">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/rest.png" mode="aspectFit" style="width: 100%"></image>
@@ -18,6 +20,7 @@
 			<br />
 			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_work">是的，我要去找活干了</button>
 			<br />
+			<button class="cu-btn round bg-gradual-red lg margin-top" @tap="init">刷新工作台</button>
 			<!-- <button class="cu-btn round bg-gradual-orange lg margin-top" @tap="goto_rest">还没恢复</button> -->
 		</view>
 
@@ -35,8 +38,8 @@
 											<view class="text ">{{ item.deviceName }}({{ item.deviceNum }})</view>
 										</view>
 										<view class="info-box">
-											<view class="label ">工期：</view>
-											<view class="text ">{{ item.limit }}</view>
+											<view class="label ">交期：</view>
+											<view class="text ">{{ deliveryPeriod(item.deliveryPeriod) }}</view>
 										</view>
 										<view class="info-box">
 											<view class="label ">负责人：</view>
@@ -104,19 +107,19 @@
 							<text class="cuIcon-title text-orange"></text>
 							我的工时
 						</view>
-						<view class="action text-gray">更新：{{ deliveryPeriod(c_project.deliveryPeriod) }}</view>
+						<view class="action text-gray">更新：{{ deliveryPeriod(new Date()) }}</view>
 					</view>
 					<view class="flex text-center solid-top padding-tb bg-white">
 						<view class="flex flex-sub flex-direction solid-right text-gray">
-							<view class="text-xxl">8</view>
+							<view class="text-xxl">{{personHours.yesterdayHours || 0}}</view>
 							<view class="margin-top-sm">昨日工时</view>
 						</view>
 						<view class="flex flex-sub flex-direction solid-right text-green">
-							<view class="text-xxl text-blue">2</view>
+							<view class="text-xxl text-blue">{{personHours.todayHours || 0}}</view>
 							<view class="margin-top-sm">今日工时</view>
 						</view>
 						<view class="flex flex-sub flex-direction text-orange">
-							<view class="text-xxl">100</view>
+							<view class="text-xxl">{{personHours.allHours || 0}}</view>
 							<view class="margin-top-sm">累计工时</view>
 						</view>
 					</view>
@@ -127,10 +130,35 @@
 							</view>
 						</view>
 					</view>
-					<view class="task-main">
-						<view class="no-list padding">
+					<view class="task-main" v-if="no_task">
+						<view class="no-list padding" >
 							<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-data.png" mode="aspectFit" class="no-data-img"></image>
 							<view class="text-gray text-center">--没有任务--</view>
+						</view>
+					</view>
+					<view class="plan-list" v-else>
+						<view class="item padding bg-white solid-bottom" v-for="item in plan_list" :key="item.id">
+							<view class="flex justify-between">
+								<view class="text-bold">
+									{{item.title}}
+								</view>
+								<view class="text-gray text-sm">
+									{{deliveryPeriod(item.createdTime)}}
+								</view>
+							</view>
+							<view class="flex align-center margin-top-sm">
+								<view class="process flex-sub">
+									<view class="cu-progress round sm striped active" >
+										<view class="bg-green" :style="{'width':item.taskProcess+'%'}"></view>
+									</view>
+								</view>
+								<view class="margin-left-sm">
+									进度{{item.taskProcess}}%
+								</view>
+							</view>
+							<view class="flex margin-top-sm">
+								<view class="cu-avatar sm round bg-red margin-right-sm" v-for="(avr,i) in item.people" :key="i" :style="{backgroundImage: `url(${avr.avaurl})`}"></view>
+							</view>
 						</view>
 					</view>
 				</template>
@@ -181,14 +209,57 @@ export default {
 			return this.project_list[this.curent_p_index];
 		},
 		finshTask() {
-			return this.$utils._get(this.detail_data, 'finshTask', []);
+			let ft_list = this.$utils._get(this.person_consol, 'finshTask', []);
+			ft_list.forEach(item =>{
+				let list = item.userList.split(',')
+				let plan_people = []
+				list.forEach(val =>{
+					let arr = val.split(':')
+					let obj = {
+						name:arr[2],
+						avaurl:arr[0]+':'+arr[1]
+					}
+					plan_people.push(obj)
+				})
+				this.$set(item,'people',plan_people)
+			})
+			return ft_list
 		},
 		activeTask() {
-			return this.$utils._get(this.detail_data, 'activeTask', []);
+			let at_list = this.$utils._get(this.person_consol, 'activeTask', [])
+			at_list.forEach(item =>{
+				let list = item.userList.split(',')
+				let plan_people = []
+				list.forEach(val =>{
+					let arr = val.split(':')
+					let obj = {
+						name:arr[2],
+						avaurl:arr[0]+':'+arr[1]
+					}
+					plan_people.push(obj)
+				})
+				this.$set(item,'people',plan_people)
+			})
+			return at_list
+		},
+		personHours() {
+			return this.$utils._get(this.person_consol, 'personHours', {});
+		},
+		plan_list(){
+			return this.TabCur === 0?this.activeTask:this.finshTask
+		},
+		no_task(){
+			return this.plan_list.length === 0
 		}
 	},
 	mounted() {
+		uni.$on('refreshJwt',(data) =>{
+			this.init()
+		})
 		this.init();
+	},
+	beforeDestroy() {
+		uni.$off('refreshJwt')
 	},
 	methods: {
 		init(cb) {
@@ -213,30 +284,39 @@ export default {
 						if(this.artisan_work_state === 'confirmInfo'){
 							this.get_person_consol()
 						}
-						if (typeof cb === 'function') {
-							
-							cb();
-						}
-						this.$nextTick(() => {
-							this.get_swiper_c_height();
-						});
 					}
-				});
+				}).finally(() =>{
+					if (typeof cb === 'function') {
+						cb();
+					}
+					this.$nextTick(() => {
+						this.get_swiper_c_height();
+					});
+				})
 		},
 		goto_work() {
-			uni.switchTab({
-				url: '/pages/tabbar/task/task'
-			});
+			this.$http
+				.post('personwx.changestatus/1.0/', {
+					id: this.id,
+					status: '0'
+				})
+				.then(res => {
+					console.log(res);
+					this.$store.commit('setArtisanWorkState', 'rest');
+					uni.switchTab({
+						url: '/pages/tabbar/task/task'
+					});
+				});
 		},
 		goto_rest() {
 			this.$http
-				.post('personwx.personwx.changestatus/1.0/', {
+				.post('personwx.changestatus/1.0/', {
 					id: this.id,
 					status: '2'
 				})
 				.then(res => {
 					console.log(res);
-					this.$store.commit('setArtisanWorkState', 'rest');
+					this.$store.commit('setArtisanWorkState', 'noTask');
 				});
 		},
 		exit_work() {},
@@ -310,7 +390,7 @@ export default {
 			this.$http
 				.get('personwx.personconsol/1.0/', {
 					id: this.c_project.id,
-					pid: this.c_project.pid
+					pid: this.id
 				})
 				.then(res => {
 					console.log(res);
@@ -318,6 +398,7 @@ export default {
 						this.person_consol = res.data.data;
 					}
 				});
+				
 		},
 		tabSelect(e) {
 			this.TabCur = e.currentTarget.dataset.id;

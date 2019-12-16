@@ -284,8 +284,21 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       this.$http.post('personwx.projectabnormalitysu/1.0/', params).then(function (res) {
         console.log(res);
         if (_this2.$_.get(res, 'data.success', false)) {
-          uni.$emit('refErrList');
-          _this2.back();
+          uni.showToast({
+            title: '异常提报成功',
+            duration: 2000,
+            success: function success() {
+              setTimeout(function () {
+                uni.$emit('refErrList');
+                _this2.back();
+              }, 300);
+            } });
+
+        } else {
+          uni.showToast({
+            title: '异常提报失败',
+            duration: 2000 });
+
         }
 
       });

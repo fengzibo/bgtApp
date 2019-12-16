@@ -179,6 +179,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         } else if (_this.$utils._get(res, 'data.data.code', '') == '0') {
           var ishead = _this.$utils._get(res, 'data.data.data.head', '');
           _this.$store.commit('setIsHead', ishead);
+          uni.$emit('refreshJwt');
           uni.showToast({
             title: '激活成功',
             duration: 2000,

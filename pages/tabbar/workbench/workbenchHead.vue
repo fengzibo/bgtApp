@@ -1,6 +1,14 @@
 <template>
 	<view class="workbench-head">
-		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :top="c_CustomBar">
+		<view class="no-task" v-if="no_work">
+			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
+			<text class="text-grey text-xl">当前没有相关在进行的任务</text>
+			<br />
+			<button class="cu-btn round bg-gradual-blue lg margin-top" @tap="goto_work">前往任务列表</button>
+			<br />
+			<button class="cu-btn round bg-gradual-red lg margin-top" @tap="init">刷新工作台</button>
+		</view>
+		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :top="c_CustomBar" v-else>
 		<view class="swiper-box">
 			<swiper class="swiper" :current="current_swiper" :indicator-dots="false" :autoplay="false" :style="{ height: swiperHeight }" @change="swiperChange" >
 				<swiper-item v-for="(item,index) in bgt_c_task" :key="item.id">
@@ -45,7 +53,7 @@
 								<view class="flex padding-tb">
 									<view class="flex-sub text-center">
 										<view class="text-lg">
-											100
+											{{ item.allHours || 0 }}
 										</view>
 										<view class="">
 											累计工时
@@ -53,7 +61,7 @@
 									</view>
 									<view class="flex-sub text-center">
 										<view class="text-lg">
-											20
+											{{ item.abnormalityNum || 0 }}
 										</view>
 										<view class="">
 											异常数
@@ -61,7 +69,7 @@
 									</view>
 									<view class="flex-sub text-center">
 										<view class="text-lg">
-											20/100
+											{{item.allcost || 0}}/{{ item.budget }}
 										</view>
 										<view class="">
 											实时/预算（万）
@@ -71,11 +79,11 @@
 								<view class="flex align-center">
 									<view class="process flex-sub">
 										<view class="cu-progress round sm striped active" >
-											<view class="bg-green" style="width: 60%;"></view>
+											<view class="bg-green" :style="{'width':item.proProgress+'%'}"></view>
 										</view>
 									</view>
 									<view class="margin-left-sm">
-										进度8%
+										进度{{item.proProgress || 0}}%
 									</view>
 								</view>
 								<view class="margin-top-sm">
@@ -105,7 +113,8 @@
 			<view class="people-list">
 				<view class="item padding bg-white solid-bottom" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
 					<view class="action solid-right">
-						<view class="text-lg people-status " :class="[status_class(item.status)]">{{ status_text(item.status)}}</view>
+						<!-- :class="[status_class(item.status)]   status_text(item.status)" -->
+						<view class="text-lg people-status text-blue">准备中</view>
 					</view>
 					<view class="content">
 						<view class="cu-avatar round lg bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
@@ -165,7 +174,7 @@
 			<err-manage v-if="TabCur == 3"></err-manage>
 		</template>
 		</mescroll-uni>
-		<view class="footer-tool bg-white solid-top" v-if="current_bgt_c_task.status == '2'">
+		<view class="footer-tool bg-white solid-top" v-if="current_bgt_c_task.status == '2' && !no_work">
 			<button class="cu-btn bg-blue" @tap="send_start" style="flex:2;height: 100%;">发送开工确认</button>
 			<!-- <button class="cu-btn round bg-blue" @tap="goto_recruiting">补招人员</button> -->
 			<button class="cu-btn bg-red" style="flex:1;height: 100%;">关闭任务</button>
@@ -257,7 +266,8 @@ export default {
 				},
 			],
 			TabCur:0,
-			scrollLeft:0
+			scrollLeft:0,
+			no_work:false
 		};
 	},
 	props: {
@@ -272,7 +282,17 @@ export default {
 		errManage
 	},
 	mounted() {
+		uni.$on('refreshJwt',(data) =>{
+			this.init()
+		})
+		uni.$on('taskToWork',(data) =>{
+			this.init()
+		})
 		this.init()
+	},
+	beforeDestroy() {
+		uni.$off('refreshJwt')
+		uni.$off('taskToWork')
 	},
 	computed:{
 		...mapState(['bgt_c_task','bgt_ct_id']),
@@ -315,35 +335,41 @@ export default {
 	methods: {
 		init(){
 			console.log(this.bgt_c_task,this.bgt_ct_id)
-			
-			if(this.bgt_ct_id == ''){
-				this.get_head_project()
-			}else{
-				this.get_project_detail()
-			}
+			this.get_head_project()
+			// if(this.bgt_ct_id == ''){
+				
+			// }else{
+			// 	this.get_project_detail()
+			// }
 		},
 		set_form_data(){
 			let index = this.bgt_c_task.findIndex((item) =>{
 				return item.id == this.bgt_ct_id
 			})
 			this.current_swiper = index
-			this.form_data.startTime = this.$utils.format_date(this.bgt_c_task[index].startTime)
+			this.form_data.startTime = this.$utils.format_date(this.$_.get(this.bgt_c_task[index],'startTime',''))
 			this.form_data.address = this.$utils._get(this.bgt_c_task[index],'address','')
 			this.form_data.points = this.$utils._get(this.bgt_c_task[index],'points','')
 			this.form_data.description = this.bgt_c_task[index].description
 		},
-		get_head_project(){
+		get_head_project(cb){
 			this.$http.get('personwx.headproject/1.0/',{
 				pid:this.id,
 				isFinish:'0'
 			}).then(res =>{
 				console.log(res)
 				if(this.$utils._get(res,'data.code') === '0'){
+					if(res.data.data.length == 0){
+						this.no_work = true
+						return
+					}else{
+						this.no_work = false
+					}
 					this.$store.commit('set_bgt_c_task',this.$utils._get(res,'data.data',[]))
 					if(this.bgt_ct_id == ''){
 						this.$store.commit('set_bgt_ct_id',this.$utils._get(res,'data.data[0].id',''))
 					}
-					this.get_project_detail()
+					this.get_project_detail(cb)
 				}
 			})
 		},
@@ -367,7 +393,6 @@ export default {
 		},
 		get_swiper_c_height(){
 			const query = uni.createSelectorQuery().in(this);
-			console.log(query.select('#content'+this.current_swiper))
 			query.select('#content'+this.current_swiper).boundingClientRect(data => {
 			  console.log("得到布局位置信息" + JSON.stringify(data));
 			  console.log("节点离页面顶部的距离为" + data.top);
@@ -397,11 +422,17 @@ export default {
 			}
 		},
 		expectedPlace(addr){
-			return JSON.parse(addr).join('')
+			let address = ''
+			try{
+				address = JSON.parse(addr).join('')
+			}catch(e){
+				//TODO handle the exception
+			}
+			return address
 		},
 		goto_detail(item) {
 			uni.navigateTo({
-				url: `/pages/auditDetail/auditDetail?id=${this.project.id}&pid=${item.id}` 
+				url: `/pages/auditDetail/auditDetail?id=${this.project.id}&pid=${item.id}&isWork=true` 
 			});
 		},
 		deliveryPeriod(time){
@@ -423,9 +454,8 @@ export default {
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
 		upCallback(mescroll) {
 			//联网加载数据
-			
 			setTimeout(() => {
-				this.get_project_detail(() =>{
+				this.get_head_project(() =>{
 					mescroll.endSuccess(this.person_list.length,false)
 				})
 			}, 300);
@@ -564,11 +594,28 @@ export default {
 						this.$http.post('personwx.projectfinish/1.0/',{
 							id:this.bgt_ct_id
 						}).then(res =>{
-							if(this.$_.get(res,'data.success',false)){
-								uni.switchTab({
-									url:"/pages/tabbar/task/task"
+							console.log(res)
+							if(this.$_.get(res,'data.code','') == '0'){
+								uni.showToast({
+								    title: '任务结案成功',
+								    duration: 2000,
+									icon:'success',
+									success:() =>{
+										uni.$emit('refreshList')
+										this.init()
+										setTimeout(() => {
+											uni.switchTab({
+												url:"/pages/tabbar/task/task"
+											})
+										}, 300);
+										
+									}
 								})
-								uni.$emit('refreshList')
+							}else{
+								uni.showToast({
+								    title: '任务结案失败',
+								    duration: 2000,
+								});
 							}
 						})
 			        } else if (res.cancel) {
@@ -577,6 +624,11 @@ export default {
 			    }
 			});
 			
+		},
+		goto_work(){
+			uni.switchTab({
+				url:"/pages/tabbar/task/task"
+			})
 		}
 	}
 };
@@ -736,5 +788,10 @@ export default {
 			opacity: 1;
 		}
 	}
+}
+.no-task {
+	text-align: center;
+	padding: 30rpx;
+	width: 100%;
 }
 </style>

@@ -12,38 +12,47 @@
 				<view class="people-main bg-white">
 					<view class="info">
 						<view class="name">
-							<!-- 	<text class="text-red">
-								<text class="cuIcon-female  sex-icon"></text>{{personinfo.age}}岁
-							</text> -->
 							<text class="text-bold text-black text-xl">{{ personinfo.pname }}</text>
-
-							<!-- <text class="margin-left text-df text-xxl text-red">{{personinfo.rating}}分</text> -->
 						</view>
 						<view class="cu-tag text-xl line-green margin-top-sm">{{ personinfo.typeName }}</view>
-						<!-- <view class="limit margin-top-sm text-grey text-df">
-							{{personinfo.workYear}}年工作年限<text class="text-xl margin-left-sm margin-right-sm">/</text>{{personinfo.homeAddress}}
-						</view> -->
-						<!-- <view class="price margin-top-sm text-red text-xl margin-bottom-sm">28/时</view> -->
-						<!-- <sunui-star iconName="cuIcon-favorfill" :disabledStar="true"></sunui-star> -->
-						<!-- 	<view class="addr text-gray margin-top-sm ">
-							<text class="cuIcon-locationfill margin-right-xs"></text>
-							<text>{{personinfo.address}}</text>
-						</view> -->
 					</view>
 					<view class="avatar bg-white"><view class="cu-avatar xl round bg-red" :style="{ backgroundImage: `url(${personinfo.headImg})` }"></view></view>
 				</view>
 				<view class="no-data" v-if="no_data"><image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image></view>
+				<view v-else class="margin-top-lg bg-white padding skills-card">
+					<view class="flex align-center justify-around solid-bottom" v-for="item in work_detail" :key="item.id">
+						<view class="text-gray">
+							{{deliveryPeriod(item.createdTime)}}
+						</view>
+						<view class="">
+							工价：
+							<text class="text-red">{{item.wages}}</text>元
+						</view>
+						<view class="">
+							累计工时
+							<text class="text-blue">{{item.validTotalNum}}</text>小时
+						</view>
+					</view>
+				</view>
 			</view>
 		</mescroll-uni>
 
 		<view class="footer-tool bg-white solid-top">
 			<view class="footer-from flex align-center padding">
 				<view class="flex-sub flex align-center">
-					工价：
+					<view style="flex: 0 0 auto;">
+						工价：
+					</view>
 					<view class="solid-bottom input-bdc text-red"><input style="width: 120rpx;text-align: left;" v-model="wages" /></view>
 				</view>
-				<view class="margin-left-sm">累计工时：<text class="text-red">{{sum_work_tiem}}小时</text></view>
-				<view class="margin-left-sm">结算金额：<text class="text-red">{{sum_price}}元</text></view>
+				<view class="margin-left-sm">
+					累计工时：
+					<text class="text-red">{{ personinfo.cumulativeHours || 0 }}小时</text>
+				</view>
+				<view class="margin-left-sm">
+					结算金额：
+					<text class="text-red">{{ sum_price }}元</text>
+				</view>
 			</view>
 			<view class="flex justify-center align-center footer-btn-box">
 				<button class="cu-btn bg-blue" style="flex:2;height: 100%;" @tap="sub_settle">确定</button>
@@ -55,6 +64,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex';
+
 export default {
 	data() {
 		return {
@@ -63,7 +73,8 @@ export default {
 				auto: false //是否在初始化后,自动执行下拉回调callback; 默认true
 			},
 			upOption: {
-				auto: false
+				auto: false,
+				textNoMore: '-- 已经到底了 --'
 			},
 			work_detail: [],
 			loading: true,
@@ -72,6 +83,7 @@ export default {
 	},
 	onLoad(option) {
 		this.personinfo = JSON.parse(decodeURIComponent(option.item));
+		this.wages = this.$_.get(this.personinfo, 'wages', '');
 		uni.$on('refreshList', () => {
 			console.log('refreshList');
 			this.init();
@@ -89,15 +101,15 @@ export default {
 		no_data() {
 			return !this.loading && this.work_detail.length == 0;
 		},
-		sum_work_tiem(){
-			let time = 0
-			this.work_detail.forEach(item =>{
-				time += this.$_.toNumber(item.workTime)
-			})
-			return time
+		sum_work_tiem() {
+			let time = 0;
+			this.work_detail.forEach(item => {
+				time += this.$_.toNumber(item.workTime);
+			});
+			return time;
 		},
-		sum_price(){
-			return this.sum_work_tiem * this.$_.toNumber(this.wages)
+		sum_price() {
+			return this.$_.get(this.personinfo, 'cumulativeHours', 0) * this.$_.toNumber(this.wages);
 		}
 	},
 	methods: {
@@ -105,15 +117,15 @@ export default {
 			this.get_work_time();
 		},
 		downCallback(mescroll) {
-			// 这里加载你想下拉刷新的数据, 比如刷新轮播数据
 			// loadSwiper();
 			// 下拉刷新的回调,默认重置上拉加载列表为第一页 (自动执行 mescroll.num=1, 再触发upCallback方法 )
 			mescroll.resetUpScroll();
 		},
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-		upCallback(mescroll) {
+		async upCallback(mescroll) {
 			//联网加载数据
-			mescroll.endErr();
+			await this.get_work_time();
+			mescroll.endSuccess(false);
 			// setTimeout(() => {
 			// 	mescroll.endErr();
 			// }, 1000);
@@ -121,7 +133,8 @@ export default {
 		get_work_time() {
 			this.$http
 				.get('personwx.personproworktimedetail/1.0/', {
-					pid: this.id
+					pid: this.personinfo.id,
+					proId:this.personinfo.proId
 				})
 				.then(res => {
 					console.log(res);
@@ -136,28 +149,52 @@ export default {
 				delta: 1
 			});
 		},
-		sub_settle(){
+		sub_settle() {
+			if(this.wages === ''){
+				uni.showToast({
+				    title: '请输入工价',
+				    duration: 2000,
+					icon:"none"
+				});
+				return
+			}
 			uni.showModal({
-			    title: '提示',
-			    content: '当前结算金额为1280元，确认是否结算',
-				'confirmText':'确认结算',
-			    success:(res) => {
-			        if (res.confirm) {
-			            console.log('用户点击确定');
-						this.$http.post('personwx.personproworktimeseet/1.0/',{
-							pid:this.id,
-							proId:this.personinfo.id,
-							wages:this.wages
-						}).then(res =>{
-							console.log(res)
-							this.back()
-						})
-			        } else if (res.cancel) {
-			            console.log('用户点击取消');
-			        }
-			    }
+				title: '提示',
+				content: `当前结算金额为${this.sum_price}元，确认是否结算`,
+				confirmText: '确认结算',
+				success: res => {
+					if (res.confirm) {
+						console.log('用户点击确定');
+						this.$http
+							.post('personwx.personproworktimeseet/1.0/', {
+								pid: this.personinfo.id,
+								proId: this.personinfo.proId,
+								wages: this.wages
+							})
+							.then(res => {
+								console.log(res);
+								uni.showToast({
+								    title: '结算成功',
+								    duration: 2000,
+									icon:'success',
+									success: () => {
+										setTimeout(() =>{
+											this.back();
+										},300)
+										
+									}
+								});
+							});
+					} else if (res.cancel) {
+						console.log('用户点击取消');
+					}
+				}
 			});
-		}
+		},
+		deliveryPeriod(time) {
+			return this.$utils.format_date(time);
+		},
+		
 	}
 };
 </script>
@@ -230,5 +267,9 @@ export default {
 		margin: 0 auto;
 		display: block;
 	}
+}
+.skills-card {
+	border-radius: 10upx;
+	box-shadow: 6upx 6upx 8upx rgba(0, 129, 255, 0.1);
 }
 </style>

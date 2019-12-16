@@ -17,12 +17,15 @@
 	export default {
 		data() {
 			return {
-				location:null
+				location:null,
 			}
 		},
 		onShow () {
 			this.location = chooseLocation.getLocation();
 			console.log('show,loc',this.location)// 如果点击确认选点按钮，则返回选点结果对象，否则返回null
+		},
+		onLoad() {
+			console.log('onLoad')
 		},
 		components:{
 			wHead,

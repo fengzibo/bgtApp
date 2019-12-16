@@ -50,13 +50,18 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
 				    title: '系统繁忙,刷新重试',
 				    icon: 'none',
 				})
-				throw '系统繁忙,刷新重试'
+				// throw '系统繁忙,刷新重试'
 			}else if(response.data.code == '2'){
 				uni.showToast({
 				    title: '服务请求参数非法',
 				    icon: 'none',
 				})
-				throw '服务请求参数非法'
+				// throw '服务请求参数非法'
+			}else if(response.data.code == '1'){
+				uni.showToast({
+				    title: response.data.msg,
+				    icon: 'none',
+				})
 			}
             break;
 
@@ -65,7 +70,6 @@ http.interceptor.response((response) => { /* 请求之后拦截器 */
                 title: '请先登录~',
                 icon: 'none',
             })
-
             // Store.commit('loginSuccess', {})
             setTimeout (() => {
                 // uni.navigateTo({

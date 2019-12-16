@@ -199,6 +199,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
 var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var stepOne = function stepOne() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step1 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step1")]).then(__webpack_require__.bind(null, /*! ./step1.vue */ 348));};var stepTwo = function stepTwo() {return Promise.all(/*! import() | pages/tabbar/task/createTask/step2 */[__webpack_require__.e("common/vendor"), __webpack_require__.e("pages/tabbar/task/createTask/step2")]).then(__webpack_require__.bind(null, /*! ./step2.vue */ 356));};var stepThree = function stepThree() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step3 */ "pages/tabbar/task/createTask/step3").then(__webpack_require__.bind(null, /*! ./step3.vue */ 363));};var stepFour = function stepFour() {return __webpack_require__.e(/*! import() | pages/tabbar/task/createTask/step4 */ "pages/tabbar/task/createTask/step4").then(__webpack_require__.bind(null, /*! ./step4.vue */ 370));};
 var chooseLocation = requirePlugin('chooseLocation');var _default =
 {
@@ -228,6 +230,7 @@ var chooseLocation = requirePlugin('chooseLocation');var _default =
       route_id: '',
       loading: true,
       recruiting_info: {},
+      recruit_list: [],
       show_modal: false,
       location: null,
       startTime: '' };
@@ -263,7 +266,10 @@ var chooseLocation = requirePlugin('chooseLocation');var _default =
     console.log('show,loc', this.location); // 如果点击确认选点按钮，则返回选点结果对象，否则返回null
   },
   computed: _objectSpread({},
-  (0, _vuex.mapState)(['current_task'])),
+  (0, _vuex.mapState)(['current_task']), {
+    can_create: function can_create() {
+      return this.$_.some(this.recruit_list, ['status', '5']);
+    } }),
 
   methods: {
     next: function next() {var _this2 = this;
@@ -300,32 +306,56 @@ var chooseLocation = requirePlugin('chooseLocation');var _default =
       this.old.scrollTop = e.detail.scrollTop;
     },
     update_recruiting_info: function update_recruiting_info(data) {
-      this.recruiting_info = data;
+      this.recruiting_info = data.info;
+      this.recruit_list = data.list;
     },
     endCreate: function endCreate(e) {var _this3 = this;
-      var pamars = {
-        proId: this.recruiting_info.proId,
-        recId: this.recruiting_info.id,
-        formId: e.detail.formId,
-        path: 'pages/tabbar/task/task' };
-
-      console.log(pamars);
-      // return 
-      this.$http.post('personwx.finishrecruit/1.0/', pamars).then(function (res) {
-        console.log(res);
-        _this3.scrollTop = _this3.old.scrollTop;
-        _this3.$nextTick(function () {
-          this.scrollTop = 0;
-        });
-        _this3.num++;
-        uni.$emit('refreshList');
-        // this.$store.commit('setHasTask',true)
+      var people_num = 0;
+      this.recruit_list.forEach(function (item) {
+        if (item.status == '5') {
+          people_num++;
+        }
       });
+      uni.showModal({
+        title: '提示',
+        content: "\u5F53\u524D\u60A8\u9009\u62E9\u4E86".concat(people_num, "\u4EBA\uFF0C\u5176\u4ED6\u4EBA\u5C06\u81EA\u52A8\u4E0D\u5F55\u7528\uFF0C\u662F\u5426\u786E\u5B9A\uFF1F"),
+        success: function success(res) {
+          if (res.confirm) {
+            console.log('用户点击确定');
+            var pamars = {
+              proId: _this3.recruiting_info.proId,
+              recId: _this3.recruiting_info.id,
+              formId: e.detail.formId,
+              path: 'pages/tabbar/task/task' };
+
+            console.log(pamars);
+            // return 
+            _this3.$http.post('personwx.finishrecruit/1.0/', pamars).then(function (res) {
+              console.log(res);
+              _this3.scrollTop = _this3.old.scrollTop;
+              _this3.$nextTick(function () {
+                this.scrollTop = 0;
+              });
+              _this3.num++;
+              uni.$emit('refreshList');
+              // this.$store.commit('setHasTask',true)
+            });
+          } else if (res.cancel) {
+            console.log('用户点击取消');
+          }
+        } });
+
+
     },
     goto_recruiting: function goto_recruiting() {
       this.show_modal = false;
       uni.navigateTo({
         url: "/pages/personList/personList?recId=".concat(this.recruiting_info.id, "&proId=").concat(this.recruiting_info.proId) });
+
+    },
+    go_list: function go_list() {
+      uni.switchTab({
+        url: "/pages/tabbar/task/task" });
 
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

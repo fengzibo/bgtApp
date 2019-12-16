@@ -16,8 +16,8 @@
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
-  -webkit-justify-content: space-around;
-          justify-content: space-around;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
 }
 .cu-form-group .check-group label.data-v-13955294 {
   display: -webkit-box;
@@ -26,6 +26,9 @@
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+          flex: 0 0 auto;
 }
 .cu-form-group .group-right-layout.data-v-13955294 {
   display: -webkit-box;

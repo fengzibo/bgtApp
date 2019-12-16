@@ -33,34 +33,35 @@
 					<view class="avatar bg-white"><view class="cu-avatar xl round bg-red" :style="{ backgroundImage: avatarUrl(personinfo.headImg) }"></view></view>
 				</view>
 			</view>
-			<view class="cu-bar bg-white solid-bottom margin-top" v-if="hasph">
+			<view class="cu-bar bg-white solid-bottom" v-if="hasph">
 				<view class="action">
 					<text class="cuIcon-titles text-green "></text>
 					工时信息
 				</view>
-				<view class="action text-sm text-gray">更新：2019-10-10 10：10：10</view>
+				<view class="action text-sm text-gray">更新：{{deliveryPeriod(new Date())}}</view>
 			</view>
 			<view class="padding flex text-center text-grey bg-white" v-if="hasph">
 				<view class="flex flex-sub flex-direction solid-right">
-					<view class="text-xxl text-orange">8</view>
+					<view class="text-xxl text-orange">{{personHours.yesterdayHours || 0}}</view>
 					<view class="margin-top-sm">
 						<text class="cuIcon-repairfill margin-right-xs"></text>
 						昨天工时
 					</view>
 				</view>
 				<view class="flex flex-sub flex-direction solid-right">
-					<view class="text-xxl text-blue">10</view>
+					<view class="text-xxl text-blue">{{personHours.todayHours || 0}}</view>
 					<view class="margin-top-sm">
 						<text class="cuIcon-timefill margin-right-xs"></text>
 						今日工时
 					</view>
 				</view>
 				<view class="flex flex-sub flex-direction">
-					<view class="text-xxl text-green">100</view>
+					<view class="text-xxl text-green">{{personHours.allHours || 0}}</view>
 					<view class="margin-top-sm">
 						<text class="cuIcon-favorfill margin-right-xs"></text>
 						累计工时
 					</view>
+					
 				</view>
 			</view>
 			<view class="bg-white nav margin-top-sm">
@@ -70,15 +71,41 @@
 					</view>
 				</view>
 			</view>
-			<view class="task-main">
+			<view class="task-main" v-if="no_task">
 				<view class="no-list padding">
 					<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-data.png" mode="aspectFit" class="no-data-img"></image>
 					<view class="text-gray text-center">--没有任务--</view>
 				</view>
 			</view>
+			<view class="plan-list" v-else>
+				<view class="item padding bg-white solid-bottom" v-for="item in plan_list" :key="item.id">
+					<view class="flex justify-between">
+						<view class="text-bold">
+							{{item.title}}
+						</view>
+						<view class="text-gray text-sm">
+							{{deliveryPeriod(item.createdTime)}}
+						</view>
+					</view>
+					<view class="flex align-center margin-top-sm">
+						<view class="process flex-sub">
+							<view class="cu-progress round sm striped active" >
+								<view class="bg-green" :style="{'width':item.taskProcess+'%'}"></view>
+							</view>
+						</view>
+						<view class="margin-left-sm">
+							进度{{item.taskProcess}}%
+						</view>
+					</view>
+					<view class="flex margin-top-sm">
+						<view class="cu-avatar sm round bg-red margin-right-sm" v-for="(avr,i) in item.people" :key="i" :style="{backgroundImage: `url(${avr.avaurl})`}"></view>
+					</view>
+				</view>
+			</view>
+			
 		</mescroll-uni>
 		<view class="footer-tool bg-white solid-top">
-			<button class="cu-btn bg-blue" style="flex:2;height: 100%;">标记为下工</button>
+			<button class="cu-btn bg-blue" style="flex:2;height: 100%;" @tap="down_work">标记为下工</button>
 			<!-- <button class="cu-btn round bg-blue" @tap="goto_recruiting">补招人员</button> -->
 			<button class="cu-btn bg-red" style="flex:1;height: 100%;" @tap="back()">返回</button>
 		</view>
@@ -122,10 +149,44 @@ export default {
 			return JSON.stringify(this.personHours) !== '{}'
 		},
 		finshTask() {
-			return this.$utils._get(this.detail_data, 'finshTask', []);
+			let ft_list = this.$utils._get(this.detail_data, 'finshTask', []);
+			ft_list.forEach(item =>{
+				let list = item.userList.split(',')
+				let plan_people = []
+				list.forEach(val =>{
+					let arr = val.split(':')
+					let obj = {
+						name:arr[2],
+						avaurl:arr[0]+':'+arr[1]
+					}
+					plan_people.push(obj)
+				})
+				this.$set(item,'people',plan_people)
+			})
+			return ft_list
 		},
 		activeTask() {
-			return this.$utils._get(this.detail_data, 'activeTask', []);
+			let at_list = this.$utils._get(this.detail_data, 'activeTask', [])
+			at_list.forEach(item =>{
+				let list = item.userList.split(',')
+				let plan_people = []
+				list.forEach(val =>{
+					let arr = val.split(':')
+					let obj = {
+						name:arr[2],
+						avaurl:arr[0]+':'+arr[1]
+					}
+					plan_people.push(obj)
+				})
+				this.$set(item,'people',plan_people)
+			})
+			return at_list
+		},
+		plan_list(){
+			return this.TabCur === 0?this.activeTask:this.finshTask
+		},
+		no_task(){
+			return this.plan_list.length === 0
 		}
 	},
 	onLoad(option) {
@@ -160,14 +221,17 @@ export default {
 			mescroll.resetUpScroll();
 		},
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
-		upCallback(mescroll) {
+		async upCallback(mescroll) {
 			//联网加载数据
+			await this.init()
 			mescroll.endErr();
 			// setTimeout(() => {
 			// 	mescroll.endErr();
 			// }, 1000);
 		},
-
+		deliveryPeriod(time) {
+			return this.$utils.format_date(time);
+		},
 		avatarUrl(avatarUrl) {
 			return `url(${avatarUrl})`;
 		},
@@ -178,6 +242,9 @@ export default {
 		},
 		tabSelect(e) {
 			this.TabCur = e.currentTarget.dataset.id;
+		},
+		down_work(){
+			
 		}
 	}
 };
