@@ -16,6 +16,8 @@ const store = new Vuex.Store({
 		is_subscribe:uni.getStorageSync('isSubscribe') || false,
 		bgt_c_task:[],
 		bgt_ct_id:'',
+		isHead_res:uni.getStorageSync('isHead_res') || '0',
+		is_login: uni.getStorageSync('is_login') || false,
 	},
 	mutations: {
 		setHasTeam(state, data) {
@@ -78,6 +80,14 @@ const store = new Vuex.Store({
 		},
 		set_bgt_ct_id(state,data){
 			state.bgt_ct_id = data
+		},
+		set_isHead_res(state,data){
+			state.isHead_res = data
+			uni.setStorageSync('isHead_res', data);
+		},
+		set_is_login(state,data){
+			state.is_login = data
+			uni.setStorageSync('is_login', data);
 		}
 	},
 	actions: {

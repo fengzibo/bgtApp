@@ -114,6 +114,7 @@ export default {
 		c_CustomBar() {
 			return this.CustomBar;
 		},
+		...mapState(['is_login']),
 		...mapGetters(['user_role','id']),
 		personHoursDetailList(){
 			return this.$_.get(this.hours_detail,'personHoursDetailList',[])
@@ -144,11 +145,18 @@ export default {
 		/*上拉加载的回调: mescroll携带page的参数, 其中num:当前页 从1开始, size:每页数据条数,默认10 */
 		upCallback(mescroll) {
 			//联网加载数据
-			this.get_hours_detail(() =>{
-				this.$nextTick(() =>{
-					mescroll.endSuccess(this.personHoursDetailList.length, false)
+			if(!this.is_login){
+				mescroll.endSuccess(0, false)
+				
+			}else {
+				this.get_hours_detail(() =>{
+					this.$nextTick(() =>{
+						mescroll.endSuccess(this.personHoursDetailList.length, false)
+					})
 				})
-			})
+			}
+				
+			
 		},
 		numDH() {
 			if (i < 20) {

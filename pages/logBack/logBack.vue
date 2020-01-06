@@ -70,8 +70,11 @@
 						uinfo.status = this.$utils._get(res,'data.data.status','0')
 						this.$store.commit('setUserInfo',uinfo)
 						this.$store.commit('setRefreshJwt',false)
-						let ishead = this.$utils._get(res, 'data.data.isHead', '0')
+						let isHead_res = this.$utils._get(res, 'data.data.isHead', '0')
 						let isSubscribe = this.$utils._get(res,'data.data.isSubscribe',false)
+						let s_isHead = uni.getStorageSync('isHead')
+						let ishead =  s_isHead === ""?isHead_res:s_isHead
+						this.$store.commit('set_isHead_res',isHead_res)
 						this.$store.commit('setIsHead',ishead)
 						this.$store.commit('setIsSubscribe',isSubscribe === '1'?true:false)
 						uni.hideLoading();

@@ -8,7 +8,7 @@
 			<view class="plh-height"></view>
 		</view>
 		<mescroll-uni :down="downOption" :up="upOption" @down="downCallback" @up="upCallback" :bottom="isWork?0:128" :top="c_CustomBar">
-			<view class="padding detail-main">
+			<view class="padding detail-main" v-if="!loading">
 				<view class="people-main bg-white">
 					<view class="info">
 						<view class="name">
@@ -36,7 +36,10 @@
 						<text class="cuIcon-titles text-blue"></text>
 						证件信息
 					</view>
-					<view class="grid col-3">
+					<view class="no-data" v-if="files.length<=0">
+						<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image>
+					</view>
+					<view class="grid col-3" v-else>
 						<view class="padding-sm radius text-center" v-for="item in files" :key="item.id">
 							<image :src="'https://zzy.zwch.ltd'+item.filePath" mode="aspectFill" style="width: 100%; height: 140rpx;background-color: #eeeeee;"></image>
 							<text class="text-grey text-df">{{item.fileName}}</text>
@@ -48,7 +51,10 @@
 						<text class="cuIcon-titles text-blue"></text>
 						最近工作情况
 					</view>
-					<view class="work-list">
+					<view class="no-data" v-if="works.length<=0">
+						<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image>
+					</view>
+					<view class="work-list" v-else>
 						<view class="item solid-bottom" v-for="item in works" :key="item.id">
 							<view class="work-info flex">
 								<view class="padding-xs work-item">
@@ -65,7 +71,7 @@
 								</view>
 								<view class="padding-xs work-item">
 									<text class="text-grey">工作周期</text>
-									<text class="text-black margin-left-sm">{{item.limit}}天</text>
+									<text class="text-black margin-left-sm">{{item.limit === 0?'不详':item.limit+'天'}}</text>
 								</view>
 								<view class="padding-xs work-item work-date">
 									<text class="text-gray">工作日期</text>
@@ -123,6 +129,7 @@ export default {
 			pid:'',
 			detail_data:'',
 			isWork:false,
+			loading:true,
 		};
 	},
 	components: {
@@ -164,7 +171,8 @@ export default {
 				if(res.data.code == 0){
 					this.detail_data = res.data.data
 				}
-				
+			}).finally(() =>{
+				this.loading = false
 			})
 		},
 		downCallback(mescroll) {
@@ -199,7 +207,23 @@ export default {
 			
 		},
 		get_work_time(item){
-			return this.$utils.format_date(item.sstartTime,'/') +' - '+this.$utils.format_date(item.sendTime,'/')
+			let start = '',
+				end = '';
+			if(this.$_.get(item,'sstartTime','') === ''){
+				start = '不详'
+			}else{
+				start = this.$utils.format_date(item.sstartTime,'/')
+			}
+			if(this.$_.get(item,'sendTime','') === ''){
+				end = '不详'
+			}else{
+				end = this.$utils.format_date(item.sendTime,'/')
+			}
+			if(start === '不详' && end === '不详'){
+				return '不详'
+			}else{
+				return start +' - '+ end
+			}
 		},
 		avatarUrl(avatarUrl){
 			return `url(${avatarUrl})`
@@ -304,6 +328,14 @@ export default {
 		.cu-btn{
 			min-width: 200upx;
 		}
+	}
+}
+.no-data{
+	.no-data-img{
+		width: 60%;
+		height: 400rpx;
+		margin: 0 auto;
+		display: block;
 	}
 }
 </style>

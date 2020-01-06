@@ -1,9 +1,9 @@
 {
+  "component": true,
   "usingComponents": {
     "head-todo": "/pages/tabbar/workbench/headTodo",
     "people-list": "/pages/tabbar/workbench/peopleList",
     "plan": "/pages/tabbar/workbench/plan",
     "err-manage": "/pages/tabbar/workbench/errManage"
-  },
-  "component": true
+  }
 }

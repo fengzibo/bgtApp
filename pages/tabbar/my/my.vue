@@ -5,17 +5,26 @@
 			<block slot="content">个人中心</block>
 		</cu-custom>
 		<view>
-			<view class="UCenter-bg bg-gradual-blue">
+			<view class="UCenter-bg bg-gradual-blue padding">
 				<!-- <image src="../../../static/login.png" class="png" mode="widthFix"></image> -->
-				<view class="cu-avatar xl round" :style="{ backgroundImage: avatarUrl }"></view>
-				<view class="text-xl margin-top-sm">
-					{{ my_info.name || user_info.loginName }}
-					<!-- <text class="text-df">v2.0</text> -->
-				</view>
-				<view class="margin-top-sm">
-					综合评分：
-					<text>{{my_info.rating}}</text>分
-				</view>
+				<template v-if="is_login">
+					<view class="cu-avatar xl round" :style="{ backgroundImage: avatarUrl }"></view>
+					<view class="margin-left">
+						<view class="text-xl">
+							{{ my_info.name || user_info.loginName }}
+						</view>
+						<view class="margin-top-sm">
+							综合评分：
+							<text>{{my_info.rating || 8}}</text>分
+						</view>
+					</view>
+				</template>
+				<template v-else>
+					<view class="text-center" style="width: 100%;">
+						<button class="cu-btn round line-white" @tap="go_login">点击登录</button>
+					</view>
+					
+				</template>
 				<!-- <view class="margin-top-sm margin-bottom-sm">
 					<text class="cuIcon-locationfill margin-right-xs"></text>
 					<text>深圳市龙华区</text>
@@ -52,7 +61,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
+			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius" v-if="is_login">
 				<navigator class="cu-item arrow" :url="my_info_nav">
 					<view class="content">
 						<text class="cuIcon-myfill text-purple"></text>
@@ -97,13 +106,22 @@
 					</view>
 				</navigator> -->
 			</view>
-			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius">
-				<navigator class="cu-item arrow" url="/pages/tabbar/my/subscribe/subscribe">
+			<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius" v-if="is_login">
+				<navigator class="cu-item arrow" url="/pages/tabbar/my/subscribe/subscribe" >
 					<view class="content">
 						<text class="cuIcon-subscription text-black"></text>
 						<text class="text-grey">订阅</text>
 					</view>
 				</navigator>
+				<view class="cu-item" v-if="can_change_role">
+					<view class="content">
+						<text class="cuIcon-profile text-black"></text>
+						<text class="text-grey">切换角色</text>
+					</view>
+					<view class="action">
+						<switch class='switch-role' @change="change_role" :class="role?'checked':''" :checked="role?true:false"></switch>
+					</view>
+				</view>
 				<view class="cu-item arrow" @tap="login_out">
 					<view class="content">
 						<text class="cuIcon-exit text-black"></text>
@@ -126,7 +144,8 @@ export default {
 			taskCount: '',
 			tiemCount: '',
 			starCount: '',
-			my_info: {}
+			my_info: {},
+			role:true,
 		};
 	},
 	onLoad() {
@@ -146,7 +165,7 @@ export default {
 		sunuiStar
 	},
 	computed: {
-		...mapState(['user_info', 'refresh_num']),
+		...mapState(['user_info', 'refresh_num','isHead_res','isHead','is_login']),
 		...mapGetters(['id']),
 		avatarUrl() {
 			return `url(${this.user_info.avatarUrl})`;
@@ -157,11 +176,18 @@ export default {
 			} else {
 				return '/pages/tabbar/my/myInfo/createInfo';
 			}
+		},
+		can_change_role(){
+			return this.isHead_res == '1'
 		}
 	},
 	methods: {
 		init() {
-			this.get_user_info();
+			this.role = this.isHead == '0'?false:true
+			if(this.is_login){
+				this.get_user_info();
+			}
+			
 		},
 		numDH() {
 			if (i < 20) {
@@ -189,6 +215,8 @@ export default {
 		},
 		login_out() {
 			uni.clearStorage();
+			this.init()
+			this.$store.commit('set_is_login',false)
 			uni.navigateTo({
 				url: '/pages/welcome/welcome'
 			});
@@ -202,6 +230,17 @@ export default {
 					console.log(res);
 					this.my_info = this.$_.get(res,'data.data.personinfo',{})
 				});
+		},
+		go_login(){
+			uni.navigateTo({
+				url: '/pages/welcome/welcome'
+			});
+		},
+		change_role(e){
+			this.role = e.detail.value
+			this.$store.commit('setIsHead',this.role?'1':'0')
+			uni.$emit('refreshJwt')
+			this.init()
 		}
 	}
 };
@@ -211,12 +250,10 @@ export default {
 .UCenter-bg {
 	// background-image: url(https://image.weilanwl.com/color2.0/index.jpg);
 	// background-size: cover;
-	height: 400upx;
+	// height: 400upx;
 	display: flex;
-	justify-content: center;
 	overflow: hidden;
 	position: relative;
-	flex-direction: column;
 	align-items: center;
 	color: #fff;
 	font-weight: 300;
@@ -242,5 +279,12 @@ export default {
 	flex: 1 1 auto;
 	height: 100%;
 	overflow: hidden;
+}
+.switch-role::after {
+	content: "包";
+}
+
+.switch-role::before {
+	content: "技";
 }
 </style>

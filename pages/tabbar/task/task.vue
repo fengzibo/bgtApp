@@ -4,6 +4,16 @@
 			<block slot="backText">返回</block>
 			<block slot="content">任务中心</block>
 		</cu-custom>
+		<view class="no-task" v-if="!is_login">
+			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
+			<text class="text-grey text-xl">没有任务</text><br>
+			<view class="flex margin-top justify-around">
+				<button class="cu-btn round bg-gradual-green lg" @tap="init">刷新任务</button>
+				<button class="cu-btn round bg-gradual-blue lg" @tap="goto_add">前往创建任务</button>
+				
+			</view>
+		</view>
+		<template v-if="is_login">
 		<view class="no-task" v-if="user_role=== 'head' && !has_task && !loading">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/no-task.png" mode="aspectFit" style="width: 100%"></image>
 			<text class="text-grey text-xl">没有任务</text><br>
@@ -74,6 +84,7 @@
 			</view>
 		</template>
 		<task-artisan v-if="user_role=== 'artisan' && show_artisan" class="task-artisan"></task-artisan>
+		</template>
 	</view>
 </template>
 <script>
@@ -120,21 +131,16 @@ export default {
 		try {
 			const version = uni.getStorageSync('version')
 			console.log('version',version)
-			if(version !== '1.1.7'){
+			if(version !== '2.1.1'){
 				uni.clearStorageSync();
-				this.show_artisan = false
-				uni.reLaunch ({
-					url: '/pages/welcome/welcome'
-				})
-				return 
 			}
 			const value = uni.getStorageSync('user_info');
 			console.log(value)
 			if (!value) {
 				this.show_artisan = false
-				uni.reLaunch ({
-					url: '/pages/welcome/welcome'
-				})
+				// uni.reLaunch ({
+				// 	url: '/pages/welcome/welcome'
+				// })
 			}else{
 				if(this.user_role=== 'head'){
 					this.init()
@@ -189,7 +195,7 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['refresh_num']),
+		...mapState(['refresh_num','is_login']),
 		...mapGetters(['user_role']),
 		has_task(){
 			// console.log('has_task',this.tab_list[this.current_tab.index])
@@ -216,12 +222,34 @@ export default {
 	},
 	methods: {
 		init(){
+			if(!this.is_login){
+				this.login_tips()
+				return
+			}
 			Promise.all([this.get_dcrw_list(),this.get_ywc_list()]).then(values =>{
 				console.log(values)
 				this.tab_list[0].data = this.$utils._get(values[0],'data.data',[]) 
 				this.tab_list[1].data = this.$utils._get(values[1],'data.data',[]) 
 				this.loading = false
 			})
+		},
+		login_tips(){
+			uni.showModal({
+			    title: '提示',
+			    content: '您还未登录，登录体验更佳',
+				cancelText:'先看看',
+				confirmText:'前往登录',
+			    success: function (res) {
+			        if (res.confirm) {
+			            console.log('用户点击确定');
+						uni.navigateTo({
+							url: '/pages/welcome/welcome'
+						});
+			        } else if (res.cancel) {
+			            console.log('用户点击取消');
+			        }
+			    }
+			});
 		},
 		get_dcrw_list(){
 			return this.$http.get('personwx.projectinfolist/1.0/',{
@@ -293,6 +321,10 @@ export default {
 			// }
 		},
 		goto_add(){
+			if(!this.is_login){
+				this.login_tips()
+				return
+			}
 			uni.navigateTo({
 				url: '/pages/tabbar/task/createTask/createTask'
 			});

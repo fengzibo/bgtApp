@@ -64,4 +64,7 @@
           flex: 0;
   min-width: 160rpx;
 }
+.cu-form-group .special-tilte.data-v-fbc63a0c {
+  width: 220rpx;
+}
 

@@ -128,4 +128,10 @@
 .bottom-btn .main .cu-btn.data-v-36cd3034 {
   min-width: 200rpx;
 }
+.no-data .no-data-img.data-v-36cd3034 {
+  width: 60%;
+  height: 400rpx;
+  margin: 0 auto;
+  display: block;
+}
 

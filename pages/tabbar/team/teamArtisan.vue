@@ -33,11 +33,11 @@
 			};
 		},
 		computed:{
-			...mapState(['isHead']),
+			...mapState(['isHead','is_login']),
 			...mapGetters(['user_role']),
 			c_CustomBar() {
 				return this.CustomBar;
-			}
+			},
 		},
 		mounted() {
 			uni.$on('refreshJwt',(data) =>{
@@ -56,9 +56,14 @@
 				mescroll.resetUpScroll();
 			},
 			upCallback(mescroll) {
-				setTimeout(() => {
-					this.get_team(mescroll)
-				}, 300);
+				if(!this.is_login){
+					mescroll.endSuccess(0,false)
+				}else{
+					setTimeout(() => {
+						this.get_team(mescroll)
+					}, 300);
+				}
+				
 			},
 			init(){
 				this.get_team()
@@ -69,7 +74,6 @@
 				}).then(res =>{
 					console.log(res)
 					this.team_data = this.$utils._get(res,'data.data',[])
-					
 				}).finally(() =>{
 					this.$nextTick(() => {
 						mescroll.endSuccess(this.team_data.length,false)
