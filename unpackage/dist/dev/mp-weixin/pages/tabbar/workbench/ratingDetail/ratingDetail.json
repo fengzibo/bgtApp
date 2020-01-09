@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "人员评分",
+  "usingComponents": {
+    "tui-rate": "/components/rate/rate"
+  }
+}

@@ -32,7 +32,9 @@
     "pages/tabbar/workbench/logReport/logReport",
     "pages/tabbar/my/subscribe/subscribe",
     "pages/tabbar/workHours/hoursSettle/hoursSettle",
-    "pages/tabbar/workbench/errorReport/errorReport"
+    "pages/tabbar/workbench/errorReport/errorReport",
+    "pages/tabbar/workbench/ratingList/ratingList",
+    "pages/tabbar/workbench/ratingDetail/ratingDetail"
   ],
   "subPackages": [],
   "window": {

@@ -1,0 +1,85 @@
+.plh-height.data-v-63271fda {
+  height: 208rpx;
+}
+.detail-main.data-v-63271fda {
+  padding-top: 64rpx;
+}
+.people-main.data-v-63271fda {
+  border-radius: 10rpx;
+  position: relative;
+  padding: 84rpx 0 30rpx;
+  box-shadow: 6rpx 6rpx 8rpx rgba(0, 129, 255, 0.1);
+}
+.people-main .info.data-v-63271fda {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.people-main .info .name.data-v-63271fda {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.people-main .info .limit.data-v-63271fda {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.people-main .avatar.data-v-63271fda {
+  position: absolute;
+  top: -64rpx;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  padding: 10rpx;
+  border-radius: 100%;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+.skills-card.data-v-63271fda {
+  border-radius: 10rpx;
+  box-shadow: 6rpx 6rpx 8rpx rgba(0, 129, 255, 0.1);
+}
+.footer-tool.data-v-63271fda {
+  width: 100%;
+  height: 80rpx;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 auto;
+          flex: 0 0 auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-around;
+          justify-content: space-around;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0px;
+  z-index: 10;
+}
+.footer-tool button.data-v-63271fda {
+  border-radius: 0;
+}
+.no-list .no-data-img.data-v-63271fda {
+  width: 30%;
+  margin: 0 auto;
+  display: block;
+  height: 260rpx;
+}
+

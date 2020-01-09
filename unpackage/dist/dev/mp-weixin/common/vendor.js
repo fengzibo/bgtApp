@@ -27028,7 +27028,38 @@ Request = /*#__PURE__*/function () {function Request() {_classCallCheck(this, Re
 
 /***/ }),
 
-/***/ 290:
+/***/ 3:
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ }),
+
+/***/ 306:
 /*!*********************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/mescroll-uni/mescroll-uni.js ***!
   \*********************************************************************************************/
@@ -27786,7 +27817,7 @@ MeScroll.prototype.setBounce = function (isBounce) {
 
 /***/ }),
 
-/***/ 291:
+/***/ 307:
 /*!****************************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/mescroll-uni/mescroll-uni-option.js ***!
   \****************************************************************************************************/
@@ -27827,38 +27858,7 @@ GlobalOption;exports.default = _default;
 
 /***/ }),
 
-/***/ 3:
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
-/***/ 353:
+/***/ 369:
 /*!****************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/common/graceChecker.js ***!
   \****************************************************************************/
@@ -27965,7 +27965,7 @@ module.exports = {
 
 /***/ }),
 
-/***/ 382:
+/***/ 398:
 /*!*************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/utils/permission.js ***!
   \*************************************************************************/
@@ -28246,7 +28246,7 @@ module.exports = permission;
 
 /***/ }),
 
-/***/ 418:
+/***/ 434:
 /*!*************************************************************************************!*\
   !*** /Users/wlbo/Documents/HBuilderProjects/bgtApp/components/tki-qrcode/qrcode.js ***!
   \*************************************************************************************/
@@ -30365,7 +30365,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@alpha","_id":"@dcloudio/uni-stat@2
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/tabbar/task/task": { "navigationBarTitleText": "任务" }, "pages/welcome/welcome": { "navigationBarTitleText": "欢迎登录" }, "pages/tabbar/my/my": { "navigationBarTitleText": "我的" }, "pages/tabbar/community/community": { "navigationBarTitleText": "社区" }, "pages/tabbar/team/team": { "navigationBarTitleText": "团队" }, "pages/tabbar/my/myInfo/myInfo": { "navigationBarTitleText": "个人信息" }, "pages/tabbar/my/myMsg/myMsg": { "navigationBarTitleText": "我的消息" }, "pages/tabbar/my/bindPhone/bindPhone": { "navigationBarTitleText": "绑定手机" }, "pages/tabbar/team/addTeam/addTeam": { "navigationBarTitleText": "添加团队" }, "pages/tabbar/team/auditList/auditList": { "navigationBarTitleText": "审核列表" }, "pages/tabbar/team/auditList/auditDetail": { "navigationBarTitleText": "审核详情" }, "pages/tabbar/team/teamMember/teamMember": { "navigationBarTitleText": "团队成员" }, "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/login/register": { "navigationBarTitleText": "注册" }, "pages/login/forget": { "navigationBarTitleText": "重置密码" }, "pages/tabbar/task/taskMain/taskMain": { "navigationBarTitleText": "任务详情" }, "pages/tabbar/task/createTask/createTask": { "navigationBarTitleText": "创建任务" }, "pages/auditDetail/auditDetail": { "navigationBarTitleText": "申请个人详情" }, "pages/tabbar/workbench/workbench": { "navigationBarTitleText": "工作台" }, "pages/tabbar/task/taskMain/taskMainArtisan": { "navigationBarTitleText": "任务详情" }, "pages/tabbar/my/myInfo/createInfo": { "navigationBarTitleText": "个人信息完善" }, "pages/tabbar/my/resume/resume": { "navigationBarTitleText": "个人履历" }, "pages/tabbar/my/aCode/aCode": { "navigationBarTitleText": "我的激活码" }, "pages/tabbar/workHours/workHours": { "navigationBarTitleText": "工时管理" }, "pages/personList/personList": { "navigationBarTitleText": "招募列表" }, "pages/logBack/logBack": { "navigationBarTitleText": "登录过期" }, "pages/shareTeam/shareTeam": { "navigationBarTitleText": "分享团队" }, "pages/tabbar/workbench/addPlan/addPlan": { "navigationBarTitleText": "生产计划" }, "pages/tabbar/workbench/peopleDetail/peopleDetail": { "navigationBarTitleText": "人员详情" }, "pages/tabbar/workbench/logReport/logReport": { "navigationBarTitleText": "日志提报" }, "pages/tabbar/my/subscribe/subscribe": { "navigationBarTitleText": "订阅" }, "pages/tabbar/workHours/hoursSettle/hoursSettle": { "navigationBarTitleText": "工时结算" }, "pages/tabbar/workbench/errorReport/errorReport": { "navigationBarTitleText": "异常提报" } }, "globalStyle": { "navigationStyle": "custom" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/tabbar/task/task": { "navigationBarTitleText": "任务" }, "pages/welcome/welcome": { "navigationBarTitleText": "欢迎登录" }, "pages/tabbar/my/my": { "navigationBarTitleText": "我的" }, "pages/tabbar/community/community": { "navigationBarTitleText": "社区" }, "pages/tabbar/team/team": { "navigationBarTitleText": "团队" }, "pages/tabbar/my/myInfo/myInfo": { "navigationBarTitleText": "个人信息" }, "pages/tabbar/my/myMsg/myMsg": { "navigationBarTitleText": "我的消息" }, "pages/tabbar/my/bindPhone/bindPhone": { "navigationBarTitleText": "绑定手机" }, "pages/tabbar/team/addTeam/addTeam": { "navigationBarTitleText": "添加团队" }, "pages/tabbar/team/auditList/auditList": { "navigationBarTitleText": "审核列表" }, "pages/tabbar/team/auditList/auditDetail": { "navigationBarTitleText": "审核详情" }, "pages/tabbar/team/teamMember/teamMember": { "navigationBarTitleText": "团队成员" }, "pages/login/login": { "navigationBarTitleText": "登录" }, "pages/login/register": { "navigationBarTitleText": "注册" }, "pages/login/forget": { "navigationBarTitleText": "重置密码" }, "pages/tabbar/task/taskMain/taskMain": { "navigationBarTitleText": "任务详情" }, "pages/tabbar/task/createTask/createTask": { "navigationBarTitleText": "创建任务" }, "pages/auditDetail/auditDetail": { "navigationBarTitleText": "申请个人详情" }, "pages/tabbar/workbench/workbench": { "navigationBarTitleText": "工作台" }, "pages/tabbar/task/taskMain/taskMainArtisan": { "navigationBarTitleText": "任务详情" }, "pages/tabbar/my/myInfo/createInfo": { "navigationBarTitleText": "个人信息完善" }, "pages/tabbar/my/resume/resume": { "navigationBarTitleText": "个人履历" }, "pages/tabbar/my/aCode/aCode": { "navigationBarTitleText": "我的激活码" }, "pages/tabbar/workHours/workHours": { "navigationBarTitleText": "工时管理" }, "pages/personList/personList": { "navigationBarTitleText": "招募列表" }, "pages/logBack/logBack": { "navigationBarTitleText": "登录过期" }, "pages/shareTeam/shareTeam": { "navigationBarTitleText": "分享团队" }, "pages/tabbar/workbench/addPlan/addPlan": { "navigationBarTitleText": "生产计划" }, "pages/tabbar/workbench/peopleDetail/peopleDetail": { "navigationBarTitleText": "人员详情" }, "pages/tabbar/workbench/logReport/logReport": { "navigationBarTitleText": "日志提报" }, "pages/tabbar/my/subscribe/subscribe": { "navigationBarTitleText": "订阅" }, "pages/tabbar/workHours/hoursSettle/hoursSettle": { "navigationBarTitleText": "工时结算" }, "pages/tabbar/workbench/errorReport/errorReport": { "navigationBarTitleText": "异常提报" }, "pages/tabbar/workbench/ratingList/ratingList": { "navigationBarTitleText": "人员列表" }, "pages/tabbar/workbench/ratingDetail/ratingDetail": { "navigationBarTitleText": "人员评分" } }, "globalStyle": { "navigationStyle": "custom" } };exports.default = _default;
 
 /***/ }),
 

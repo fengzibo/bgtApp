@@ -140,10 +140,15 @@
 		</template>
 		<template v-if="current_bgt_c_task.status == '3'">
 			<view class="cu-list grid col-4 no-border">
-				<view class="cu-item text-black" @tap="scan">
+				<!-- <view class="cu-item text-black" @tap="scan">
 					<view class="cuIcon-scan">
 					</view>
 					<text>扫码</text>
+				</view> -->
+				<view class="cu-item text-black" @tap="goto_rating">
+					<view class="cuIcon-post">
+					</view>
+					<text>人员评级</text>
 				</view>
 				<view class="cu-item text-yellow" @tap="goto_error">
 					<view class="cuIcon-warn ">
@@ -544,9 +549,13 @@ export default {
 			})
 		},
 		goto_error(){
-			
 			uni.navigateTo({
 				url:'/pages/tabbar/workbench/errorReport/errorReport'
+			})
+		},
+		goto_rating(){
+			uni.navigateTo({
+				url:'/pages/tabbar/workbench/ratingList/ratingList'
 			})
 		},
 		async scan(){
