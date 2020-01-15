@@ -20,11 +20,11 @@
 			</view>
 			<view class="flex justify-between bg-white padding align-center solid-bottom" v-for="(item, index) in proTaskList" :key="item.id">
 				<view class="text-black">
-					<view class="">{{ item.taskNo }}</view>
-					<view class="margin-top-sm">{{ item.taskName }}</view>
+					<!-- <view class="">{{ item.taskNo }}</view> -->
+					<view >{{ item.taskName }}</view>
 				</view>
 				<view class="text-right">
-					<view class="text-gray">创建日期：{{ deliveryPeriod(item.createTime) }}</view>
+					<!-- <view class="text-gray">创建日期：{{ deliveryPeriod(item.createTime) }}</view> -->
 					<view class="flex align-center justify-end text-cyan">
 						<view class="solid-bottom input-bdc"><input style="width: 120rpx;" v-model="work_log_data[index].value" /></view>
 						<text class="margin-left-sm">%</text>
@@ -39,7 +39,7 @@
 			</view>
 			<view class="flex align-center justify-between padding bg-white solid-bottom" v-for="(item, index) in proPersonList" :key="item.id">
 				<view class="flex align-center">
-					<view class="cu-avatar xl round bg-red" :style="{ backgroundImage: `url(${item.headImg})` }"></view>
+					<view class="cu-avatar lg round bg-red" :style="{ backgroundImage: `url(${item.headImg})` }"></view>
 					<view class="margin-left-sm">
 						<view class="text-black">{{ item.pname }}</view>
 						<view class="margin-top-sm">{{ item.typeName }}</view>
@@ -60,6 +60,15 @@
 					<view class="solid-bottom input-bdc"><input style="width: 120rpx;text-align: right;" v-model="all_progress.value" /></view>
 					<text class="margin-left-sm">%</text>
 				</view>
+			</view>
+			<view class="cu-bar bg-white solid-bottom margin-top">
+				<view class="action">
+					<text class="cuIcon-titles text-blue "></text>
+					备注
+				</view>
+			</view>
+			<view class="cu-form-group">
+				<textarea maxlength="-1" placeholder="请输入备注" v-model="all_progress.remark"></textarea>
 			</view>
 			<view class="footer-tool bg-white solid-top margin-top">
 				<button class="cu-btn bg-blue" @tap="save_log" style="flex:2;height: 100%;">提交</button>
@@ -84,9 +93,10 @@ export default {
 			all_progress: {
 				id: '',
 				type: '',
-				value: ''
+				value: '',
+				remark:''
 			},
-			workDate:''
+			workDate:'',
 		};
 	},
 	components: {
@@ -133,7 +143,7 @@ export default {
 						let obj = {
 							id: item.id,
 							type: item.type,
-							value: this.$_.get(item,'taskProcess','')
+							value: this.$_.get(item,'schedule','')
 						};
 						task_data.push(obj);
 					});
@@ -150,6 +160,7 @@ export default {
 					this.all_progress.id = this.projectInfo.id;
 					this.all_progress.type = this.projectInfo.type;
 					this.all_progress.value = this.$_.get(this.projectInfo,'schedule','')
+					this.all_progress.remark = this.$_.get(this.projectInfo,'remark','')
 				});
 		},
 		deliveryPeriod(time) {
@@ -189,7 +200,7 @@ export default {
 		},
 		change_date(date){
 			console.log(date)
-			this.workDate = date
+			this.workDate = this.$utils.format_date(new Date(date))
 			this.get_day_log()
 		}
 	}

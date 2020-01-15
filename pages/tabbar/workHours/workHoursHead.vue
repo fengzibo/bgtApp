@@ -25,13 +25,16 @@
 				<text class="cuIcon-titles text-blue "></text>
 				待结算人员列表
 			</view>
+			<view class="action text-blue" @tap="goto_more_detail">
+				更多明细
+			</view>
 		</view>
 		<view class="no-data" v-if="no_data">
 			<image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image>
 		
 		</view>
-		<view class="bg-white solid-bottom padding" v-for="item in headHoursDetailList" :key="item.proId" >
-			<view class="item-title flex justify-between padding-tb solid-bottom has-link" @tap="goto_detail(item)">
+		<view class="bg-white solid-bottom padding-lr padding-bottom" v-for="item in headHoursDetailList" :key="item.proId" >
+			<view class="item-title flex justify-between solid-bottom has-link" @tap="goto_detail(item)">
 				<view class="text-black text-bold">
 					{{ item.scompany }}
 				</view>
@@ -139,6 +142,11 @@ export default {
 		round(num){
 			let res = this.$_.round(this.$_.toNumber(num),2)
 			return this.$_.isNaN(res)?0:res
+		},
+		goto_more_detail(){
+			uni.navigateTo({
+				url:'/pages/tabbar/workHours/moreDetail/moreDetail'
+			});
 		}
 	}
 };
@@ -162,7 +170,7 @@ export default {
 		position: absolute;
 		font-size: 34rpx;
 		color: #8799a3;
-		line-height: 100rpx;
+		line-height: 70rpx;
 		width: 60rpx;
 		text-align: center;
 		top: 0;
@@ -171,5 +179,8 @@ export default {
 		margin: auto;
 
 	}
+}
+.item-title{
+	padding: 15rpx 30rpx 15rpx 0;
 }
 </style>

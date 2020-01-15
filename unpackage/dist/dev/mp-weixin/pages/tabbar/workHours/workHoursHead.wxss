@@ -14,12 +14,15 @@
   position: absolute;
   font-size: 34rpx;
   color: #8799a3;
-  line-height: 100rpx;
+  line-height: 70rpx;
   width: 60rpx;
   text-align: center;
   top: 0;
   bottom: 0;
   right: -20rpx;
   margin: auto;
+}
+.item-title.data-v-21ac7aa1 {
+  padding: 15rpx 30rpx 15rpx 0;
 }
 

@@ -190,6 +190,12 @@
             	"navigationBarTitleText": "人员评分"
             }
         }
+        ,{
+            "path" : "pages/tabbar/workHours/moreDetail/moreDetail",
+            "style" : {
+            	"navigationBarTitleText": "更多明细"
+            }
+        }
     ],
 	"globalStyle": {
 		"navigationStyle": "custom"

@@ -39,7 +39,7 @@
 					</view>
 				</view>
 				<view class="content flex flex-sub align-center padding-left" >
-					<view class="cu-avatar round lg bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
+					<view class="cu-avatar round  bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
 					<view class="content-info margin-left flex flex-direction">
 						<view class="content-info-top flex">
 							<view class="text-orange">

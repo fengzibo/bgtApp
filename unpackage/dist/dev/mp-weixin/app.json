@@ -34,7 +34,8 @@
     "pages/tabbar/workHours/hoursSettle/hoursSettle",
     "pages/tabbar/workbench/errorReport/errorReport",
     "pages/tabbar/workbench/ratingList/ratingList",
-    "pages/tabbar/workbench/ratingDetail/ratingDetail"
+    "pages/tabbar/workbench/ratingDetail/ratingDetail",
+    "pages/tabbar/workHours/moreDetail/moreDetail"
   ],
   "subPackages": [],
   "window": {
@@ -96,5 +97,5 @@
     "mescroll-uni": "/components/mescroll-uni/mescroll-uni",
     "cu-custom": "/colorui/components/cu-custom"
   },
-  "sitemapLocation": "sitemap92.json"
+  "sitemapLocation": "sitemap75.json"
 }

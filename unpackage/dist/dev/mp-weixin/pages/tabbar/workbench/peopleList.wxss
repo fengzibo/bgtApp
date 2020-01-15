@@ -1,3 +1,6 @@
+.people-list .item.data-v-697a08d9 {
+  padding: 15rpx 30rpx;
+}
 .people-list .status.data-v-697a08d9 {
   height: auto;
   font-size: 32rpx;

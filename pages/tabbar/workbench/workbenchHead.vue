@@ -111,13 +111,17 @@
 				</view>
 			</view>
 			<view class="people-list">
-				<view class="item padding bg-white solid-bottom" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
+				<view class="item bg-white solid-bottom" v-for="item in person_list" :key="item.id" >
 					<view class="action solid-right">
 						<!-- :class="[status_class(item.status)]   status_text(item.status)" -->
-						<view class="text-lg people-status text-blue">准备中</view>
+						<!-- <view class="text-lg people-status text-blue">准备中</view> -->
+						<view class="flex align-center justify-end text-blue margin-right-sm">
+							<view class="solid-bottom input-bdc"><input style="width: 120rpx;" type="number" v-model="item.custom_wages" /></view>
+							<text class="margin-left-sm">元/时</text>
+						</view>
 					</view>
-					<view class="content">
-						<view class="cu-avatar round lg bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
+					<view class="content" @tap="goto_detail(item)">
+						<view class="cu-avatar round  bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
 						<view class="content-info margin-left">
 							<view class="content-info-top">
 								<view class="text-orange">
@@ -129,10 +133,10 @@
 								</view> -->
 								<view class="cu-tag  margin-left line-green">{{ item.typeLevelName }}</view>
 							</view>
-							<view class="content-info-addr text-grey text-sm">
+							<!-- <view class="content-info-addr text-grey text-sm">
 								<text class="cuIcon-locationfill margin-right-xs"></text>
 								<text>{{ expectedPlace(item.expectedPlace)}}</text>
-							</view>
+							</view> -->
 						</view>
 					</view>
 				</view>
@@ -180,7 +184,7 @@
 		</template>
 		</mescroll-uni>
 		<view class="footer-tool bg-white solid-top" v-if="current_bgt_c_task.status == '2' && !no_work">
-			<button class="cu-btn bg-blue" @tap="send_start" style="flex:2;height: 100%;">发送开工确认</button>
+			<button class="cu-btn bg-blue" @tap="before_send_start" style="flex:2;height: 100%;">发送开工确认</button>
 			<!-- <button class="cu-btn round bg-blue" @tap="goto_recruiting">补招人员</button> -->
 			<button class="cu-btn bg-red" style="flex:1;height: 100%;">关闭任务</button>
 		</view>
@@ -303,7 +307,11 @@ export default {
 		...mapState(['bgt_c_task','bgt_ct_id']),
 		...mapGetters(['user_role','id']),
 		person_list(){
-			return this.$utils._get(this.project_detail,'personList',[])
+			let arr = this.$utils._get(this.project_detail,'personList',[])
+			arr.forEach(item =>{
+				this.$set(item,'custom_wages','')
+			})
+			return arr
 		},
 		project(){
 			return this.$utils._get(this.project_detail,'project',{})
@@ -480,10 +488,41 @@ export default {
 			// 	this.get_project_detail()
 			// })
 		},
+		before_send_start(){
+			if(this.$_.every(this.person_list,o =>{
+				return o.custom_wages !== ''
+			})){
+				uni.showLoading({
+				    title: '加载中',
+					mask:true
+				});
+				let WageDate = []
+				this.person_list.forEach(item =>{
+					WageDate.push({
+						id:item.id,
+						value:item.custom_wages
+					})
+				})
+				this.$http.post('personwx.updatePersonWages/1.0/',{
+					WageDate: JSON.stringify(WageDate)
+				}).then(res =>{
+					uni.hideLoading();
+					this.send_start()
+				})
+			}else{
+				uni.showToast({
+				    title: '请输入每位人员工价',
+				    duration: 2000,
+					icon:'none'
+				});
+				console.log(this.person_list)
+			}
+		},
 		send_start(){
 			uni.showModal({
 			    title: '提示',
 			    content: '确认输入的开工信息是否有误',
+				confirmText:'确认开工',
 			    success:(res) => {
 			        if (res.confirm) {
 			            console.log('用户点击确定');
@@ -504,9 +543,7 @@ export default {
 							console.log(params)
 							this.$http.post('personwx.startproject/1.0/',params).then(res =>{
 								console.log(res)
-								if (res.data.code == '0'){
-									this.get_head_project()
-								}
+								this.get_head_project()
 							})
 							
 						})
@@ -730,6 +767,7 @@ export default {
 	.item {
 		display: flex;
 		align-items: center;
+		padding: 20rpx 30rpx;
 		.content {
 			display: flex;
 			align-items: center;
@@ -802,5 +840,10 @@ export default {
 	text-align: center;
 	padding: 30rpx;
 	width: 100%;
+}
+.input-bdc {
+	&::after {
+		border-color: #0081ff;
+	}
 }
 </style>

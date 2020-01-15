@@ -103,6 +103,7 @@
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
+  padding: 20rpx 30rpx;
 }
 .people-list .item .content.data-v-59419c3a {
   display: -webkit-box;
@@ -203,5 +204,8 @@
   text-align: center;
   padding: 30rpx;
   width: 100%;
+}
+.input-bdc.data-v-59419c3a::after {
+  border-color: #0081ff;
 }
 

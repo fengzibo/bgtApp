@@ -34,7 +34,8 @@
     "pages/tabbar/workHours/hoursSettle/hoursSettle",
     "pages/tabbar/workbench/errorReport/errorReport",
     "pages/tabbar/workbench/ratingList/ratingList",
-    "pages/tabbar/workbench/ratingDetail/ratingDetail"
+    "pages/tabbar/workbench/ratingDetail/ratingDetail",
+    "pages/tabbar/workHours/moreDetail/moreDetail"
   ],
   "subPackages": [],
   "window": {

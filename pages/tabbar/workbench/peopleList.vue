@@ -1,6 +1,6 @@
 <template>
 	<view class="people-list">
-		<view class="item padding bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
+		<view class="item bg-white solid-bottom flex align-center" v-for="item in person_list" :key="item.id" @tap="goto_detail(item)">
 			<view class="action solid-right text-center" style="padding: 0 30rpx;">
 				<view class="text-xl text-blue">
 					{{item.totalHours || 0}}
@@ -11,14 +11,14 @@
 				</view>
 			</view>
 			<view class="content flex flex-sub align-center padding-left" >
-				<view class="cu-avatar round lg bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
+				<view class="cu-avatar round  bg-blue" :style="{backgroundImage: `url(${item.headImg})`}"></view>
 				<view class="content-info margin-left flex flex-direction">
 					<view class="content-info-top flex">
 						<view class="text-orange">
 							<view class="text-cut">{{item.pname}}</view>
 						</view>
 					</view>
-					<view class="cu-tag line-green margin-top-sm">{{item.typeName}}</view>
+					<view class="cu-tag line-green">{{item.typeName}}</view>
 				</view>
 			</view>
 			<view class="cu-tag status" :class="[status_color(item.status)]">
@@ -107,6 +107,9 @@
 
 <style lang="less" scoped>
 	.people-list{
+		.item{
+			padding: 15rpx 30rpx;
+		}
 		.status{
 			height: auto;
 			font-size: 32rpx;

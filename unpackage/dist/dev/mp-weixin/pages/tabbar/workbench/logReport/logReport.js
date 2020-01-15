@@ -100,22 +100,6 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var l0 = _vm.__map(_vm.proTaskList, function(item, index) {
-    var m0 = _vm.deliveryPeriod(item.createTime)
-    return {
-      $orig: _vm.__get_orig(item),
-      m0: m0
-    }
-  })
-
-  _vm.$mp.data = Object.assign(
-    {},
-    {
-      $root: {
-        l0: l0
-      }
-    }
-  )
 }
 var recyclableRender = false
 var staticRenderFns = []
@@ -223,7 +207,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var darkCalendar = function darkCalendar() {return __webpack_require__.e(/*! import() | components/dark-calendar/dark-calendar */ "components/dark-calendar/dark-calendar").then(__webpack_require__.bind(null, /*! ../../../../components/dark-calendar/dark-calendar.vue */ 437));};var _default =
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};var ownKeys = Object.keys(source);if (typeof Object.getOwnPropertySymbols === 'function') {ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {return Object.getOwnPropertyDescriptor(source, sym).enumerable;}));}ownKeys.forEach(function (key) {_defineProperty(target, key, source[key]);});}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var darkCalendar = function darkCalendar() {return __webpack_require__.e(/*! import() | components/dark-calendar/dark-calendar */ "components/dark-calendar/dark-calendar").then(__webpack_require__.bind(null, /*! ../../../../components/dark-calendar/dark-calendar.vue */ 445));};var _default =
 {
   data: function data() {
     return {
@@ -235,7 +228,8 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
       all_progress: {
         id: '',
         type: '',
-        value: '' },
+        value: '',
+        remark: '' },
 
       workDate: '' };
 
@@ -284,7 +278,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
           var obj = {
             id: item.id,
             type: item.type,
-            value: _this2.$_.get(item, 'taskProcess', '') };
+            value: _this2.$_.get(item, 'schedule', '') };
 
           task_data.push(obj);
         });
@@ -301,6 +295,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
         _this2.all_progress.id = _this2.projectInfo.id;
         _this2.all_progress.type = _this2.projectInfo.type;
         _this2.all_progress.value = _this2.$_.get(_this2.projectInfo, 'schedule', '');
+        _this2.all_progress.remark = _this2.$_.get(_this2.projectInfo, 'remark', '');
       });
     },
     deliveryPeriod: function deliveryPeriod(time) {
@@ -340,7 +335,7 @@ var _vuex = __webpack_require__(/*! vuex */ 18);function _objectSpread(target) {
     },
     change_date: function change_date(date) {
       console.log(date);
-      this.workDate = date;
+      this.workDate = this.$utils.format_date(new Date(date));
       this.get_day_log();
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

@@ -20,6 +20,27 @@
 				</view>
 				<view class="no-data" v-if="no_data"><image src="https://boboyun.oss-cn-hangzhou.aliyuncs.com/bgt/noData.png" mode="aspectFit" class="no-data-img"></image></view>
 				<view v-else class="margin-top-lg bg-white padding skills-card">
+				    
+				   <view class="grid  text-center col-4 solid-bottom">
+						<view class="padding-cus text-bold" >日期</view>
+						<view class="padding-cus text-bold" >姓名</view>
+						<view class="padding-cus text-bold" >工时(小时)</view>
+						<view class="padding-cus text-bold" >成本(元)</view>
+				   </view>
+				   <view class="grid  text-center col-4 solid-bottom" v-for="item in work_detail" :key="item.id" >
+						<view class="padding-cus" >{{deliveryPeriod(item.createdTime)}}</view>
+						<view class="padding-cus" >{{ personinfo.pname }}</view>
+						<view class="padding-cus" >{{item.validTotalNum}}</view>
+						<view class="padding-cus" >{{item.wages}}</view>
+				   </view>
+				   <view class="grid text-center col-4"  v-if="work_detail.length>0">
+						<view class="padding-cus text-bold" >共计</view>
+						<view class="padding-cus text-bold" >--</view>
+						<view class="padding-cus text-bold text-red">{{personinfo.cumulativeHours || 0}}</view>
+						<view class="padding-cus text-bold text-red">{{countCost}}</view>
+				   </view>
+				</view>
+				<!-- <view v-else class="margin-top-lg bg-white padding skills-card">
 					<view class="flex align-center justify-around solid-bottom" v-for="item in work_detail" :key="item.id">
 						<view class="text-gray">
 							{{deliveryPeriod(item.createdTime)}}
@@ -33,7 +54,7 @@
 							<text class="text-blue">{{item.validTotalNum}}</text>小时
 						</view>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</mescroll-uni>
 
@@ -110,6 +131,13 @@ export default {
 		},
 		sum_price() {
 			return this.$_.get(this.personinfo, 'cumulativeHours', 0) * this.$_.toNumber(this.wages);
+		},
+		countCost(){
+			let cost = 0
+			this.work_detail.forEach(item =>{
+				cost += item.wages
+			})
+			return cost
 		}
 	},
 	methods: {
@@ -201,16 +229,16 @@ export default {
 
 <style lang="less" scoped>
 .plh-height {
-	height: 208upx;
+	height: 208rpx;
 }
 .detail-main {
-	padding-top: 64upx;
+	padding-top: 64rpx;
 }
 .people-main {
-	border-radius: 10upx;
+	border-radius: 10rpx;
 	position: relative;
-	padding: 84upx 0 30upx;
-	box-shadow: 6upx 6upx 8upx rgba(0, 129, 255, 0.1);
+	padding: 84rpx 0 30rpx;
+	box-shadow: 6rpx 6rpx 8rpx rgba(0, 129, 255, 0.1);
 	.info {
 		display: flex;
 		flex-direction: column;
@@ -227,10 +255,10 @@ export default {
 	}
 	.avatar {
 		position: absolute;
-		top: -64upx;
+		top: -64rpx;
 		left: 50%;
 		transform: translateX(-50%);
-		padding: 10upx;
+		padding: 10rpx;
 		border-radius: 100%;
 		align-items: center;
 	}
@@ -269,7 +297,10 @@ export default {
 	}
 }
 .skills-card {
-	border-radius: 10upx;
-	box-shadow: 6upx 6upx 8upx rgba(0, 129, 255, 0.1);
+	border-radius: 10rpx;
+	box-shadow: 6rpx 6rpx 8rpx rgba(0, 129, 255, 0.1);
+}
+.padding-cus{
+	padding: 20rpx 0;
 }
 </style>

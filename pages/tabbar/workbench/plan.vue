@@ -2,15 +2,25 @@
 	<view class="plan">
 		<view class="plan-list">
 			<view class="item padding bg-white solid-bottom" v-for="item in plan_list" :key="item.id" @tap="goto_detail(item)">
-				<view class="flex justify-between">
-					<view class="text-bold">
+				<view class="flex justify-between align-center">
+					<view class="text-bold margin-right">
 						{{item.title}}
 					</view>
-					<view class="text-gray text-sm">
+					<!-- <view class="text-gray text-sm">
 						{{f_time(item.createdTime)}}
+					</view> -->
+					<view class="flex align-center flex-sub">
+						<view class="process flex-sub">
+							<view class="cu-progress round sm striped active" >
+								<view class="bg-green" :style="{'width':item.taskProcess+'%'}"></view>
+							</view>
+						</view>
+						<view class="margin-left-sm">
+							进度{{item.taskProcess}}%
+						</view>
 					</view>
 				</view>
-				<view class="flex align-center margin-top-sm">
+				<!-- <view class="flex align-center margin-top-sm">
 					<view class="process flex-sub">
 						<view class="cu-progress round sm striped active" >
 							<view class="bg-green" :style="{'width':item.taskProcess+'%'}"></view>
@@ -19,7 +29,7 @@
 					<view class="margin-left-sm">
 						进度{{item.taskProcess}}%
 					</view>
-				</view>
+				</view> -->
 				<view class="flex margin-top-sm">
 					<view class="cu-avatar sm round bg-red margin-right-sm" v-for="(avr,i) in item.people" :key="i" :style="{backgroundImage: `url(${avr.avaurl})`}"></view>
 				</view>

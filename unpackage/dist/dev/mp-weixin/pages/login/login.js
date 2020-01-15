@@ -133,7 +133,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var lInput = function lInput() {return __webpack_require__.e(/*! import() | components/login-comp/login-input */ "components/login-comp/login-input").then(__webpack_require__.bind(null, /*! ../../components/login-comp/login-input.vue */ 350));};var lButton = function lButton() {return __webpack_require__.e(/*! import() | components/login-comp/login-button */ "components/login-comp/login-button").then(__webpack_require__.bind(null, /*! ../../components/login-comp/login-button.vue */ 357));};
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var lInput = function lInput() {return __webpack_require__.e(/*! import() | components/login-comp/login-input */ "components/login-comp/login-input").then(__webpack_require__.bind(null, /*! ../../components/login-comp/login-input.vue */ 358));};var lButton = function lButton() {return __webpack_require__.e(/*! import() | components/login-comp/login-button */ "components/login-comp/login-button").then(__webpack_require__.bind(null, /*! ../../components/login-comp/login-button.vue */ 365));};
 
 
 
